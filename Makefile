@@ -6,9 +6,10 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/02/22 11:23:59 by nplieger         ###   ########.fr        #
+#    Updated: 2023/02/23 15:07:02 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 NAME				:=		minishell
 
 #------------------------------------------------#
@@ -41,15 +42,6 @@ CFLAGS				:=		-Wall -Wextra -Werror -O3
 RM					:=		rm -f
 
 #------------------------------------------------#
-#   COLORS			                             #
-#------------------------------------------------#
-
-COLOR_GREEN=\033[0;32m
-COLOR_RED=\033[0;31m
-COLOR_BLUE=\033[0;34m
-COLOR_END=\033[0m
-
-#------------------------------------------------#
 #   RECIPES                                      #
 #------------------------------------------------#
 
@@ -57,11 +49,11 @@ all:				$(NAME)
 
 $(NAME):			$(OBJS)
 	$(AR) $(NAME).a $(OBJS)
-	$(CC) $(CFLAGS) $(NAME).a -o ./$(NAME)
+	$(CC) $(CFLAGS) $(NAME).a -lreadline -o ./$(NAME)
 
 $(OBJS):			$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCS) -c $< -lreadline -o $@
 
 clean:
 	$(RM) -r $(OBJ_DIR)
