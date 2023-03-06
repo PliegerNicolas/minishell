@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/02/23 15:14:45 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/06 10:27:12 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -25,21 +25,23 @@
 /* * TYPEDEFS							* */
 /* ************************************** */
 
-typedef struct s_options
-{
-	char		*temp_arg;
-}	t_options;
-
-typedef struct s_command
-{
-	char				*temp_arg;
-	t_options			options;
-	struct s_command	*next;
-}	t_command;
+typedef int	t_bool;
 
 /* ************************************** */
-/* * COLORS								* */
+/* * MACRO								* */
 /* ************************************** */
+
+/* t_bool */
+
+# define FALSE 0
+# define TRUE 1
+
+/* int limits */
+
+# define MAX_INT 2147483647
+# define MIN_INT -2147483648
+
+/* colors */
 
 # define RED "\033[1;31m"
 # define GREEN "\033[1;32m"

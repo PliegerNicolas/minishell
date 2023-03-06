@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/02/23 15:07:02 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/06 10:22:37 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,13 @@ INC_DIR				:=		includes
 
 SRCS				:=		minishell \
 
+DEPS				:=		minishell \
+
 SRCS_C				:=		$(addsuffix .c, $(SRCS))
 CC_SRCS_C			:=		$(addsuffix $(SRC_DIR)/, $(SRCS_C))
+
+DEPS_H				:=		$(addsuffix .h, $(DEPS))
+CC_DEPS_H			:=		$(addsuffix $(DEPS_H), $(INC_DIR)/)
 
 OBJS				:=		$(SRCS_C:%.c=$(OBJ_DIR)/%.o)
 
@@ -51,7 +56,7 @@ $(NAME):			$(OBJS)
 	$(AR) $(NAME).a $(OBJS)
 	$(CC) $(CFLAGS) $(NAME).a -lreadline -o ./$(NAME)
 
-$(OBJS):			$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJS):			$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(CC_DEPS_H)
 	mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(INCS) -c $< -lreadline -o $@
 
