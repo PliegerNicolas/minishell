@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/07 23:13:15 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/07 23:19:33 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ INC_DIR				:=		includes
 SRCS				:=		minishell \
 							env/initialize_env \
 							env/env_utils \
-							utils/free \
+							exit/free \
 							utils/ft_strchr \
 							utils/ft_substr \
 							utils/ft_split \
