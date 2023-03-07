@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/07 22:36:31 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/07 23:13:15 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,6 @@ INC_DIR				:=		includes
 SRCS				:=		minishell \
 							env/initialize_env \
 							env/env_utils \
-							parsing/parse \
 							utils/free \
 							utils/ft_strchr \
 							utils/ft_substr \
@@ -38,6 +37,11 @@ SRCS				:=		minishell \
 							utils/ft_strtrim \
 							utils/ft_bzero \
 							utils/ft_calloc \
+							utils/ft_putchar_fd \
+							utils/ft_putstr_fd \
+							utils/ft_putendl_fd \
+							utils/ft_putnbr_fd \
+							utils/write_colors \
 
 DEPS				:=		minishell \
 

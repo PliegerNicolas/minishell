@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initialize_env.c                                   :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/07 21:38:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/07 22:44:13 by nicolas          ###   ########.fr       */
+/*   Created: 2023/01/31 17:11:58 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/07 23:10:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_bool	initialize_env(int argc, char **argv, char **env)
+void	ft_putnbr_fd(int n, int fd)
 {
-	int		i;
-
-	g_envp = ft_calloc((env_len(env) + 1), sizeof(char *));
-	if (!g_envp)
-		return (TRUE);
-	i = 0;
-	while (env[i])
+	if (n == -2147483648)
 	{
-		g_envp[i] = ft_strdup(env[i]);
-		if (!g_envp[i])
-			return (free_g_envp(), TRUE);
-		i++;
+		ft_putnbr_fd((n / 10), fd);
+		ft_putnbr_fd(-(n % 10), fd);
 	}
-	g_envp[i] = 0;
-	(void)argc;
-	(void)argv;
-	return (FALSE);
+	else
+	{
+		if (n < 0)
+		{
+			ft_putchar_fd('-', fd);
+			n = -n;
+		}
+		if (n >= 10)
+		{
+			ft_putnbr_fd(n / 10, fd);
+			ft_putnbr_fd(n % 10, fd);
+		}
+		else
+			ft_putchar_fd(n + '0', fd);
+	}
 }

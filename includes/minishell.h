@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/07 22:36:57 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/07 23:10:42 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -16,10 +16,12 @@
 /* * INCLUDES							* */
 /* ************************************** */
 
+# include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 
 /* ************************************** */
 /* * GLOBAL VAR							* */
@@ -69,9 +71,13 @@ typedef int	t_bool;
 
 /* env */
 
-t_bool	initialize_env(char **env);
+t_bool	initialize_env(int argc, char **argv, char **env);
 void	put_env(void);
 size_t	env_len(char **env);
+
+/* signals */
+
+void	sigint_handler(int sig);
 
 /* parsing */
 
@@ -89,5 +95,12 @@ char	*ft_strtrim(char const *s1, char const *set);
 
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
+
+int		ft_putchar_fd(char c, int fd);
+int		ft_putstr_fd(char *s, int fd);
+int		ft_putendl_fd(char *s, int fd);
+void	ft_putnbr_fd(int n, int fd);
+void	set_write_color(char *s, int fd);
+void	reset_write_color(int fd);
 
 #endif
