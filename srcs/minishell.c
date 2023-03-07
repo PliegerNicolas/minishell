@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/07 23:12:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/07 23:18:40 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,11 +19,10 @@ void	prompt(void)
 
 	while (1)
 	{
-		signal(SIGINT, sigint_handler);
 		line = readline(0);
 		free(line);
+		break ;
 	}
-	rl_clear_history();
 }
 
 int	main(int argc, char **argv, char **env)
