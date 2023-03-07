@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/06 10:22:37 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/07 22:36:31 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,19 @@ INC_DIR				:=		includes
 #------------------------------------------------#
 
 SRCS				:=		minishell \
+							env/initialize_env \
+							env/env_utils \
+							parsing/parse \
+							utils/free \
+							utils/ft_strchr \
+							utils/ft_substr \
+							utils/ft_split \
+							utils/ft_strdup \
+							utils/ft_strlcpy \
+							utils/ft_strlen \
+							utils/ft_strtrim \
+							utils/ft_bzero \
+							utils/ft_calloc \
 
 DEPS				:=		minishell \
 
@@ -43,7 +56,7 @@ OBJS				:=		$(SRCS_C:%.c=$(OBJ_DIR)/%.o)
 CC					:=		gcc
 AR					:=		ar -rcs
 INCS				:=		-I $(INC_DIR)
-CFLAGS				:=		-Wall -Wextra -Werror -O3
+CFLAGS				:=		-Wall -Wextra -Werror -g3 #-O3
 RM					:=		rm -f
 
 #------------------------------------------------#

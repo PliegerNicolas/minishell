@@ -6,30 +6,37 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/06 10:28:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/07 22:37:22 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+char	**g_envp;
+
+/*
 void	prompt(void)
 {
-	t_bool	previous_command_exit_status;
 	char	*arg;
 
-	previous_command_exit_status = 0;
 	while (1)
 	{
-		if (prev_command_exit_status == 0)
-			printf("%s→  %sminishell %s✗%s ", GREEN, CYAN, YELLOW, WHITE);
-		else
-			printf("%s→  %sminishell %s✗%s ", RED, CYAN, YELLOW, WHITE);
+		printf("%s→  %sminishell %s✗%s ", CYAN, CYAN, YELLOW, WHITE);
 		arg = readline(0);
 		free(arg);
+		break ;
 	}
+	rl_clear_history();
 }
+*/
 
-int	main(void)
+int	main(int argc, char **argv, char **env)
 {
-	prompt();
+	(void)argc;
+	(void)argv;
+	if (initialize_env(env))
+		return (1);
+	put_env();
+	//prompt();
+	free_g_envp();
 	return (0);
 }

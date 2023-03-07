@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/06 10:27:12 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/07 22:36:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -20,6 +20,16 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+/* ************************************** */
+/* * GLOBAL VAR							* */
+/* ************************************** */
+
+extern char	**g_envp;
+
+/* ************************************** */
+/* * ENUMERATORS						* */
+/* ************************************** */
 
 /* ************************************** */
 /* * TYPEDEFS							* */
@@ -56,5 +66,28 @@ typedef int	t_bool;
 /* ************************************** */
 /* * FUNCTIONS							* */
 /* ************************************** */
+
+/* env */
+
+t_bool	initialize_env(char **env);
+void	put_env(void);
+size_t	env_len(char **env);
+
+/* parsing */
+
+/* utils */
+
+void	free_g_envp(void);
+
+char	*ft_strchr(const char *s, int c);
+char	*ft_substr(const char *s, unsigned int start, size_t len);
+char	**ft_split(char const *s, char c);
+size_t	ft_strlen(const char *s);
+char	*ft_strdup(const char *s);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+char	*ft_strtrim(char const *s1, char const *set);
+
+void	ft_bzero(void *s, size_t n);
+void	*ft_calloc(size_t count, size_t size);
 
 #endif
