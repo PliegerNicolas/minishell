@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/07 23:10:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/07 23:25:48 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -76,8 +76,6 @@ void	put_env(void);
 size_t	env_len(char **env);
 
 /* signals */
-
-void	sigint_handler(int sig);
 
 /* parsing */
 
