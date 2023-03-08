@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/08 18:30:47 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/08 23:02:33 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,13 @@ SRCS				:=		minishell \
 							env/initialize_env \
 							env/env_utils \
 							env/free_env \
+							output/prompt_prefix \
+							output/ft_putchar_fd \
+							output/ft_putstr_fd \
+							output/ft_putendl_fd \
+							output/ft_putnbr_fd \
+							output/write_colors \
+							signals/sig_handlers \
 							utils/ft_strchr \
 							utils/ft_substr \
 							utils/ft_split \
@@ -37,11 +44,6 @@ SRCS				:=		minishell \
 							utils/ft_strtrim \
 							utils/ft_bzero \
 							utils/ft_calloc \
-							utils/ft_putchar_fd \
-							utils/ft_putstr_fd \
-							utils/ft_putendl_fd \
-							utils/ft_putnbr_fd \
-							utils/write_colors \
 
 DEPS				:=		minishell \
 

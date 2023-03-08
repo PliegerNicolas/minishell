@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/08 18:34:48 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 00:00:34 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -22,6 +22,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <termios.h>
 
 /* ************************************** */
 /* * ENUMERATORS						* */
@@ -31,7 +32,6 @@ enum e_status
 {
 	success = 1,
 	failure = 2,
-	skip = 3,
 	stop = 0,
 };
 
@@ -61,6 +61,10 @@ extern enum e_status	g_status;
 # define MAX_INT 2147483647
 # define MIN_INT -2147483648
 
+/* buffer_size */
+
+# define BUFFER_SIZE 4096
+
 /* colors */
 
 # define RED "\033[1;31m"
@@ -84,7 +88,20 @@ void	put_env(char **envp);
 size_t	env_len(char **envp);
 void	free_envp(char **envp);
 
+/* ouput */
+
+void	prompt_prefix(char *arrow_color);
+
+int		ft_putchar_fd(char c, int fd);
+int		ft_putstr_fd(char *s, int fd);
+int		ft_putendl_fd(char *s, int fd);
+void	ft_putnbr_fd(int n, int fd);
+void	set_write_color(char *s, int fd);
+void	reset_write_color(int fd);
+
 /* signals */
+
+void	sighandler(int sig);
 
 /* parsing */
 
@@ -100,12 +117,5 @@ char	*ft_strtrim(char const *s1, char const *set);
 
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
-
-int		ft_putchar_fd(char c, int fd);
-int		ft_putstr_fd(char *s, int fd);
-int		ft_putendl_fd(char *s, int fd);
-void	ft_putnbr_fd(int n, int fd);
-void	set_write_color(char *s, int fd);
-void	reset_write_color(int fd);
 
 #endif
