@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/07 23:25:48 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/08 18:34:48 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -24,20 +24,28 @@
 # include <signal.h>
 
 /* ************************************** */
-/* * GLOBAL VAR							* */
-/* ************************************** */
-
-extern char	**g_envp;
-
-/* ************************************** */
 /* * ENUMERATORS						* */
 /* ************************************** */
+
+enum e_status
+{
+	success = 1,
+	failure = 2,
+	skip = 3,
+	stop = 0,
+};
 
 /* ************************************** */
 /* * TYPEDEFS							* */
 /* ************************************** */
 
-typedef int	t_bool;
+typedef int				t_bool;
+
+/* ************************************** */
+/* * GLOBAL VAR							* */
+/* ************************************** */
+
+extern enum e_status	g_status;
 
 /* ************************************** */
 /* * MACRO								* */
@@ -71,17 +79,16 @@ typedef int	t_bool;
 
 /* env */
 
-t_bool	initialize_env(int argc, char **argv, char **env);
-void	put_env(void);
-size_t	env_len(char **env);
+char	**initialize_env(int argc, char **argv, char **env);
+void	put_env(char **envp);
+size_t	env_len(char **envp);
+void	free_envp(char **envp);
 
 /* signals */
 
 /* parsing */
 
 /* utils */
-
-void	free_g_envp(void);
 
 char	*ft_strchr(const char *s, int c);
 char	*ft_substr(const char *s, unsigned int start, size_t len);

@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   free_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/07 22:20:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/07 22:25:12 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/08 18:29:09 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/08 18:30:20 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-void	free_g_envp(void)
+void	free_envp(char **envp)
 {
 	int		i;
 
 	i = 0;
-	while (g_envp[i])
-		free(g_envp[i++]);
-	if (g_envp)
-		free(g_envp);
+	while (envp[i])
+		free(envp[i++]);
+	if (envp)
+		free(envp);
 }

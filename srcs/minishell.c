@@ -6,29 +6,34 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/07 23:18:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/08 18:36:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-char	**g_envp;
+enum e_status	g_status = success;
 
 void	prompt(void)
 {
 	char	*line;
 
-	while (1)
+	while (g_status != stop)
 	{
 		line = readline(0);
 		free(line);
-		break ;
+		g_status = stop;
 	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	if (initialize_env(argc, argv, env))
+	char	**envp;
+
+	if (argc != 1)
+		return (1);
+	envp = initialize_env(argc, argv, env);
+	if (!envp)
 		return (1);
 	prompt();
-	return (free_g_envp(), 0);
+	return (free_envp(envp), 0);
 }
