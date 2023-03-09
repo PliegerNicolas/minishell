@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/08 23:22:11 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 08:42:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -27,7 +27,7 @@ static char	*parse_prompt_prefix(char *cwd)
 	return (parsed_cwd);
 }
 
-void	prompt_prefix(char *arrow_color)
+void	prompt_prefix(void)
 {
 	char	*cwd;
 
@@ -38,7 +38,10 @@ void	prompt_prefix(char *arrow_color)
 	cwd = parse_prompt_prefix(cwd);
 	if (!cwd)
 		return ;
-	set_write_color(arrow_color, 1);
+	if (g_status == success)
+		set_write_color(GREEN, 1);
+	else
+		set_write_color(RED, 1);
 	ft_putstr_fd("➜  ", 1);
 	set_write_color(CYAN, 1);
 	ft_putstr_fd(cwd, 1);

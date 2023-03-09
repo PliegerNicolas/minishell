@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/09 00:00:34 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 08:43:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -51,6 +51,12 @@ extern enum e_status	g_status;
 /* * MACRO								* */
 /* ************************************** */
 
+/* std */
+
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
+
 /* t_bool */
 
 # define FALSE 0
@@ -90,7 +96,7 @@ void	free_envp(char **envp);
 
 /* ouput */
 
-void	prompt_prefix(char *arrow_color);
+void	prompt_prefix(void);
 
 int		ft_putchar_fd(char c, int fd);
 int		ft_putstr_fd(char *s, int fd);
