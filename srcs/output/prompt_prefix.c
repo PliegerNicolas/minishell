@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/09 08:42:00 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 19:26:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -46,7 +46,7 @@ void	prompt_prefix(void)
 	set_write_color(CYAN, 1);
 	ft_putstr_fd(cwd, 1);
 	set_write_color(YELLOW, 1);
-	ft_putstr_fd(" ✗ ", 1);
+	ft_putstr_fd(" ✗", 1);
 	reset_write_color(1);
 	free(cwd);
 }

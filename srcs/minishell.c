@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/09 17:47:25 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 19:27:10 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -17,16 +17,17 @@ void	prompt(void)
 {
 	char	*line;
 
-	while (g_status != stop)
+	while (1)
 	{
 		prompt_prefix();
-		line = readline(STDIN);
+		line = readline(" ");
 		if (!line)
 			break ;
 		ft_putendl_fd(line, 1);
 		g_status = success;
 		free(line);
 	}
+	rl_clear_history();
 }
 
 int	main(int argc, char **argv, char **env)
@@ -38,7 +39,7 @@ int	main(int argc, char **argv, char **env)
 	envp = initialize_env(argc, argv, env);
 	if (!envp)
 		return (1);
-	signal(SIGINT, sighandler);
+	setup_signals();
 	prompt();
 	return (free_envp(envp), 0);
 }

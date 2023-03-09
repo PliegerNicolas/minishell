@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/09 08:43:03 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 19:27:16 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -22,7 +22,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-# include <termios.h>
 
 /* ************************************** */
 /* * ENUMERATORS						* */
@@ -107,7 +106,7 @@ void	reset_write_color(int fd);
 
 /* signals */
 
-void	sighandler(int sig);
+void	setup_signals(void);
 
 /* parsing */
 
@@ -116,10 +115,12 @@ void	sighandler(int sig);
 char	*ft_strchr(const char *s, int c);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	**ft_split(char const *s, char c);
+char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strtrim(char const *s1, char const *set);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);

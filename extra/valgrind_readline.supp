@@ -1,0 +1,8 @@
+# Used to suppress readline leaks. Use : valgrind --suppressions=valgrind_readline.supp ./minishell
+
+{
+   ignore_libreadline_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libreadline.so.*
+}

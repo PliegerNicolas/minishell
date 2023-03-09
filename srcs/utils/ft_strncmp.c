@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sig_handlers.c                                     :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/07 23:12:52 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/09 19:25:36 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/09 18:40:08 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/09 18:40:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static void	sigint_handler(int signo)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	if (signo != SIGINT)
-		return ;
-	g_status = failure;
-	ft_putchar_fd('\n', STDIN);
-	rl_replace_line("", STDIN);
-	rl_on_new_line();
-	prompt_prefix();
-	rl_redisplay();
-}
+	size_t		i;
 
-void	setup_signals(void)
-{
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	i = 0;
+	while (i < n && (s1[i] || s2[i]))
+	{
+		if (s1[i] != s2[i])
+			return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
+		i++;
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/08 23:02:33 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/09 18:50:22 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRCS				:=		minishell \
 							signals/sig_handlers \
 							utils/ft_strchr \
 							utils/ft_substr \
+							utils/ft_strjoin \
 							utils/ft_split \
 							utils/ft_strdup \
 							utils/ft_strlcpy \
@@ -44,6 +45,7 @@ SRCS				:=		minishell \
 							utils/ft_strtrim \
 							utils/ft_bzero \
 							utils/ft_calloc \
+							utils/ft_strncmp \
 
 DEPS				:=		minishell \
 
