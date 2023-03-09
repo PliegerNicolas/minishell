@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/09 08:58:55 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 17:47:25 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -24,6 +24,7 @@ void	prompt(void)
 		if (!line)
 			break ;
 		ft_putendl_fd(line, 1);
+		g_status = success;
 		free(line);
 	}
 }
