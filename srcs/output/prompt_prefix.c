@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/10 13:47:19 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/10 13:52:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -42,7 +42,7 @@ static char	*compose_prompt_prefix(char *cwd)
 	free(temp);
 	if (!prompt_prefix)
 		return (NULL);
-	return (prompt_prefix);	
+	return (prompt_prefix);
 }
 
 char	*prompt_prefix(const enum e_status status)
@@ -62,16 +62,4 @@ char	*prompt_prefix(const enum e_status status)
 		ft_putstr_fd(RED, STDOUT);
 	cwd = compose_prompt_prefix(cwd);
 	return (cwd);
-	/*
-	if (status == success)
-		set_write_color(GREEN, STDOUT);
-	else
-		set_write_color(RED, STDOUT);
-	ft_putstr_fd("➜  ", STDOUT);
-	set_write_color(CYAN, STDOUT);
-	ft_putstr_fd(cwd, STDOUT);
-	set_write_color(YELLOW, STDOUT);
-	ft_putstr_fd(" ✗", STDOUT);
-	reset_write_color(STDOUT);
-	*/
 }
