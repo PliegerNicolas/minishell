@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/10 13:04:17 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/10 13:44:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -21,14 +21,19 @@
 void	prompt(void)
 {
 	char			*line;
+	char			*prompt_msg;
 	enum e_status	status;
 
 	status = success;
 	setup_signals();
+	prompt_msg = NULL;
 	while (1)
 	{
-		prompt_prefix(status);
-		line = readline(" ");
+		prompt_msg = prompt_prefix(status);
+		if (!prompt_msg)
+			break ;
+		line = readline(prompt_msg);
+		free(prompt_msg);
 		if (!line)
 			break ;
 		ft_putendl_fd(line, 1);
