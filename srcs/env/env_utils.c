@@ -11,6 +11,10 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	Writes what is contained in the envp pointer (environnement pointer).
+	In other terms, it writes all saved environnement variables.
+*/
 void	put_env(char **envp)
 {
 	int		i;
@@ -25,6 +29,10 @@ void	put_env(char **envp)
 	}
 }
 
+/*
+	Returns the number of variables (lines) contained
+	in envp (environnement pointer).
+*/
 size_t	env_len(char **envp)
 {
 	size_t	i;

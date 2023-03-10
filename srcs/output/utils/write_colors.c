@@ -11,12 +11,21 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-void	set_write_color(char *s, int fd)
+/*
+	Puts a simple string. This function is used with the different color macros
+	present in minishell.h ("RED", "GREEN", "CYAN", ...).
+	This function exists for readability.
+*/
+int	set_write_color(char *s, int fd)
 {
-	ft_putstr_fd(s, fd);
+	return (ft_putstr_fd(s, fd));
 }
 
-void	reset_write_color(int fd)
+/*
+	Puts a simple string representing the default terminal color (white).
+	This function exists for readability.
+*/
+int	reset_write_color(int fd)
 {
-	ft_putstr_fd("\033[0m", fd);
+	return (ft_putstr_fd("\033[0m", fd));
 }

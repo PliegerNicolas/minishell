@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	Writes an integer in terminal via the write function (unistd).
+*/
 void	ft_putnbr_fd(int n, int fd)
 {
 	if (n == -2147483648)

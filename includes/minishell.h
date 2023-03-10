@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/10 13:43:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/10 14:15:48 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -22,6 +22,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <termios.h>
 
 /* ************************************** */
 /* * ENUMERATORS						* */
@@ -98,12 +99,14 @@ int		ft_putchar_fd(char c, int fd);
 int		ft_putstr_fd(char *s, int fd);
 int		ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
-void	set_write_color(char *s, int fd);
-void	reset_write_color(int fd);
+int		set_write_color(char *s, int fd);
+int		reset_write_color(int fd);
 
 /* signals */
 
 void	setup_signals(void);
+void	rm_echoctl(void);
+void	reset_echoctl(void);
 
 /* parsing */
 

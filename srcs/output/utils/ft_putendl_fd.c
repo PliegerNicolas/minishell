@@ -11,6 +11,11 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	Writes a string in terminal via the write function (unistd) and adds
+	a new line at the end.
+	It returns the number of written characters.
+*/
 int	ft_putendl_fd(char *s, int fd)
 {
 	int		i;

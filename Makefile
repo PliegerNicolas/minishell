@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/10 12:48:48 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/10 14:18:06 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRCS				:=		minishell \
 							output/utils/ft_putnbr_fd \
 							output/utils/write_colors \
 							signals/sig_handlers \
+							signals/echoctl_handlers \
 							utils/ft_strchr \
 							utils/ft_substr \
 							utils/ft_strjoin \

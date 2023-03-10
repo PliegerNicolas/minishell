@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	Frees safely envp (environnement pointer).
+*/
 void	free_envp(char **envp)
 {
 	int		i;

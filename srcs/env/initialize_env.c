@@ -11,6 +11,10 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	This copies the inhereted env (environnement) variable to a pointer
+	so it can freely be used and modified.
+*/
 char	**initialize_env(int argc, char **argv, char **env)
 {
 	char	**envp;

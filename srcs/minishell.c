@@ -6,17 +6,27 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/10 13:44:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/10 14:17:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 /*
-	The core of the minishell program.
-	- An infinite loop that can be exited by pressing CTRL+D when STDIN
-	is empty (readline returns NULL).
-	- setup_signals() : Modifies the behaviour on reception of certain signals.
-	- readline(" ") : the space prevents deleting the prompt prefix.
+	This is the core function of the minishell program.
+	
+	@line : contains what the user gives (supposedly commands).
+	@prompt_msg : it's the minishell prefix displayed on console when waiting for
+								a command. It's build via the current working directory (cwd).
+	@status : it's the status related to the last command (success or failure).
+						It has an esthetic purpose. By default the value is success.
+	
+	It's an infinite loop that exists when line = NULL. Readline returns NULL
+	when EOF is met (CTRL+D on empty line).
+
+	- setup_signals() changes how the program should manage certain kind of
+		signals (SIGINT & SIGQUIT).
+	- rm_echoctl() & reset_echoctl() prevents interrupt messages to be displayed
+		in console (^C). 
 */
 void	prompt(void)
 {
@@ -26,7 +36,7 @@ void	prompt(void)
 
 	status = success;
 	setup_signals();
-	prompt_msg = NULL;
+	rm_echoctl();
 	while (1)
 	{
 		prompt_msg = prompt_prefix(status);
@@ -40,6 +50,7 @@ void	prompt(void)
 		free(line);
 		status = success;
 	}
+	reset_echoctl();
 	rl_clear_history();
 }
 

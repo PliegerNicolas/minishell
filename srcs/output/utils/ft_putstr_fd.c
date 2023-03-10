@@ -11,6 +11,10 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	Writes a string in terminal via the write function (unistd).
+	It returns the number of written characters.
+*/
 int	ft_putstr_fd(char *s, int fd)
 {
 	int		i;
