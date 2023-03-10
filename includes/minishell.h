@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/09 19:27:16 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/09 20:55:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -30,8 +30,7 @@
 enum e_status
 {
 	success = 1,
-	failure = 2,
-	stop = 0,
+	failure = 2
 };
 
 /* ************************************** */
@@ -43,8 +42,6 @@ typedef int				t_bool;
 /* ************************************** */
 /* * GLOBAL VAR							* */
 /* ************************************** */
-
-extern enum e_status	g_status;
 
 /* ************************************** */
 /* * MACRO								* */
@@ -95,7 +92,7 @@ void	free_envp(char **envp);
 
 /* ouput */
 
-void	prompt_prefix(void);
+void	prompt_prefix(enum e_status status);
 
 int		ft_putchar_fd(char c, int fd);
 int		ft_putstr_fd(char *s, int fd);
