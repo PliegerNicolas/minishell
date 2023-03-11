@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 23:12:52 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/10 14:10:54 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/11 12:46:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -37,4 +37,17 @@ void	setup_signals(void)
 {
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGSTOP, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
+}
+
+/*
+	Resets all modifications done by setup_signals() to default behavior;
+*/
+void	reset_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGSTOP, SIG_DFL);
+	signal(SIGTSTP, SIG_DFL);
 }
