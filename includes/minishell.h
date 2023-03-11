@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/10 14:15:48 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/11 11:54:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -94,6 +94,10 @@ void	free_envp(char **envp);
 /* ouput */
 
 char	*prompt_prefix(enum e_status status);
+
+void	perror_minishell_arguments(int nbr_args);
+void	perror_environnement_copy(void);
+void	perror_malloc(char *location);
 
 int		ft_putchar_fd(char c, int fd);
 int		ft_putstr_fd(char *s, int fd);
