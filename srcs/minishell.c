@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/11 11:56:50 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/11 12:04:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -28,7 +28,7 @@
 	- rm_echoctl() & reset_echoctl() prevents interrupt messages to be displayed
 		in console (^C). 
 */
-void	prompt(void)
+static void	prompt(void)
 {
 	char			*line;
 	char			*prompt_msg;
@@ -42,7 +42,7 @@ void	prompt(void)
 		prompt_msg = prompt_prefix(status);
 		if (!prompt_msg)
 		{
-			perror_malloc("prompt_msg (srcs/minishell.c)");
+			perror_malloc("@prompt_msg (srcs/minishell.c)");
 			break ;
 		}
 		line = readline(prompt_msg);

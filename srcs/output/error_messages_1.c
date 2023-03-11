@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 11:30:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/11 11:57:29 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/11 12:02:12 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -36,7 +36,8 @@ void	perror_malloc(char *location)
 {
 	set_write_color(RED, STDERR);
 	ft_putendl_fd("Error ... ( ͡° ʖ̯ ͡°)", STDERR);
-	ft_putstr_fd("A memory allocation went wrong. See : ", STDERR);
+	ft_putendl_fd("A memory allocation went wrong.", STDERR);
+	ft_putstr_fd("See : ", STDERR);
 	ft_putstr_fd(location, STDERR);
 	ft_putendl_fd(".", STDERR);
 	reset_write_color(STDERR);
