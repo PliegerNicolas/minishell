@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 12:20:25 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 12:29:06 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -26,13 +26,11 @@ static char	*parse_prompt_prefix(char *path)
 	end = 0;
 	parsed_path = ft_strjoin("/home/", getenv("USER"));
 	if (!parsed_path)
-		return (NULL);
+		return (free(path), NULL);
 	if (strncmp(path, parsed_path, ft_strlen(parsed_path) + 1) == 0)
 	{
 		free(parsed_path);
-		parsed_path = malloc(2 * sizeof(*parsed_path));
-		parsed_path[0] = '~';
-		parsed_path[1] = 0;
+		parsed_path = ft_substr("~", 0, 1);
 	}
 	else
 	{
@@ -42,8 +40,9 @@ static char	*parse_prompt_prefix(char *path)
 				start = end;
 		parsed_path = ft_substr(path, start, end);
 	}
-	free(path);
-	return (parsed_path);
+	if (!parsed_path)
+		return (free(path), NULL);
+	return (free(path), parsed_path);
 }
 
 /*
