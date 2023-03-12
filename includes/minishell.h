@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/12 20:01:57 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 23:40:40 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -133,7 +133,10 @@ void			reset_echoctl(void);
 
 t_commands		*lexer(char *line);
 t_commands		*initialize_commands(char *line);
+t_bool			fill_commands_lexer(t_commands *commands, char *line);
+
 void			free_commands(t_commands *commands);
+void			free_str_arr(char **arr);
 
 /* execution */
 

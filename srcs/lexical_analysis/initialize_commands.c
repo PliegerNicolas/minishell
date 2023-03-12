@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 19:51:03 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 23:26:52 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 23:52:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -15,13 +15,13 @@ static t_commands	*generate_head_commands(size_t *len)
 {
 	t_commands	*head_commands;
 
+	*head_commands = NULL;
 	if (*len)
 	{
 		(*len)--;
 		head_commands = malloc(sizeof(*head_commands));
 		if (!head_commands)
-			return (perror_malloc("@head_commands \
-(srcs/lexical_analysis/initialize_commands.c #generate_head_commands)"), NULL);
+			return (perror_malloc("@head_commands (srcs/lexical_analysis/initialize_commands.c #generate_head_commands)"), NULL);
 		head_commands->lexer = NULL;
 		head_commands->next = NULL;
 	}
@@ -35,16 +35,14 @@ static t_commands	*generate_commands(size_t len)
 
 	head_commands = generate_head_commands(&len);
 	if (!head_commands)
-		return (perror_malloc("@head_commands \
-(srcs/lexical_analysis/initialize_commands.c #generate_commands)"), NULL);
+		return (perror_malloc("@head_commands (srcs/lexical_analysis/initialize_commands.c #generate_commands)"), NULL);
 	commands = head_commands;
 	while (len--)
 	{
 		commands->next = malloc(sizeof(*commands));
 		if (!commands->next)
 		{
-			perror_malloc("@commands \
-(srcs/lexical_analysis/initialize_commands.c #generate_commands)");
+			perror_malloc("@commands (srcs/lexical_analysis/initialize_commands.c #generate_commands)");
 			return (free_commands(head_commands), NULL);
 		}
 		commands = commands->next;
@@ -64,10 +62,6 @@ t_commands	*initialize_commands(char *line)
 	len = ft_sections(line, ";");
 	commands = generate_commands(len);
 	if (!commands)
-	{
-		perror_malloc("@commands \
-(srcs/lexical_analysis/initialize_commands.c #initialize_commands)");
-		return (NULL);
-	}
+		return (perror_malloc("@commands (srcs/lexical_analysis/initialize_commands.c #initialize_commands)"), NULL);
 	return (commands);
 }
