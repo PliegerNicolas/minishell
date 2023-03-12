@@ -6,14 +6,14 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/11 12:48:56 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 02:31:13 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 /*
 	- setup_signals() changes how the program should manage certain kind of
-		signals (SIGINT, SIGQUIT, SIGTSTP & SIGSTOP).
+		signals (SIGINT, SIGQUIT & SIGTSTP).
 	- rm_echoctl() prevents interrupt messages to be displayed
 		in console (example : ^C). 
 */
@@ -61,13 +61,12 @@ static void	prompt(void)
 			perror_malloc("@prompt_msg (srcs/minishell.c)");
 			break ;
 		}
-		line = readline(prompt_msg);
+		line = readline(prompt_msg); // leak dangereux inattendu.
 		free(prompt_msg);
 		if (!line)
 			break ;
-		add_history(line);
-		ft_putendl_fd(line, 1);
-		free(line);
+		//add_history(line);
+		//status = exec(line);
 		status = success;
 	}
 }

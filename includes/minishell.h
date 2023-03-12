@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/11 12:47:15 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 02:25:09 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -38,7 +38,15 @@ enum e_status
 /* * TYPEDEFS							* */
 /* ************************************** */
 
-typedef int				t_bool;
+typedef int		t_bool;
+
+typedef struct s_command
+{
+	char				*exec;
+	char				*options;
+	char				**args;
+	struct s_command	*next;
+}	t_command;
 
 /* ************************************** */
 /* * GLOBAL VAR							* */
@@ -86,51 +94,66 @@ typedef int				t_bool;
 
 /* env */
 
-char	**initialize_env(int argc, char **argv, char **env);
-void	put_env(char **envp);
-size_t	env_len(char **envp);
-void	free_envp(char **envp);
+char			**initialize_env(int argc, char **argv, char **env);
+void			put_env(char **envp);
+size_t			env_len(char **envp);
+void			free_envp(char **envp);
 
 /* ouput */
 
-char	*prompt_prefix(enum e_status status);
+char			*prompt_prefix(enum e_status status);
 
-void	perror_minishell_arguments(int nbr_args);
-void	perror_environnement_copy(void);
-void	perror_malloc(char *location);
+void			perror_minishell_arguments(int nbr_args);
+void			perror_environnement_copy(void);
+void			perror_malloc(char *location);
 
-int		ft_putchar_fd(char c, int fd);
-int		ft_putstr_fd(char *s, int fd);
-int		ft_putendl_fd(char *s, int fd);
-void	ft_putnbr_fd(int n, int fd);
-int		set_write_color(char *s, int fd);
-int		reset_write_color(int fd);
+int				ft_putchar_fd(char c, int fd);
+int				ft_putstr_fd(char *s, int fd);
+int				ft_putendl_fd(char *s, int fd);
+void			ft_putnbr_fd(int n, int fd);
+int				set_write_color(char *s, int fd);
+int				reset_write_color(int fd);
 
 /* signals */
 
-void	setup_signals(void);
-void	reset_signals(void);
+void			setup_signals(void);
+void			reset_signals(void);
 
-void	rm_echoctl(void);
-void	reset_echoctl(void);
+void			rm_echoctl(void);
+void			reset_echoctl(void);
 
 /* parsing */
 
-void	parse(char *str);
+t_command		**parse(char *line);
+t_command		*initialize_piped_command(char *line);
+t_command		*initialize_command(char *line);
+
+void			free_2d_str(char **arr);
+void			free_command(t_command *command);
+void			free_commands(t_command **commands);
+void			free_parsing_cmd_arr(t_command *command, char **arr);
+void			free_parsing_all(t_command **commands, char **arr);
+
+/* execution */
+
+enum e_status	exec(char *line);
 
 /* utils */
 
-char	*ft_strchr(const char *s, int c);
-char	*ft_substr(const char *s, unsigned int start, size_t len);
-char	**ft_split(char const *s, char c);
-char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlen(const char *s);
-char	*ft_strdup(const char *s);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-char	*ft_strtrim(char const *s1, char const *set);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
+char			*ft_strchr(const char *s, int c);
+char			*ft_substr(const char *s, unsigned int start, size_t len);
+char			**ft_split(char const *s, char c);
+char			*ft_strjoin(char const *s1, char const *s2);
+size_t			ft_strlen(const char *s);
+char			*ft_strdup(const char *s);
+size_t			ft_strlcpy(char *dst, const char *src, size_t size);
+char			*ft_strtrim(char const *s1, char const *set);
+int				ft_strncmp(const char *s1, const char *s2, size_t n);
+int				ft_isspace(int c);
 
-void	ft_bzero(void *s, size_t n);
-void	*ft_calloc(size_t count, size_t size);
+void			ft_bzero(void *s, size_t n);
+void			*ft_calloc(size_t count, size_t size);
+
+size_t			ft_2d_strlen(const char **s_arr);
 
 #endif
