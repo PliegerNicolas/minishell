@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/12 02:25:09 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 20:01:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -40,13 +40,20 @@ enum e_status
 
 typedef int		t_bool;
 
-typedef struct s_command
+typedef struct s_lexer
 {
 	char				*exec;
 	char				*options;
 	char				**args;
-	struct s_command	*next;
-}	t_command;
+	struct s_lexer		*previous;
+	struct s_lexer		*next;
+}	t_lexer;
+
+typedef struct s_commands
+{
+	t_lexer				*lexer;
+	struct s_commands	*next;
+}	t_commands;
 
 /* ************************************** */
 /* * GLOBAL VAR							* */
@@ -122,21 +129,15 @@ void			reset_signals(void);
 void			rm_echoctl(void);
 void			reset_echoctl(void);
 
-/* parsing */
+/* lexical_analysis */
 
-t_command		**parse(char *line);
-t_command		*initialize_piped_command(char *line);
-t_command		*initialize_command(char *line);
-
-void			free_2d_str(char **arr);
-void			free_command(t_command *command);
-void			free_commands(t_command **commands);
-void			free_parsing_cmd_arr(t_command *command, char **arr);
-void			free_parsing_all(t_command **commands, char **arr);
+t_commands		*lexer(char *line);
+t_commands		*initialize_commands(char *line);
+void			free_commands(t_commands *commands);
 
 /* execution */
 
-enum e_status	exec(char *line);
+enum e_status	exec(char **envp, char *line);
 
 /* utils */
 
@@ -154,6 +155,6 @@ int				ft_isspace(int c);
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
 
-size_t			ft_2d_strlen(const char **s_arr);
+size_t			ft_sections(const char *s, const char *set);
 
 #endif

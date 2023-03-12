@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_2d_strlen.c                                     :+:      :+:    :+:   */
+/*   free_lexer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 02:01:24 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 02:02:18 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/12 19:47:14 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/12 19:48:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-size_t	ft_2d_strlen(const char **s_arr)
+void	free_commands(t_commands *commands)
 {
-	size_t		i;
+	t_commands	*temp;
 
-	i = 0;
-	if (!s_arr)
-		return (0);
-	while (s_arr[i])
-		i++;
-	return (i);
+	while (commands)
+	{
+		temp = commands;
+		commands = commands->next;
+		if (temp->lexer)
+			free(temp->lexer);
+		free(temp);
+	}
 }
