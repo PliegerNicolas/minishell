@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/12 02:31:13 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 12:12:11 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -46,7 +46,7 @@ static void	prompt_exit(void)
 	It's an infinite loop that exists when line = NULL. Readline returns NULL
 	when EOF is met (CTRL+D on empty line).
 */
-static void	prompt(void)
+static void	prompt(char **envp)
 {
 	char			*line;
 	char			*prompt_msg;
@@ -68,7 +68,9 @@ static void	prompt(void)
 		//add_history(line);
 		//status = exec(line);
 		status = success;
+		free(line);
 	}
+	(void)envp;
 }
 
 /*
@@ -92,7 +94,7 @@ int	main(int argc, char **argv, char **env)
 	if (!envp)
 		return (perror_environnement_copy(), 1);
 	prompt_init();
-	prompt();
+	prompt(envp);
 	prompt_exit();
 	return (free_envp(envp), 0);
 }

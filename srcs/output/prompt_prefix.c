@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/10 13:52:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 12:20:25 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -14,6 +14,7 @@
 /*
 	This function gets the last element of a string splitted by '/'.
 	It's purpose is to get the name of the last directory of the given path.
+	If the given path is /home/USER. It returns ~.
 */
 static char	*parse_prompt_prefix(char *path)
 {
@@ -23,17 +24,31 @@ static char	*parse_prompt_prefix(char *path)
 
 	start = 0;
 	end = 0;
-	while (path[end])
-		if (path[end++] == '/')
-			start = end;
-	parsed_path = ft_substr(path, start, end);
+	parsed_path = ft_strjoin("/home/", getenv("USER"));
+	if (!parsed_path)
+		return (NULL);
+	if (strncmp(path, parsed_path, ft_strlen(parsed_path) + 1) == 0)
+	{
+		free(parsed_path);
+		parsed_path = malloc(2 * sizeof(*parsed_path));
+		parsed_path[0] = '~';
+		parsed_path[1] = 0;
+	}
+	else
+	{
+		free(parsed_path);
+		while (path[end])
+			if (path[end++] == '/')
+				start = end;
+		parsed_path = ft_substr(path, start, end);
+	}
 	free(path);
 	return (parsed_path);
 }
 
 /*
 	This composes the "prompt_prefix".
-	It should look like : "➜  [dir_name] ✗"
+	It should look like : "➜  [dir_name] ¤ "
 */
 static char	*compose_prompt_prefix(char *dir_name)
 {
@@ -46,7 +61,7 @@ static char	*compose_prompt_prefix(char *dir_name)
 	free(dir_name);
 	if (!temp)
 		return (NULL);
-	prompt_prefix = ft_strjoin(temp, "\033[1;33m ✗ \033[0m");
+	prompt_prefix = ft_strjoin(temp, "\033[1;33m ¤ \033[0m");
 	free(temp);
 	if (!prompt_prefix)
 		return (NULL);
