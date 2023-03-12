@@ -6,11 +6,17 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 19:47:14 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 23:38:46 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/12 23:57:18 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	This function free char** variables.
+	Practical in case of usage of these following functions or variables :
+	- @lexer->args or commands->lexer->args;
+	- ft_split();
+*/
 void	free_str_arr(char **arr)
 {
 	int		i;
@@ -23,7 +29,10 @@ void	free_str_arr(char **arr)
 }
 
 /*
-	This function frees t_commands. A chained
+	This function frees t_commands.
+	t_commands is a chained list containing every "command" given by the user.
+	A command is considered as a string finished by a semicolon (;). If no
+	semicolon (;) is given and the string exists, there is one command.
 */
 void	free_commands(t_commands *commands)
 {

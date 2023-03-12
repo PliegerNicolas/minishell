@@ -6,11 +6,17 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 19:51:03 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 23:52:01 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/13 00:11:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	This function exists because of the 42 norm. It generates the head of
+	the commands chained list. See below functions for more info.
+
+	It returns the head of the commands chained list.
+*/
 static t_commands	*generate_head_commands(size_t *len)
 {
 	t_commands	*head_commands;
@@ -28,6 +34,17 @@ static t_commands	*generate_head_commands(size_t *len)
 	return (head_commands);
 }
 
+/*
+	This function Generated for each section of the given line a
+	spot in the commands's chained list.
+
+	It initializes all lexers to NULL.
+
+	- generate_head_commands() : a simple function to generate the head of the list.
+	  It exists just because of the 42 norm.
+
+	It returns the head of the commands chained list.
+*/
 static t_commands	*generate_commands(size_t len)
 {
 	t_commands	*head_commands;
@@ -52,6 +69,18 @@ static t_commands	*generate_commands(size_t len)
 	return (head_commands);
 }
 
+/*
+	Initializes the commands (chained list). It doesn't initialize
+	lexers : see "fill_commands_lexer.c".
+	
+	@commands : A chained list containing each "command". Each command
+				is separated by a semicolon (;). If there is no
+				semicolon (;), there is only one or zero command.
+	@len : Detected potential "commands". Aka number of elements
+		   in commands chained list.
+
+	It returns the command's chained_list. Lexers aren't initialized yet.
+*/
 t_commands	*initialize_commands(char *line)
 {
 	t_commands	*commands;
