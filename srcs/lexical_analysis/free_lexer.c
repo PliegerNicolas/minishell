@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 19:47:14 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 23:57:18 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/13 18:03:07 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -42,6 +42,8 @@ void	free_commands(t_commands *commands)
 	{
 		temp = commands;
 		commands = commands->next;
+		if (temp->cmd)
+			free(temp->cmd);
 		if (temp->lexer)
 		{
 			if (temp->lexer->exec)

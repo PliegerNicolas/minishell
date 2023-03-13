@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/12 23:40:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/13 17:20:02 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -51,6 +51,7 @@ typedef struct s_lexer
 
 typedef struct s_commands
 {
+	char				*cmd;
 	t_lexer				*lexer;
 	struct s_commands	*next;
 }	t_commands;
@@ -132,8 +133,7 @@ void			reset_echoctl(void);
 /* lexical_analysis */
 
 t_commands		*lexer(char *line);
-t_commands		*initialize_commands(char *line);
-t_bool			fill_commands_lexer(t_commands *commands, char *line);
+t_commands		*initialize_commands(const char **commands_str);
 
 void			free_commands(t_commands *commands);
 void			free_str_arr(char **arr);

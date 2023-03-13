@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/12 23:41:19 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/13 17:13:32 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,6 @@ SRCS				:=		minishell \
 							signals/echoctl_handlers \
 							lexical_analysis/lexer \
 							lexical_analysis/initialize_commands \
-							lexical_analysis/fill_commands_lexer \
 							lexical_analysis/free_lexer \
 							execution/exec \
 							utils/ft_strchr \
