@@ -6,11 +6,27 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 14:54:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 15:32:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	This function checks if a given character in present in the given set
+	while no quote is open.
+
+	@quote_status : if != none, a quote is open.
+	@c : given character to test.
+	@set : given set.
+
+	- whitelist_quote() : this function opens a specific quote (" or ') if
+						  the character is given and
+						  returns TRUE if a quote is open. Else return FALSE.
+						  If a quote is open, it closes it.
+	
+	Returns TRUE if character is in set and quote is closes.
+	else returns FALSE.
+*/
 static t_bool	is_inset(char c, const char *set,
 	enum e_quote_status *quote_status)
 {
@@ -29,6 +45,24 @@ static t_bool	is_inset(char c, const char *set,
 	return (FALSE);
 }
 
+/*
+	This function counts the number of sections in a string
+	following a character set.
+	If a quote is open, character set is ignored.
+
+	@count : returned sections count;
+	@quote_status : An enumerator that describes if a quote is
+					open (none, single_quote, double_quote).
+
+	- is_isspace() : verifies if given character is a whitespace
+					 character.
+
+	Returns 0 if empty string.
+	Returns 0 if only characters contained
+	in the set are present.
+	Returns the number of sections separated by the set.
+	The last section doesn't need to be terminated by the set.
+*/
 static size_t	ft_sections(const char *s, const char *set)
 {
 	size_t				count;
@@ -57,6 +91,20 @@ static size_t	ft_sections(const char *s, const char *set)
 	return (count);
 }
 
+/*
+	This function mallocs and returns a string following the given set.
+
+	@section : the returned string.
+	@quote_status : An enumerator that describes if a quote is
+					open (none, single_quote, double_quote).
+
+	Returns NULL if only whitespaces are present until a character of
+	the set is met.
+	Returns the given string if no set character is met.
+	Returns a substring of the given string from start to where a characeter
+	of the set is met.
+	
+*/
 static char	*get_section(const char *line, const char *set, size_t *i)
 {
 	char				*section;
@@ -81,6 +129,9 @@ static char	*get_section(const char *line, const char *set, size_t *i)
 	return (section);
 }
 
+/*
+	This function free the splitted_commands (char **).
+*/
 static void	free_split(char **splitted_commands)
 {
 	int		i;
@@ -94,6 +145,24 @@ static void	free_split(char **splitted_commands)
 	}
 }
 
+/*
+	This function splitteds a given sting following a set.
+	This set is ignored if a quote has been opened.
+
+	@splitted_commands : returns value.
+	@sections : number of considered sections in the given string.
+	@line_index : The read index of the given string.
+
+	- ft_sections() : counts sections.
+	- get_section() : retrieves a section and increments
+					  line_index accordingly.
+	- free_split() : frees the splitted_commands variable.
+
+	Returns empty char** if string only contains characters of
+	the set or whitespace characters.
+	Returns NULL on malloc error.
+	Return splitted string otherwise, ended by NULL.
+*/
 char	**ft_split_by_set_quote_safe(const char *line, const char *set)
 {
 	char	**splitted_commands;
