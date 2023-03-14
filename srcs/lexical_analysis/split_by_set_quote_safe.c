@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 14:37:01 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 14:54:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -104,8 +104,6 @@ char	**ft_split_by_set_quote_safe(const char *line, const char *set)
 	if (!line || !*line || contains_quote(set))
 		return (NULL);
 	sections = ft_sections(line, set);
-	if (!sections)
-		return (NULL);
 	splitted_commands = malloc((sections + 1) * sizeof(*splitted_commands));
 	if (!splitted_commands)
 		return (NULL);

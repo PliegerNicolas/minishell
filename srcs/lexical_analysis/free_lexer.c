@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 19:47:14 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/13 18:03:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 14:44:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -22,10 +22,12 @@ void	free_str_arr(char **arr)
 	int		i;
 
 	i = 0;
-	while (arr[i])
-		free(arr[i++]);
 	if (arr)
+	{
+		while (arr[i])
+			free(arr[i++]);
 		free(arr);
+	}
 }
 
 /*

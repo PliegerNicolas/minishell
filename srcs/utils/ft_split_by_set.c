@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 11:22:46 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 14:59:55 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,17 +19,15 @@ static t_bool	is_inset(char c, const char *set)
 		return (FALSE);
 	i = 0;
 	while (set[i])
-	{
 		if (c == set[i++])
 			return (TRUE);
-	}
 	return (FALSE);
 }
 
 static size_t	ft_sections(const char *s, const char *set)
 {
-	size_t	count;
-	int		i;
+	size_t				count;
+	size_t				i;
 
 	if (!s || !*s || !set || !*set)
 		return (0);
@@ -37,26 +35,23 @@ static size_t	ft_sections(const char *s, const char *set)
 	i = 0;
 	while (s[i])
 	{
-		while (is_inset(s[i], set))
-		{
-			if (!is_inset(s[i + 1], set))
-			{
-				count++;
-				break ;
-			}
+		while ((s[i] && is_inset(s[i], set)) || ft_isspace(s[i]))
 			i++;
-		}
-		i++;
+		if (!s[i])
+			break ;
+		while (s[i + 1] && !is_inset(s[i], set))
+			i++;
+		is_inset(s[i], set);
+		if (s[i++])
+			count++;
 	}
-	if (i > 0 && !count)
-		count++;
 	return (count);
 }
 
 static char	*get_section(const char *line, const char *set, size_t *i)
 {
-	char	*section;
-	size_t	j;
+	char				*section;
+	size_t				j;
 
 	if (!line || !*line || !set || !*set)
 		return (NULL);
@@ -98,7 +93,7 @@ char	**ft_split_by_set(const char *line, const char *set)
 	if (!line || !*line)
 		return (NULL);
 	sections = ft_sections(line, set);
-	splitted_commands = malloc((sections + 1) * sizeof(**splitted_commands));
+	splitted_commands = malloc((sections + 1) * sizeof(*splitted_commands));
 	if (!splitted_commands)
 		return (NULL);
 	i = 0;
