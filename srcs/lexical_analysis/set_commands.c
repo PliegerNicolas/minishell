@@ -1,41 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_sections.c                                      :+:      :+:    :+:   */
+/*   set_commands.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 19:12:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 19:33:28 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/13 22:59:15 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/14 01:27:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-size_t	ft_sections(const char *s, const char *set)
+t_commands	*set_commands(const char *line)
 {
-	size_t	count;
-	int		i;
-	int		j;
+	char		**test;
+	t_commands	*commands;
 
-	if (!s || !*s || !set || !*set)
-		return (0);
-	count = 1;
-	i = 0;
-	while (s[i])
-	{
-		j = 0;
-		while (s[i + j] == set[j])
-		{
-			if (set[j + 1] == '\0')
-			{
-				i += j;
-				if (s[i + 1])
-					count++;
-				break ;
-			}
-			j++;
-		}
-		i++;
-	}
-	return (count);
+	if (!line)
+		return (NULL);
+	test = ft_split_by_set(line, ";");
+	(void)test;
+	commands = NULL;
+	return (commands);
 }

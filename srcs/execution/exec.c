@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 23:48:59 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/13 22:59:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,7 +19,7 @@
 	@commands : a chained list containing parsed data. Each element of this list
 				is a command. Each command (options, arguments, pipes, ...) is
 				separated by semicolons (;).
-	- lexer(line) : this function treat's user's input.
+	- set_commands(line) : this function treat's user's input.
 	- ???
 
 	It returns the command's status (success / failure).
@@ -30,11 +30,10 @@ enum e_status	exec(char **envp, char *line)
 
 	if (!*line)
 		return (failure);
-	commands = lexer(line);
+	commands = set_commands(line);
 	if (!commands)
 		return (perror_malloc("@commands (srcs/execution/exec.c #exec)"), failure);
-	// execute commands.
-	// free commands.
+	// execute commands
 	(void)envp;
 	return (free_commands(commands), success);
 }

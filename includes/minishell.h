@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/13 17:20:02 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 01:33:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -32,6 +32,13 @@ enum e_status
 {
 	success = 1,
 	failure = 2
+};
+
+enum e_quote_status
+{
+	none = 0,
+	single_quote = 1,
+	double_quote = 2
 };
 
 /* ************************************** */
@@ -79,6 +86,10 @@ typedef struct s_commands
 
 # define MAX_INT 2147483647
 # define MIN_INT -2147483648
+
+/* whitespaces */
+
+# define WHITE_SPACES " \t\n\v\f\r"
 
 /* buffer_size */
 
@@ -132,8 +143,11 @@ void			reset_echoctl(void);
 
 /* lexical_analysis */
 
-t_commands		*lexer(char *line);
-t_commands		*initialize_commands(const char **commands_str);
+t_commands		*set_commands(const char *line);
+
+t_bool			whitelist_quote(char c, enum e_quote_status *quote_status);
+t_bool			is_open_quote(enum e_quote_status quote_status);
+t_bool			contains_quote(const char *s);
 
 void			free_commands(t_commands *commands);
 void			free_str_arr(char **arr);
@@ -158,6 +172,7 @@ int				ft_isspace(int c);
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
 
-size_t			ft_sections(const char *s, const char *set);
+char			**ft_split_by_set(const char *line, const char *set);
+char			**ft_trimsplit(const char **split, const char *set);
 
 #endif

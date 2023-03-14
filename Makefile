@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/13 17:13:32 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/14 01:27:58 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,8 +37,8 @@ SRCS				:=		minishell \
 							output/utils/write_colors \
 							signals/sig_handlers \
 							signals/echoctl_handlers \
-							lexical_analysis/lexer \
-							lexical_analysis/initialize_commands \
+							lexical_analysis/quotes \
+							lexical_analysis/set_commands \
 							lexical_analysis/free_lexer \
 							execution/exec \
 							utils/ft_strchr \
@@ -53,7 +53,8 @@ SRCS				:=		minishell \
 							utils/ft_calloc \
 							utils/ft_strncmp \
 							utils/ft_isspace \
-							utils/ft_sections \
+							utils/ft_split_by_set \
+							utils/ft_trimsplit \
 
 DEPS				:=		minishell \
 
