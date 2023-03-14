@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/14 02:14:44 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 11:28:59 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -97,15 +97,15 @@ typedef struct s_commands
 
 /* colors */
 
-# define RED "\033[1;31m"
-# define GREEN "\033[1;32m"
-# define YELLOW "\033[1;33m"
-# define BLUE "\033[1;34m"
-# define PURPLE "\033[1;35m"
-# define CYAN "\033[1;36m"
-# define LIGHT_GRAY "\033[1;37m"
-# define DARK_GRAY "\033[1;38m"
-# define WHITE "\033[0m"
+# define RED "\001\033[1;31m\002"
+# define GREEN "\001\033[1;32m\002"
+# define YELLOW "\001\033[1;33m\002"
+# define BLUE "\001\033[1;34m\002"
+# define PURPLE "\001\033[1;35m\002"
+# define CYAN "\001\033[1;36m\002"
+# define LIGHT_GRAY "\001\033[1;37m\002"
+# define DARK_GRAY "\001\033[1;38m\002"
+# define WHITE "\001\033[0m\002"
 
 /* ************************************** */
 /* * FUNCTIONS							* */
@@ -169,6 +169,7 @@ char			*ft_strjoin(char const *s1, char const *s2);
 size_t			ft_strlen(const char *s);
 char			*ft_strdup(const char *s);
 size_t			ft_strlcpy(char *dst, const char *src, size_t size);
+size_t			ft_strlcat(char *dst, const char *src, size_t size);
 char			*ft_strtrim(char const *s1, char const *set);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 int				ft_isspace(int c);

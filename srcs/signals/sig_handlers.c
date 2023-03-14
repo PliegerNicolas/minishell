@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 23:12:52 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 02:33:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 11:50:10 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -25,7 +25,7 @@ static void	sigint_handler(int signo)
 	ft_putchar_fd('\n', STDIN);
 	rl_replace_line("", STDIN);
 	rl_on_new_line();
-	ft_putstr_fd(RED, STDIN);
+	ft_putstr_fd(RED, STDOUT);
 	rl_redisplay();
 }
 

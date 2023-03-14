@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 02:21:08 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 14:37:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -32,7 +32,7 @@ static t_bool	is_inset(char c, const char *set,
 static size_t	ft_sections(const char *s, const char *set)
 {
 	size_t				count;
-	int					i;
+	size_t				i;
 	enum e_quote_status	quote_status;
 
 	if (!s || !*s || !set || !*set || contains_quote(set))
@@ -42,24 +42,18 @@ static size_t	ft_sections(const char *s, const char *set)
 	quote_status = none;
 	while (s[i])
 	{
-		while (is_inset(s[i], set, &quote_status))
-		{
-			if (!is_inset(s[i + 1], set, &quote_status))
-			{
-				count++;
-				break ;
-			}
+		while ((s[i] && is_inset(s[i], set, &quote_status)) || ft_isspace(s[i]))
 			i++;
-		}
-		i++;
+		if (!s[i])
+			break ;
+		while (s[i + 1] && !is_inset(s[i], set, &quote_status))
+			i++;
+		is_inset(s[i], set, &quote_status);
+		if (s[i++])
+			count++;
 	}
-	if (i > 0 && !count)
-		count++;
 	if (quote_status != none)
-	{
-		perror_quote("@quote_status (srcs/lexical_analysis/split_by_set_quote_safe.c #ft_sections)");
-		return (0);
-	}
+		return (perror_quote("@quote_status (srcs/lexical_analysis/split_by_set_quote_safe.c #ft_sections)"), 0);
 	return (count);
 }
 
@@ -91,10 +85,13 @@ static void	free_split(char **splitted_commands)
 {
 	int		i;
 
-	while (splitted_commands[i])
-		free(splitted_commands[i++]);
-	if (!splitted_commands)
+	if (splitted_commands)
+	{
+		i = 0;
+		while (splitted_commands[i])
+			free(splitted_commands[i++]);
 		free(splitted_commands);
+	}
 }
 
 char	**ft_split_by_set_quote_safe(const char *line, const char *set)
@@ -109,7 +106,7 @@ char	**ft_split_by_set_quote_safe(const char *line, const char *set)
 	sections = ft_sections(line, set);
 	if (!sections)
 		return (NULL);
-	splitted_commands = malloc((sections + 1) * sizeof(**splitted_commands));
+	splitted_commands = malloc((sections + 1) * sizeof(*splitted_commands));
 	if (!splitted_commands)
 		return (NULL);
 	i = 0;
@@ -117,8 +114,9 @@ char	**ft_split_by_set_quote_safe(const char *line, const char *set)
 	while (i < sections)
 	{
 		splitted_commands[i] = get_section(line, set, &line_index);
-		if (!splitted_commands[i++])
+		if (!splitted_commands[i])
 			return (free_split(splitted_commands), NULL);
+		i++;
 	}
 	splitted_commands[i] = '\0';
 	return (splitted_commands);

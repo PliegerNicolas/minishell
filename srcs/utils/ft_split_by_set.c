@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 01:31:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 11:22:46 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -79,10 +79,13 @@ static void	free_split(char **splitted_commands)
 {
 	int		i;
 
-	while (splitted_commands[i])
-		free(splitted_commands[i++]);
-	if (!splitted_commands)
+	if (splitted_commands)
+	{
+		i = 0;
+		while (splitted_commands[i])
+			free(splitted_commands[i++]);
 		free(splitted_commands);
+	}
 }
 
 char	**ft_split_by_set(const char *line, const char *set)

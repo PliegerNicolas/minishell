@@ -1,25 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_commands.c                                     :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/13 22:59:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 14:42:37 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/14 11:26:58 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/14 11:27:16 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_commands	*set_commands(const char *line)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	char		**splitted_commands;
-	t_commands	*commands;
+	size_t	i;
+	size_t	len_src;
+	size_t	len_dst;
 
-	if (!line)
-		return (NULL);
-	splitted_commands = ft_split_by_set_quote_safe(line, ";");
-	splitted_commands = ft_trimsplit((const char **)splitted_commands, WHITE_SPACES);
-	commands = NULL;
-	return (free_str_arr(splitted_commands), commands);
+	len_src = ft_strlen(src);
+	len_dst = ft_strlen(dst);
+	i = 0;
+	if (size <= len_dst)
+		return (size + len_src);
+	while (dst[i] && i < size - 1)
+		i++;
+	while (*src && i < size - 1)
+	{
+		dst[i] = *src;
+		i++;
+		src++;
+	}
+	dst[i] = '\0';
+	return (len_dst + len_src);
 }

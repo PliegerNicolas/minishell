@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/14 01:45:41 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/14 11:28:22 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,7 @@ SRCS				:=		minishell \
 							utils/ft_calloc \
 							utils/ft_strncmp \
 							utils/ft_isspace \
+							utils/ft_strlcat \
 							utils/ft_split_by_set \
 							utils/ft_trimsplit \
 

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/12 12:29:06 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 14:40:05 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -50,21 +50,26 @@ static char	*parse_prompt_prefix(char *path)
 	It should look like : "➜  [dir_name] ¤ "
 */
 static char	*compose_prompt_prefix(char *dir_name)
+
 {
 	char	*prompt_prefix;
-	char	*temp;
+	size_t	len;
 
 	if (!dir_name)
 		return (NULL);
-	temp = ft_strjoin("➜  \033[1;36m", dir_name);
-	free(dir_name);
-	if (!temp)
-		return (NULL);
-	prompt_prefix = ft_strjoin(temp, "\033[1;33m ¤ \033[0m");
-	free(temp);
+	len = (ft_strlen(RED) * 3) + ft_strlen(WHITE) + ft_strlen("➜  ")
+		+ ft_strlen(" ¤ ") + ft_strlen(dir_name) + 1;
+	prompt_prefix = malloc(len * sizeof(*prompt_prefix));
 	if (!prompt_prefix)
 		return (NULL);
-	return (prompt_prefix);
+	*prompt_prefix = '\0';
+	ft_strlcat(prompt_prefix, "➜  ", len);
+	ft_strlcat(prompt_prefix, CYAN, len);
+	ft_strlcat(prompt_prefix, dir_name, len);
+	ft_strlcat(prompt_prefix, YELLOW, len);
+	ft_strlcat(prompt_prefix, " ¤ ", len);
+	ft_strlcat(prompt_prefix, WHITE, len);
+	return (free(dir_name), prompt_prefix);
 }
 
 /*

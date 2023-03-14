@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/13 22:59:03 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/14 12:15:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -31,8 +31,8 @@ enum e_status	exec(char **envp, char *line)
 	if (!*line)
 		return (failure);
 	commands = set_commands(line);
-	if (!commands)
-		return (perror_malloc("@commands (srcs/execution/exec.c #exec)"), failure);
+	//if (!commands)
+		//return (perror_malloc("@commands (srcs/execution/exec.c #exec)"), failure);
 	// execute commands
 	(void)envp;
 	return (free_commands(commands), success);
