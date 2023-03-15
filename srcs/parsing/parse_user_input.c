@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   parse_user_input.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 12:56:18 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/14 23:54:01 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/15 16:35:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-enum e_status	exec(char **envp, char *line)
+t_commands	*parse_user_input(char *line)
 {
 	t_commands	*commands;
 
-	if (!*line || !envp)
-		return (failure);
-	commands = parse_user_input(line);
-	if (!commands)
-		return (failure);
-	// execute commands
-	return (free_commands(commands), success);
+	if (!line)
+		return (NULL);
+	line = substitute_variables(line);
+	if (line)
+		printf("%s\n", line);
+	// subtitute line
+	// generate commands
+	commands = NULL; // temp
+	return (commands);
 }

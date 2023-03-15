@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 14:40:05 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 16:30:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -63,7 +63,7 @@ static char	*compose_prompt_prefix(char *dir_name)
 	if (!prompt_prefix)
 		return (NULL);
 	*prompt_prefix = '\0';
-	ft_strlcat(prompt_prefix, "➜  ", len);
+	ft_strlcat(prompt_prefix, "\001➜\002  ", len);
 	ft_strlcat(prompt_prefix, CYAN, len);
 	ft_strlcat(prompt_prefix, dir_name, len);
 	ft_strlcat(prompt_prefix, YELLOW, len);

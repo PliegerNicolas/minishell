@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_by_set.c                                  :+:      :+:    :+:   */
+/*   ft_setsplit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 14:59:55 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 00:53:19 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -83,7 +83,7 @@ static void	free_split(char **splitted_commands)
 	}
 }
 
-char	**ft_split_by_set(const char *line, const char *set)
+char	**ft_setsplit(const char *line, const char *set)
 {
 	char	**splitted_commands;
 	size_t	sections;

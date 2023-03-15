@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/14 11:28:59 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 13:42:42 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -142,23 +142,19 @@ void			reset_signals(void);
 void			rm_echoctl(void);
 void			reset_echoctl(void);
 
-/* lexical_analysis */
-
-t_commands		*set_commands(const char *line);
-
-t_bool			whitelist_quote(char c, enum e_quote_status *quote_status);
-t_bool			is_open_quote(enum e_quote_status quote_status);
-t_bool			contains_quote(const char *s);
-
-char			**ft_split_by_set_quote_safe(const char *line,
-					const char *set);
-
-void			free_commands(t_commands *commands);
-void			free_str_arr(char **arr);
-
 /* execution */
 
 enum e_status	exec(char **envp, char *line);
+
+/* parsing */
+
+t_commands		*parse_user_input(char *line);
+
+char			*substitute_variables(char *line);
+
+void			free_commands(t_commands *commands);
+void			free_lexer(t_lexer *lexer);
+void			free_str_arr(char **arr);
 
 /* utils */
 
@@ -173,11 +169,18 @@ size_t			ft_strlcat(char *dst, const char *src, size_t size);
 char			*ft_strtrim(char const *s1, char const *set);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 int				ft_isspace(int c);
+char			*ft_strnstr(const char *big, const char *little, size_t len);
+void			*ft_memcpy(void *dest, const void *src, size_t n);
 
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
 
-char			**ft_split_by_set(const char *line, const char *set);
+char			**ft_setsplit_quotesafe(const char *line, const char *set);
+char			**ft_setsplit(const char *line, const char *set);
 char			**ft_trimsplit(const char **split, const char *set);
+
+t_bool			is_open_quote(enum e_quote_status quote_status);
+t_bool			whitelist_quote(char c, enum e_quote_status *quote_status);
+t_bool			contains_quote(const char *s);
 
 #endif

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_lexer.c                                       :+:      :+:    :+:   */
+/*   free_commands.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 19:47:14 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 17:45:48 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/14 23:58:54 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/15 01:03:14 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -21,17 +21,18 @@ void	free_str_arr(char **arr)
 {
 	int		i;
 
-	if (arr)
-	{
-		i = 0;
-		while (arr[i])
-			free(arr[i++]);
-		free(arr);
-	}
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
 }
 
 /*
 	This function frees all elements of a lexer struct.
+	A lexer structure contains arranged data based on
+	user input.
 */
 void	free_lexer(t_lexer *lexer)
 {

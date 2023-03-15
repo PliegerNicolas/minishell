@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_by_set_quote_safe.c                          :+:      :+:    :+:   */
+/*   ft_setsplit_quotesafe.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 15:32:17 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 00:52:07 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -163,7 +163,7 @@ static void	free_split(char **splitted_commands)
 	Returns NULL on malloc error.
 	Return splitted string otherwise, ended by NULL.
 */
-char	**ft_split_by_set_quote_safe(const char *line, const char *set)
+char	**ft_setsplit_quotesafe(const char *line, const char *set)
 {
 	char	**splitted_commands;
 	size_t	sections;
