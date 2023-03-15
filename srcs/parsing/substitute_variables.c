@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 17:02:05 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 23:50:35 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -118,7 +118,7 @@ void	substitute_variables(char **line)
 	if (!line || !*line || !ft_strchr(*line, '$'))
 		return ;
 	i = 0;
-	while (line[i])
+	while (*line[i])
 	{
 		variable = get_next_variable_substr(*line, &i);
 		if (!variable)

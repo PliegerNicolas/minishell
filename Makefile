@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/15 12:08:13 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/15 23:32:22 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ SRCS				:=		minishell \
 							execution/exec \
 							parsing/parse_user_input \
 							parsing/substitute_variables \
+							parsing/generate_commands \
 							parsing/free_commands \
 							utils/ft_strchr \
 							utils/ft_substr \
