@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/15 13:42:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 16:52:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -144,13 +144,13 @@ void			reset_echoctl(void);
 
 /* execution */
 
-enum e_status	exec(char **envp, char *line);
+enum e_status	exec(char **envp, char **line);
 
 /* parsing */
 
-t_commands		*parse_user_input(char *line);
+t_commands		*parse_user_input(char **line);
 
-char			*substitute_variables(char *line);
+void			substitute_variables(char **line);
 
 void			free_commands(t_commands *commands);
 void			free_lexer(t_lexer *lexer);

@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 12:56:18 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 16:50:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-enum e_status	exec(char **envp, char *line)
+enum e_status	exec(char **envp, char **line)
 {
 	t_commands	*commands;
 

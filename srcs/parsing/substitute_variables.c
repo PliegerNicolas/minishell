@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 14:23:12 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/15 17:02:05 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -43,8 +43,6 @@ static char	*get_next_variable_substr(char *line, size_t *i)
 		len++;
 	}
 	variable_substr = ft_substr(line, start, len);
-	if (!variable_substr)
-		return (NULL);
 	return (variable_substr);
 }
 
@@ -82,65 +80,58 @@ static char	*retrieve_variable_name(char *variable_substr)
 	@lens[1] = substr's len.
 	@lens[2] = replacement's len.
 */
-char	*substitute_next_string(char *str, const char *substr,
+void	substitute_next_string(char **str, const char *substr,
 	const char *replacement, size_t *i)
 {
 	char	*new_str;
 	char	*pos;
 	size_t	lens[3];
 
-	lens[0] = ft_strlen(str);
-	pos = ft_strnstr(str, substr, lens[0]);
-	if (!pos || !substr || !replacement)
-		return (str);
+	lens[0] = ft_strlen(*str);
+	pos = ft_strnstr(*str, substr, lens[0]);
+	if (!replacement)
+		replacement = "";
+	if (!pos || !substr)
+		return ;
 	lens[1] = ft_strlen(substr);
 	lens[2] = ft_strlen(replacement);
 	new_str = malloc((lens[0] + (lens[2] - lens[1]) + 1) * sizeof(*new_str));
 	if (!new_str)
-		return (str);
-	ft_memcpy(new_str, str, pos - str);
-	ft_memcpy(new_str + (pos - str), replacement, lens[2]);
-	ft_memcpy(new_str + (pos - str) + lens[2], pos + lens[1],
-		str + lens[0] - (pos + lens[1]));
+		return ;
+	ft_memcpy(new_str, *str, pos - *str);
+	ft_memcpy(new_str + (pos - *str), replacement, lens[2]);
+	ft_memcpy(new_str + (pos - *str) + lens[2], pos + lens[1],
+		*str + lens[0] - (pos + lens[1]));
 	new_str[lens[0] + (lens[2] - lens[1])] = '\0';
 	(*i) += lens[2];
-	free(str);
-	return(new_str);
+	free(*str);
+	*str = new_str;
 }
 
-char	*substitute_variables(char *line)
+void	substitute_variables(char **line)
 {
 	char	*variable;
 	char	*variable_name;
 	char	*env;
 	size_t	i;
 
-	if (!line)
-		return (NULL);
-	if (!*line || !ft_strchr(line, '$'))
-		return (line);
+	if (!line || !*line || !ft_strchr(*line, '$'))
+		return ;
 	i = 0;
 	while (line[i])
 	{
-		variable = get_next_variable_substr(line, &i);
+		variable = get_next_variable_substr(*line, &i);
 		if (!variable)
-			return (line);
+			return ;
 		variable_name = retrieve_variable_name(variable);
 		if (!variable_name)
 		{
 			free(variable);
-			return (line);
+			return ;
 		}
 		env = getenv(variable_name);
-		if (env)
-			line = substitute_next_string(line, variable, env, &i);
+		substitute_next_string(line, variable, env, &i);
 		free(variable);
 		free(variable_name);
-		if (!env)
-		{
-			printf("%sERROR%s\n", RED, WHITE); // temp
-			return (free(line), NULL);
-		}
 	}
-	return (line);
 }
