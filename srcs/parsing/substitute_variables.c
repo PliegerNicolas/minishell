@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/16 08:45:12 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/16 08:49:06 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -125,10 +125,7 @@ char	*substitute_variables(char *line)
 			return (line);
 		variable_name = retrieve_variable_name(variable);
 		if (!variable_name)
-		{
-			free(variable);
-			return (line);
-		}
+			return (free(variable), line);
 		env = getenv(variable_name);
 		if (!env)
 			env = "";
