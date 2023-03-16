@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 23:50:35 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/16 08:45:12 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -80,58 +80,61 @@ static char	*retrieve_variable_name(char *variable_substr)
 	@lens[1] = substr's len.
 	@lens[2] = replacement's len.
 */
-void	substitute_next_string(char **str, const char *substr,
+char	*substitute_next_string(char *str, const char *substr,
 	const char *replacement, size_t *i)
 {
 	char	*new_str;
 	char	*pos;
 	size_t	lens[3];
 
-	lens[0] = ft_strlen(*str);
-	pos = ft_strnstr(*str, substr, lens[0]);
+	lens[0] = ft_strlen(str);
+	pos = ft_strnstr(str, substr, lens[0]);
 	if (!replacement)
 		replacement = "";
 	if (!pos || !substr)
-		return ;
+		return (str);
 	lens[1] = ft_strlen(substr);
 	lens[2] = ft_strlen(replacement);
 	new_str = malloc((lens[0] + (lens[2] - lens[1]) + 1) * sizeof(*new_str));
 	if (!new_str)
-		return ;
-	ft_memcpy(new_str, *str, pos - *str);
-	ft_memcpy(new_str + (pos - *str), replacement, lens[2]);
-	ft_memcpy(new_str + (pos - *str) + lens[2], pos + lens[1],
-		*str + lens[0] - (pos + lens[1]));
+		return (str);
+	ft_memcpy(new_str, str, pos - str);
+	ft_memcpy(new_str + (pos - str), replacement, lens[2]);
+	ft_memcpy(new_str + (pos - str) + lens[2], pos + lens[1],
+		str + lens[0] - (pos + lens[1]));
 	new_str[lens[0] + (lens[2] - lens[1])] = '\0';
 	(*i) += lens[2];
-	free(*str);
-	*str = new_str;
+	free(str);
+	return (new_str);
 }
 
-void	substitute_variables(char **line)
+char	*substitute_variables(char *line)
 {
 	char	*variable;
 	char	*variable_name;
 	char	*env;
 	size_t	i;
 
-	if (!line || !*line || !ft_strchr(*line, '$'))
-		return ;
+	if (!line || !*line || !ft_strchr(line, '$'))
+		return (line);
 	i = 0;
-	while (*line[i])
+	while (line[i])
 	{
-		variable = get_next_variable_substr(*line, &i);
+		variable = get_next_variable_substr(line, &i);
 		if (!variable)
-			return ;
+			return (line);
 		variable_name = retrieve_variable_name(variable);
 		if (!variable_name)
 		{
 			free(variable);
-			return ;
+			return (line);
 		}
 		env = getenv(variable_name);
-		substitute_next_string(line, variable, env, &i);
+		if (!env)
+			env = "";
+		line = substitute_next_string(line, variable, env, &i);
 		free(variable);
 		free(variable_name);
 	}
+	return (line);
 }
