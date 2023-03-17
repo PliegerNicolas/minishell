@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/16 08:44:50 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/17 18:25:02 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -126,6 +126,7 @@ void			perror_minishell_arguments(int nbr_args);
 void			perror_environnement_copy(void);
 void			perror_malloc(char *location);
 void			perror_quote(char *location);
+void			perror_bad_substitution(void);
 
 int				ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(char *s, int fd);
@@ -182,5 +183,6 @@ char			**ft_trimsplit(const char **split, const char *set);
 t_bool			is_open_quote(enum e_quote_status quote_status);
 t_bool			whitelist_quote(char c, enum e_quote_status *quote_status);
 t_bool			contains_quote(const char *s);
+int				ft_followed_chars(const char *s, const int c1, const int c2);
 
 #endif

@@ -6,44 +6,73 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/16 08:49:06 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/17 19:29:46 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 /*
-	Returns a malloced string containing the first variable.
-	Examples : "${VAR}" or "$VAR".
+	This function is called by get_next_variable_substr() if
+	a '{' as been detected just after a $.
+	It then returns the length of the variable.
+	Example : "${USER}"; len = 7.
+*/
+int	variable_len_in_braquet(char *line, size_t *i, int len)
+{
+	int	braquets;
+
+	braquets = 0;
+	if (line[*i + len] == '{')
+	{
+		len++;
+		braquets++;
+	}
+	while (line[*i + len] && braquets)
+	{
+		if (line[*i + len] == '{')
+			return (perror_bad_substitution(), -1);
+		else if (line[*i + len] == '}')
+			braquets--;
+		len++;
+	}
+	return (len);
+}
+
+/*
+	This function returns the substr designating the
+	next variable (example : "$USER" or "${USER}").
+	If the line is badly constructed (unclosed '{' or extra '}'),
+	it returns an NULL and an error message.
 	It also moves the cursor (i) around so multiple variables can be read
 	through a while loop.
 */
 static char	*get_next_variable_substr(char *line, size_t *i)
 {
-	char	*variable_substr;
-	int		braquets;
-	int		start;
-	int		len;
+	int	len;
 
 	if (!line || !line[*i])
 		return (NULL);
-	while (line[*i] && line[*i] != '$')
-		(*i)++;
 	if (!line[*i])
-		return (NULL);
-	braquets = 1;
-	start = *i;
+		return (ft_strdup(""));
+	while ((line[*i] && line[*i] != '$') || (line[*i] == '$' && ft_isspace(line[*i + 1])))
+		(*i)++;
+	if (line[*i] && !ft_followed_chars(line + *i, '{', '}'))
+		return (perror_bad_substitution(), NULL);
 	len = 0;
-	while (line[*i + len] && !ft_isspace(line[*i + len]) && braquets != 0)
+	if (line[*i] == '$' && line[*i + 1] && line[*i + 1] == '{')
+		len = variable_len_in_braquet(line, i, ++len);
+	else if (line[*i] == '$')
 	{
-		if (line[*i + len] == '{')
-			braquets++;
-		else if (line[*i + len] == '}')
-			if (--braquets == 1)
-				braquets--;
 		len++;
+		while (line[*i + len] && line[*i + len] != '$' && !ft_isspace(line[*i + len])
+			&& line[*i + len] != '{' && line[*i + len] != '}')
+			len++;
+		if (line[*i + len] == '{' || line[*i + len] == '}')
+			return (perror_bad_substitution(), NULL);
 	}
-	variable_substr = ft_substr(line, start, len);
-	return (variable_substr);
+	if (len < 0)
+		return (NULL);
+	return (ft_substr(line, *i, len));
 }
 
 /*
@@ -59,9 +88,13 @@ static char	*retrieve_variable_name(char *variable_substr)
 
 	if (!variable_substr)
 		return (NULL);
+	else if (ft_strncmp(variable_substr, "$", 2) == 0)
+		return (ft_strdup("$"));
 	braquets = 1;
-	i = 1;
-	if (variable_substr[i] == '{')
+	i = 0;
+	if (variable_substr[i] && variable_substr[i] == '$')
+		i++;
+	if (variable_substr[i] && variable_substr[i] == '{')
 	{
 		braquets = 3;
 		i++;
@@ -122,13 +155,13 @@ char	*substitute_variables(char *line)
 	{
 		variable = get_next_variable_substr(line, &i);
 		if (!variable)
-			return (line);
+			return (free(line), NULL);
 		variable_name = retrieve_variable_name(variable);
 		if (!variable_name)
-			return (free(variable), line);
+			return (line);
 		env = getenv(variable_name);
 		if (!env)
-			env = "";
+			env = variable_name;
 		line = substitute_next_string(line, variable, env, &i);
 		free(variable);
 		free(variable_name);

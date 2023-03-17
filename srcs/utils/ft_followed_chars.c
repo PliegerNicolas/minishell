@@ -1,27 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_user_input.c                                 :+:      :+:    :+:   */
+/*   ft_followed_chars.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/14 23:54:01 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/17 14:40:43 by nicolas          ###   ########.fr       */
+/*   Created: 2023/03/17 18:19:19 by nicolas           #+#    #+#             */
+/*   Updated: 2023/03/17 18:38:48 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_commands	*parse_user_input(char *line)
+int	ft_followed_chars(const char *s, const int c1, const int c2)
 {
-	t_commands	*commands;
+	int	c1_found;
 
-	if (!line)
-		return (NULL);
-	line = substitute_variables(line);
-	if (!line)
-		return (free(line), NULL);
-	if (line) // temp
-		ft_putendl_fd(line, STDOUT); // temp
-	commands = generate_commands(line);
-	return (free(line), commands);
+	if (!s || !c1 || !c2)
+		return (0);
+	c1_found = 0;
+	while (*s)
+	{
+		if (c1_found && *s == (unsigned char)c1)
+			return (0);
+		else if (*s == (unsigned char)c1)
+			c1_found = 1;
+		else if (*s == (unsigned char)c2 && c1_found)
+			return (1);
+		s++;
+	}
+	if (c1_found)
+		return (0);
+	return (1);
 }

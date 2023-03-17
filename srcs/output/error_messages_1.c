@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 11:30:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/14 02:19:21 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/17 14:58:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -51,5 +51,12 @@ void	perror_quote(char *location)
 	ft_putstr_fd("See : ", STDERR);
 	ft_putstr_fd(location, STDERR);
 	ft_putendl_fd(".", STDERR);
+	reset_write_color(STDERR);
+}
+
+void	perror_bad_substitution(void)
+{
+	set_write_color(RED, STDERR);
+	ft_putendl_fd("Bad substitution. ＼(;ﾟ∇ﾟ)/", STDERR);
 	reset_write_color(STDERR);
 }
