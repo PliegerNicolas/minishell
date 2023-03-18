@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/18 03:27:58 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/18 03:33:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -67,7 +67,7 @@ t_bool	scan_line(char *line, size_t *i)
 	while (line[*i] && line[*i + 1] && line[*i - 1] != '$')
 		(*i)++;
 	if (line[*i] == ' ' || line[*i] == '$'
-		|| (line[*i] == '?' && line[*i + 1] == ' '))
+		|| (line[*i] == '?' && (line[*i + 1] == ' ' || !line[*i + 1])))
 		return ((*i)++, TRUE);
 	return ((*i)--, FALSE);
 }
