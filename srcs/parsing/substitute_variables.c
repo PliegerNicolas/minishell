@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/18 03:33:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/18 13:39:25 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -64,12 +64,20 @@ char	*substitute_line(char *line, const char *substr,
 
 t_bool	scan_line(char *line, size_t *i)
 {
-	while (line[*i] && line[*i + 1] && line[*i - 1] != '$')
-		(*i)++;
-	if (line[*i] == ' ' || line[*i] == '$'
-		|| (line[*i] == '?' && (line[*i + 1] == ' ' || !line[*i + 1])))
-		return ((*i)++, TRUE);
-	return ((*i)--, FALSE);
+	while (line[*i] && line[*i + 1])
+	{
+		if (line[*i] != '$')
+			(*i)++;
+		else if (line[*i + 1] && line[*i + 1] == '$')
+			(*i)++;
+		else if (line[*i + 1] && ft_isspace(line[*i]))
+			(*i)++;
+		else if (line[*i + 1] && line[*i + 1] == '?')
+			(*i)++;
+		else
+			return (FALSE);
+	}
+	return (TRUE);
 }
 
 char	*set_env_variable(char *variable_name)
@@ -92,12 +100,13 @@ char	*substitute_variables(char *line)
 
 	if (!line || !*line || !ft_strchr(line, '$'))
 		return (line);
-	i = 1;
+	i = 0;
 	variable_name = NULL;
 	while (line[i] && line[i + 1])
 	{
-		if (line[i - 1] != *line && !ft_strchr(line + i, '$'))
+		if (!ft_strchr(line + i, '$'))
 			return (line);
+		scan_line(line, &i);
 		if (scan_line(line, &i))
 			continue ;
 		placeholder = get_variable_placeholder(line, &i, &variable_name);
