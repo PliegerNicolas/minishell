@@ -6,10 +6,12 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/16 08:38:14 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/18 20:06:47 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
+
+enum e_status	g_status = success;
 
 /*
 	- setup_signals() changes how the program should manage certain kind of
@@ -50,12 +52,10 @@ static void	prompt(char **envp)
 {
 	char			*line;
 	char			*prompt_msg;
-	enum e_status	status;
 
-	status = success;
 	while (1)
 	{
-		prompt_msg = prompt_prefix(status);
+		prompt_msg = prompt_prefix();
 		if (!prompt_msg)
 		{
 			perror_malloc("@prompt_msg (srcs/minishell.c #prompt)");
@@ -66,7 +66,7 @@ static void	prompt(char **envp)
 		if (!line)
 			break ;
 		add_history(line);
-		status = exec(envp, line);
+		g_status = exec(envp, line);
 	}
 }
 

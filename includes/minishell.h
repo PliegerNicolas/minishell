@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/17 18:25:02 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/18 20:12:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -30,8 +30,14 @@
 
 enum e_status
 {
-	success = 1,
-	failure = 2
+	success = 0,
+	general_failure = 1,
+	misuse_of_shell_builtins = 2,
+	command_invoked_cannot_execute = 126,
+	command_not_found = 127,
+	invalid_argument_to_exit = 128,
+	termination_by_ctrl_c = 130,
+	exit_status_out_of_range = 255
 };
 
 enum e_quote_status
@@ -45,7 +51,7 @@ enum e_quote_status
 /* * TYPEDEFS							* */
 /* ************************************** */
 
-typedef int		t_bool;
+typedef int				t_bool;
 
 typedef struct s_lexer
 {
@@ -66,6 +72,8 @@ typedef struct s_commands
 /* ************************************** */
 /* * GLOBAL VAR							* */
 /* ************************************** */
+
+extern enum e_status	g_status;
 
 /* ************************************** */
 /* * MACRO								* */
@@ -120,7 +128,7 @@ void			free_envp(char **envp);
 
 /* ouput */
 
-char			*prompt_prefix(enum e_status status);
+char			*prompt_prefix(void);
 
 void			perror_minishell_arguments(int nbr_args);
 void			perror_environnement_copy(void);
@@ -172,6 +180,7 @@ int				ft_strncmp(const char *s1, const char *s2, size_t n);
 int				ft_isspace(int c);
 char			*ft_strnstr(const char *big, const char *little, size_t len);
 void			*ft_memcpy(void *dest, const void *src, size_t n);
+char			*ft_itoa(int n);
 
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);

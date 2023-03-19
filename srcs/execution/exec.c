@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/16 08:47:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/18 20:07:44 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,10 +16,10 @@ enum e_status	exec(char **envp, char *line)
 	t_commands	*commands;
 
 	if (!line || !envp)
-		return (free(line), failure);
+		return (free(line), general_failure);
 	commands = parse_user_input(line);
 	if (!commands)
-		return (failure);
+		return (general_failure);
 	// execute commands
 	return (free_commands(commands), success);
 }

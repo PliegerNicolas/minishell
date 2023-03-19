@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/18 13:39:25 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/19 12:41:19 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -28,7 +28,7 @@ char	*get_variable_placeholder(char *line, size_t *i, char **variable_name)
 		while (line[*i + len] && line[*i + len] != '}')
 			len++;
 	else
-		while (line[*i + len] && !ft_isspace(line[*i + len]))
+		while (line[*i + len] && !ft_isspace(line[*i + len]) && line[*i + len] != '$')
 			len++;
 	len++;
 	*variable_name = ft_substr(line, *i + brackets + 1, len - brackets - 2);
@@ -66,13 +66,11 @@ t_bool	scan_line(char *line, size_t *i)
 {
 	while (line[*i] && line[*i + 1])
 	{
-		if (line[*i] != '$')
+		if (line[*i] != '$' || (line[*i] == '$' && ft_isspace(line[*i + 1])))
 			(*i)++;
 		else if (line[*i + 1] && line[*i + 1] == '$')
 			(*i)++;
 		else if (line[*i + 1] && ft_isspace(line[*i]))
-			(*i)++;
-		else if (line[*i + 1] && line[*i + 1] == '?')
 			(*i)++;
 		else
 			return (FALSE);
@@ -83,12 +81,21 @@ t_bool	scan_line(char *line, size_t *i)
 char	*set_env_variable(char *variable_name)
 {
 	char	*env;
+	char	*temp_env;
 
 	if (!variable_name)
 		return (NULL);
-	env = getenv(variable_name);
+	if (ft_strncmp(variable_name, "?", 2) == 0)
+		env = ft_itoa(g_status);
+	else
+	{
+		temp_env = getenv(variable_name);
+		if (!temp_env)
+			temp_env = "";
+		env = ft_strdup(temp_env);
+	}
 	if (!env)
-		env = "";
+		return (free(variable_name), NULL);
 	return (free(variable_name), env);
 }
 
@@ -96,6 +103,7 @@ char	*substitute_variables(char *line)
 {
 	char	*placeholder;
 	char	*variable_name;
+	char	*env;
 	size_t	i;
 
 	if (!line || !*line || !ft_strchr(line, '$'))
@@ -112,11 +120,21 @@ char	*substitute_variables(char *line)
 		placeholder = get_variable_placeholder(line, &i, &variable_name);
 		if (!placeholder)
 			return (NULL);
-		line = substitute_line(line, placeholder,
-				set_env_variable(variable_name), &i);
+		env = set_env_variable(variable_name);
+		if (!env)
+			return (NULL);
+		line = substitute_line(line, placeholder, env, &i);
+		free(env);
 		free(placeholder);
 		if (!line)
 			return (NULL);
 	}
 	return (line);
 }
+
+/*
+char	*substitute_variables(char *line, size_t i)
+{
+	
+}
+*/

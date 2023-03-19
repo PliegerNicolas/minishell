@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 16:30:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/18 20:06:19 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -76,7 +76,7 @@ static char	*compose_prompt_prefix(char *dir_name)
 	This function creates the "prompt_prefix". A small and colored message to
 	indicate when prompt is open.
 */
-char	*prompt_prefix(const enum e_status status)
+char	*prompt_prefix(void)
 {
 	char	*cwd;
 
@@ -87,7 +87,7 @@ char	*prompt_prefix(const enum e_status status)
 	cwd = parse_prompt_prefix(cwd);
 	if (!cwd)
 		return (NULL);
-	if (status == success)
+	if (g_status == success)
 		ft_putstr_fd(GREEN, STDOUT);
 	else
 		ft_putstr_fd(RED, STDOUT);
