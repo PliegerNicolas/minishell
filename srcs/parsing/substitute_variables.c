@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/19 13:06:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/19 13:19:20 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -34,7 +34,8 @@ char	*get_variable_placeholder(char *line, size_t *i, char **variable_name)
 	len++;
 	*variable_name = ft_substr(line, *i + brackets + 1, len - brackets - 2);
 	if (!*variable_name)
-		return (NULL);
+		return (perror_malloc("@variable_name \
+(srcs/parsing/substitute_variables.c #substitute_variables)"), NULL);
 	return (ft_substr(line, *i, len - !brackets));
 }
 
@@ -55,7 +56,11 @@ char	*set_env_variable(char *variable_name)
 		env = ft_strdup(temp_env);
 	}
 	if (!env)
+	{
+		perror_malloc("@env (srcs/parsing/substitute_variables.c \
+#set_env_variable)");
 		return (free(variable_name), NULL);
+	}
 	return (free(variable_name), env);
 }
 
@@ -74,7 +79,11 @@ char	*substitute_line(char *line, const char *substr,
 	lens[2] = ft_strlen(replacement);
 	new_line = malloc((lens[0] + lens[2] - lens[1] + 1) * sizeof(*new_line));
 	if (!new_line)
+	{
+		perror_malloc("@new_line (srcs/parsing/substitute_variables.c \
+#substitute_line)");
 		return (free(line), NULL);
+	}
 	ft_memcpy(new_line, line, pos - line);
 	ft_memcpy(new_line + (pos - line), replacement, lens[2]);
 	ft_memcpy(new_line + (pos - line) + lens[2], pos + lens[1],
@@ -116,14 +125,15 @@ char	*substitute_variables(char *line, size_t i)
 		return (free(line), NULL);
 	var = set_env_variable(variable_name);
 	if (!var)
-	{
-		free(variable_placeholder);
-		return (free(line), NULL);
-	}
+		return (free(variable_placeholder), free(line), NULL);
 	line = substitute_line(line, variable_placeholder, var, &i);
 	free(variable_placeholder);
 	free(var);
 	if (!line)
+	{
+		perror_malloc("@line (srcs/parsing/substitute_variables.c \
+#substitute_variables)");
 		return (free(line), NULL);
+	}
 	return (substitute_variables(line, i));
 }
