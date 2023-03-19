@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/19 12:41:19 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/19 13:06:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -28,13 +28,35 @@ char	*get_variable_placeholder(char *line, size_t *i, char **variable_name)
 		while (line[*i + len] && line[*i + len] != '}')
 			len++;
 	else
-		while (line[*i + len] && !ft_isspace(line[*i + len]) && line[*i + len] != '$')
+		while (line[*i + len] && !ft_isspace(line[*i + len])
+			&& line[*i + len] != '$')
 			len++;
 	len++;
 	*variable_name = ft_substr(line, *i + brackets + 1, len - brackets - 2);
 	if (!*variable_name)
 		return (NULL);
 	return (ft_substr(line, *i, len - !brackets));
+}
+
+char	*set_env_variable(char *variable_name)
+{
+	char	*env;
+	char	*temp_env;
+
+	if (!variable_name)
+		return (NULL);
+	if (ft_strncmp(variable_name, "?", 2) == 0)
+		env = ft_itoa(g_status);
+	else
+	{
+		temp_env = getenv(variable_name);
+		if (!temp_env)
+			temp_env = "";
+		env = ft_strdup(temp_env);
+	}
+	if (!env)
+		return (free(variable_name), NULL);
+	return (free(variable_name), env);
 }
 
 char	*substitute_line(char *line, const char *substr,
@@ -78,63 +100,30 @@ t_bool	scan_line(char *line, size_t *i)
 	return (TRUE);
 }
 
-char	*set_env_variable(char *variable_name)
-{
-	char	*env;
-	char	*temp_env;
-
-	if (!variable_name)
-		return (NULL);
-	if (ft_strncmp(variable_name, "?", 2) == 0)
-		env = ft_itoa(g_status);
-	else
-	{
-		temp_env = getenv(variable_name);
-		if (!temp_env)
-			temp_env = "";
-		env = ft_strdup(temp_env);
-	}
-	if (!env)
-		return (free(variable_name), NULL);
-	return (free(variable_name), env);
-}
-
-char	*substitute_variables(char *line)
-{
-	char	*placeholder;
-	char	*variable_name;
-	char	*env;
-	size_t	i;
-
-	if (!line || !*line || !ft_strchr(line, '$'))
-		return (line);
-	i = 0;
-	variable_name = NULL;
-	while (line[i] && line[i + 1])
-	{
-		if (!ft_strchr(line + i, '$'))
-			return (line);
-		scan_line(line, &i);
-		if (scan_line(line, &i))
-			continue ;
-		placeholder = get_variable_placeholder(line, &i, &variable_name);
-		if (!placeholder)
-			return (NULL);
-		env = set_env_variable(variable_name);
-		if (!env)
-			return (NULL);
-		line = substitute_line(line, placeholder, env, &i);
-		free(env);
-		free(placeholder);
-		if (!line)
-			return (NULL);
-	}
-	return (line);
-}
-
-/*
 char	*substitute_variables(char *line, size_t i)
 {
-	
+	char	*variable_placeholder;
+	char	*variable_name;
+	char	*var;
+
+	if (!line || !line[i] || !ft_strchr(line, '$'))
+		return (line);
+	if (scan_line(line, &i))
+		return (line);
+	variable_name = NULL;
+	variable_placeholder = get_variable_placeholder(line, &i, &variable_name);
+	if (!variable_placeholder)
+		return (free(line), NULL);
+	var = set_env_variable(variable_name);
+	if (!var)
+	{
+		free(variable_placeholder);
+		return (free(line), NULL);
+	}
+	line = substitute_line(line, variable_placeholder, var, &i);
+	free(variable_placeholder);
+	free(var);
+	if (!line)
+		return (free(line), NULL);
+	return (substitute_variables(line, i));
 }
-*/
