@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/19 12:44:30 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/19 13:30:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -60,6 +60,7 @@ typedef struct s_lexer
 	char				**args;
 	struct s_lexer		*previous;
 	struct s_lexer		*next;
+	int					pipefds[2];
 }	t_lexer;
 
 typedef struct s_commands

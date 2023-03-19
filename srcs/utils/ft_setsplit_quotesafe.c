@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 00:52:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/19 13:31:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -87,7 +87,8 @@ static size_t	ft_sections(const char *s, const char *set)
 			count++;
 	}
 	if (quote_status != none)
-		return (perror_quote("@quote_status (srcs/lexical_analysis/split_by_set_quote_safe.c #ft_sections)"), 0);
+		return (perror_quote("@quote_status \
+(srcs/lexical_analysis/split_by_set_quote_safe.c #ft_sections)"), 0);
 	return (count);
 }
 
