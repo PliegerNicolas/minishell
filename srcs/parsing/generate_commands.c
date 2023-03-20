@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 23:30:48 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/20 14:30:20 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/20 14:54:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -29,11 +29,13 @@ static t_commands	*new_command(char *cmd)
 	{
 		perror_malloc("@command->cmd \
 (srcs/parsing/generate_commands.c #new_command");
-		free(command);
+		free_commands(command);
 		return (NULL);
 	}
-	command->lexer = NULL; // temp
 	command->next = NULL;
+	command->lexer = NULL; // temp
+	if (!command->lexer)
+		return (free_commands(command), NULL);
 	return (command);
 }
 
