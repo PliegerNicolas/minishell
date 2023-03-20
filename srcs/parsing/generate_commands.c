@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 23:30:48 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/20 14:54:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/20 15:01:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,21 +19,16 @@ static t_commands	*new_command(char *cmd)
 		return (NULL);
 	command = malloc(sizeof(*command));
 	if (!command)
-	{
-		perror_malloc("@command \
-(srcs/parsing/generate_commands.c #new_command");
-		return (NULL);
-	}
+		return (perror_malloc("@command (srcs/parsing/generate_commands.c #new_command"), NULL);
+	command->lexer = NULL;
+	command->next = NULL;
 	command->cmd = ft_strtrim(cmd, " ");
 	if (!command->cmd)
 	{
-		perror_malloc("@command->cmd \
-(srcs/parsing/generate_commands.c #new_command");
-		free_commands(command);
-		return (NULL);
+		perror_malloc("@command->cmd (srcs/parsing/generate_commands.c #new_command");
+		return (free_commands(command), NULL);
 	}
-	command->next = NULL;
-	command->lexer = NULL; // temp
+	command->lexer = NULL;
 	if (!command->lexer)
 		return (free_commands(command), NULL);
 	return (command);
