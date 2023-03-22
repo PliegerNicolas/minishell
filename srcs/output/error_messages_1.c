@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 11:30:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/22 17:43:18 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/22 17:48:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -58,4 +58,3 @@ void	perror_quote(void)
 	ft_putendl_fd("Open quote.", STDERR);
 	reset_write_color(STDERR);
 }
-

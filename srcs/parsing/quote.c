@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:17:40 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/22 17:28:45 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/22 17:47:24 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -37,6 +37,11 @@ t_bool	set_quotestatus(char c, enum e_quote_status *quote_status)
 	return (TRUE);
 }
 
+/*
+	This function reads through a string and verifies if every
+	quote is closed correctly.
+	It returns TRUE if there is an error. Else FALSE.
+*/
 t_bool	quote_error(char *s, enum e_quote_status quote_status)
 {
 	int		i;
@@ -50,21 +55,3 @@ t_bool	quote_error(char *s, enum e_quote_status quote_status)
 		return (TRUE);
 	return (FALSE);
 }
-
-/*
-int	main(void)
-{
-	char	*line;
-	enum e_quote_status	quote_status;
-	
-	line = "a\"\'s\"\'\'dg";
-	quote_status = none;
-	printf("%s\n", line);
-	while (*line)
-	{
-		printf("%d", set_quotestatus(*line, &quote_status));
-		line++;
-	}
-	return (0);
-}
-*/
