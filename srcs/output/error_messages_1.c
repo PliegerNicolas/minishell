@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 11:30:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/17 14:58:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/22 17:43:18 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -43,20 +43,19 @@ void	perror_malloc(char *location)
 	reset_write_color(STDERR);
 }
 
-void	perror_quote(char *location)
-{
-	set_write_color(RED, STDERR);
-	ft_putendl_fd("Error ... (ﾉ･д･)ﾉ", STDERR);
-	ft_putendl_fd("An unclose quote has been detected.", STDERR);
-	ft_putstr_fd("See : ", STDERR);
-	ft_putstr_fd(location, STDERR);
-	ft_putendl_fd(".", STDERR);
-	reset_write_color(STDERR);
-}
-
 void	perror_bad_substitution(void)
 {
 	set_write_color(RED, STDERR);
-	ft_putendl_fd("Bad substitution. ＼(;ﾟ∇ﾟ)/", STDERR);
+	ft_putendl_fd("Error ... ＼(;ﾟ∇ﾟ)/", STDERR);
+	ft_putendl_fd("Bad substitution.", STDERR);
 	reset_write_color(STDERR);
 }
+
+void	perror_quote(void)
+{
+	set_write_color(RED, STDERR);
+	ft_putendl_fd("Error ... ಠ‿ಠ", STDERR);
+	ft_putendl_fd("Open quote.", STDERR);
+	reset_write_color(STDERR);
+}
+

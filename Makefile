@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/18 20:11:32 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/22 17:44:15 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,8 +40,10 @@ SRCS				:=		minishell \
 							signals/echoctl_handlers \
 							execution/exec \
 							parsing/parse_user_input \
-							parsing/substitute_variables \
+							parsing/substitute_variables_1 \
+							parsing/substitute_variables_2 \
 							parsing/generate_commands \
+							parsing/quote \
 							parsing/free_commands \
 							utils/ft_strchr \
 							utils/ft_substr \
@@ -57,8 +59,6 @@ SRCS				:=		minishell \
 							utils/ft_isspace \
 							utils/ft_strlcat \
 							utils/ft_setsplit \
-							utils/ft_setsplit_quotesafe \
-							utils/ft_quotes_closure \
 							utils/ft_trimsplit \
 							utils/ft_strnstr \
 							utils/ft_memcpy \

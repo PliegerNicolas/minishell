@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/19 13:30:21 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/22 17:44:42 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -134,8 +134,8 @@ char			*prompt_prefix(void);
 void			perror_minishell_arguments(int nbr_args);
 void			perror_environnement_copy(void);
 void			perror_malloc(char *location);
-void			perror_quote(char *location);
 void			perror_bad_substitution(void);
+void			perror_quote(void);
 
 int				ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(char *s, int fd);
@@ -159,9 +159,13 @@ enum e_status	exec(char **envp, char *line);
 /* parsing */
 
 t_commands		*parse_user_input(char *line);
-//char			*substitute_variables(char *line);
-char			*substitute_variables(char *line, size_t i);
+char			*substitute_line_content(char *line, size_t i, enum e_quote_status quote_status);
+char			**set_variable_landmarks(char *line, size_t i, size_t len, t_bool brackets);
+
 t_commands		*generate_commands(const char *line);
+
+t_bool			set_quotestatus(char c, enum e_quote_status *quote_status);
+t_bool			quote_error(char *s, enum e_quote_status quote_status);
 
 void			free_commands(t_commands *commands);
 void			free_lexer(t_lexer *lexer);
@@ -187,7 +191,6 @@ char			*ft_itoa(int n);
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
 
-char			**ft_setsplit_quotesafe(const char *line, const char *set);
 char			**ft_setsplit(const char *line, const char *set);
 char			**ft_trimsplit(const char **split, const char *set);
 

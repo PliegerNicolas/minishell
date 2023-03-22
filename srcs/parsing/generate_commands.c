@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 23:30:48 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/20 15:01:49 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/22 17:45:02 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -64,7 +64,7 @@ t_commands	*generate_commands(const char *line)
 
 	if (!line || !*line)
 		return (NULL);
-	splitted_line = ft_setsplit_quotesafe(line, ";");
+	splitted_line = ft_setsplit(line, ";");
 	if (!splitted_line)
 	{
 		perror_malloc("@splitted_line \
