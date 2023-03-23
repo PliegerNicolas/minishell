@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:17:40 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/23 14:17:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/23 14:48:39 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,11 +19,12 @@
 t_bool	set_quotestatus(char *s, enum e_quote_status *quote_status)
 {
 	enum e_quote_status	mem_quote;
+	static t_bool		found_backslash;
 
-	if (*s == '\\')
-		return (TRUE);
-	if (*(s - 1) == '\\')
-		return (FALSE);
+	if (!found_backslash && *(s + 1) && *s == '\\')
+		return (found_backslash = TRUE, TRUE);
+	else if (found_backslash && *s)
+		return (found_backslash = FALSE, FALSE);
 	mem_quote = *quote_status;
 	if (*quote_status == none)
 	{
