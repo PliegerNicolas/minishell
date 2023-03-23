@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/22 22:56:26 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/23 14:15:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,7 +16,7 @@ static t_bool	scan_line(char *line, size_t *i,
 {
 	while (line[*i] && line[*i + 1])
 	{
-		if (set_quotestatus(line[*i], quote_status))
+		if (set_quotestatus(line + *i, quote_status))
 			(*i)++;
 		else if (*quote_status == single_quote)
 			(*i)++;
@@ -93,7 +93,7 @@ char	*remove_quotes(char *line, enum e_quote_status quote_status)
 	i = 0;
 	len = 0;
 	while (line[i])
-		if (!set_quotestatus(line[i++], &quote_status))
+		if (!set_quotestatus(line + i++, &quote_status))
 			len++;
 	new_line = malloc((len + 1) * sizeof(*new_line));
 	if (!new_line)
@@ -103,7 +103,7 @@ ariables.c #remove_quotes)"), NULL);
 	len = 0;
 	while (line[i])
 	{
-		if (!set_quotestatus(line[i], &quote_status))
+		if (!set_quotestatus(line + i, &quote_status))
 			new_line[len++] = line[i];
 		i++;
 	}

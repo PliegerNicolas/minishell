@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:17:40 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/22 17:47:24 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/23 14:17:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,21 +16,25 @@
 	If *quote_status has been modified (a.k.a a hidden quote has been found),
 	it returns TRUE. Else FALSE.
 */
-t_bool	set_quotestatus(char c, enum e_quote_status *quote_status)
+t_bool	set_quotestatus(char *s, enum e_quote_status *quote_status)
 {
 	enum e_quote_status	mem_quote;
 
+	if (*s == '\\')
+		return (TRUE);
+	if (*(s - 1) == '\\')
+		return (FALSE);
 	mem_quote = *quote_status;
 	if (*quote_status == none)
 	{
-		if (c == '\'')
+		if (*s == '\'')
 			*quote_status = single_quote;
-		else if (c == '\"')
+		else if (*s == '\"')
 			*quote_status = double_quote;
 	}
-	else if (*quote_status == single_quote && c == '\'')
+	else if (*quote_status == single_quote && *s == '\'')
 		*quote_status = none;
-	else if (*quote_status == double_quote && c == '\"')
+	else if (*quote_status == double_quote && *s == '\"')
 		*quote_status = none;
 	if (mem_quote == *quote_status)
 		return (FALSE);
@@ -50,7 +54,7 @@ t_bool	quote_error(char *s, enum e_quote_status quote_status)
 		return (FALSE);
 	i = 0;
 	while (s[i])
-		set_quotestatus(s[i++], &quote_status);
+		set_quotestatus(s + i++, &quote_status);
 	if (quote_status != none)
 		return (TRUE);
 	return (FALSE);

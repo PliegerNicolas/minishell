@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 13:24:12 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/22 18:05:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/23 14:19:55 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -70,6 +70,8 @@ size_t	get_placeholder_len(char *line, size_t i, t_bool brackets)
 		while (line[i + len])
 		{
 			if (len && line[i + len] == '$')
+				break ;
+			else if (len && line[i + len] == '\\')
 				break ;
 			else if (ft_isspace(line[i + len]))
 				break ;
