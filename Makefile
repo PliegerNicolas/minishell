@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/22 17:44:15 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/23 16:23:33 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,8 @@ SRCS				:=		minishell \
 							parsing/substitute_variables_1 \
 							parsing/substitute_variables_2 \
 							parsing/generate_commands \
+							parsing/generate_lexer_1 \
+							parsing/generate_lexer_2 \
 							parsing/quote \
 							parsing/free_commands \
 							utils/ft_strchr \

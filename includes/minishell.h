@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/23 14:14:11 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/23 18:31:12 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -136,6 +136,7 @@ void			perror_environnement_copy(void);
 void			perror_malloc(char *location);
 void			perror_bad_substitution(void);
 void			perror_quote(void);
+void			perror_command_not_found(void);
 
 int				ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(char *s, int fd);
@@ -160,6 +161,11 @@ enum e_status	exec(char **envp, char *line);
 
 t_commands		*parse_user_input(char *line);
 t_commands		*generate_commands(const char *line);
+t_lexer			*generate_lexer(const char *cmd);
+
+char			*retrieve_exec(char *cmd, size_t *i);
+char			*retrieve_options(char *cmd, size_t *i);
+char			**retrieve_args(char *cmd, size_t *i);
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);

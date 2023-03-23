@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 23:58:54 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/20 14:54:09 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/23 19:15:26 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -36,19 +36,22 @@ void	free_str_arr(char **arr)
 */
 void	free_lexer(t_lexer *lexer)
 {
+	t_lexer	*temp;
+
 	if (!lexer)
 		return ;
 	while (lexer)
 	{
-		if (lexer->exec)
-			free(lexer->exec);
-		if (lexer->options)
-			free(lexer->options);
-		if (lexer->args)
-			free_str_arr(lexer->args);
+		temp = lexer;
 		lexer = lexer->next;
+		if (temp->exec)
+			free(temp->exec);
+		if (temp->options)
+			free(temp->options);
+		if (temp->args)
+			free_str_arr(temp->args);
+		free(temp);
 	}
-	free(lexer);
 }
 
 /*

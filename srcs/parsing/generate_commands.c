@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 23:30:48 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/22 17:45:02 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/23 19:20:16 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,16 +19,18 @@ static t_commands	*new_command(char *cmd)
 		return (NULL);
 	command = malloc(sizeof(*command));
 	if (!command)
-		return (perror_malloc("@command (srcs/parsing/generate_commands.c #new_command"), NULL);
+		return (perror_malloc("@command (srcs/parsing/generate_commands.c #new_\
+command"), NULL);
 	command->lexer = NULL;
 	command->next = NULL;
 	command->cmd = ft_strtrim(cmd, " ");
 	if (!command->cmd)
 	{
-		perror_malloc("@command->cmd (srcs/parsing/generate_commands.c #new_command");
+		perror_malloc("@command->cmd (srcs/parsing/generate_commands.c #new_com\
+mand");
 		return (free_commands(command), NULL);
 	}
-	command->lexer = NULL;
+	command->lexer = generate_lexer(command->cmd);
 	if (!command->lexer)
 		return (free_commands(command), NULL);
 	return (command);
@@ -66,11 +68,8 @@ t_commands	*generate_commands(const char *line)
 		return (NULL);
 	splitted_line = ft_setsplit(line, ";");
 	if (!splitted_line)
-	{
-		perror_malloc("@splitted_line \
-(srcs/parsing/generate_commands.c #generate_commands)");
-		return (NULL);
-	}
+		return (perror_malloc("@splitted_line (srcs/parsing/generate_commands.c\
+#generate_commands)"), NULL);
 	i = 0;
 	commands = NULL;
 	while (splitted_line[i])
