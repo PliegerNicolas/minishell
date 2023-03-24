@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   generate_lexer_1.c                                 :+:      :+:    :+:   */
+/*   generate_lexer.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/23 19:20:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/24 13:26:13 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -14,22 +14,18 @@
 static t_lexer	*new_lexer(char *cmd)
 {
 	t_lexer	*lexer;
-	size_t	i;
 
 	if (!cmd)
 		return (NULL);
 	lexer = ft_calloc(1, sizeof(*lexer));
 	if (!lexer)
-		return (perror_malloc("@lexer (srcs/parsing/generate_lexer.c #new_lexer\
-)"), NULL);
-	i = 0;
-	lexer->pipefds[0] = STDIN; // ?
-	lexer->pipefds[1] = STDOUT; // ?
-	lexer->exec = retrieve_exec(cmd + i, &i);
-	if (!lexer->exec)
-		return (free_lexer(lexer), NULL);
-	lexer->options = retrieve_options(cmd + i, &i);
-	lexer->args = retrieve_args(cmd + i, &i);
+	{
+		perror_malloc("@lexer (srcs/parsing/generate_lexer.c #new_lexer)");
+		return (NULL);
+	}
+	lexer = populate_lexer(lexer, cmd, 0);
+	if (!lexer)
+		return (NULL);
 	return (lexer);
 }
 

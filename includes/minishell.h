@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/23 18:31:12 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/24 13:42:10 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -162,10 +162,7 @@ enum e_status	exec(char **envp, char *line);
 t_commands		*parse_user_input(char *line);
 t_commands		*generate_commands(const char *line);
 t_lexer			*generate_lexer(const char *cmd);
-
-char			*retrieve_exec(char *cmd, size_t *i);
-char			*retrieve_options(char *cmd, size_t *i);
-char			**retrieve_args(char *cmd, size_t *i);
+t_lexer			*populate_lexer(t_lexer *lexer, const char *cmd, size_t i);
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);
@@ -203,9 +200,7 @@ void			*ft_calloc(size_t count, size_t size);
 char			**ft_setsplit(const char *line, const char *set);
 char			**ft_trimsplit(const char **split, const char *set);
 
-t_bool			is_open_quote(enum e_quote_status quote_status);
-t_bool			whitelist_quote(char c, enum e_quote_status *quote_status);
-t_bool			contains_quote(const char *s);
 int				ft_followed_chars(const char *s, const int c1, const int c2);
+int				ft_isnextcharset(const char *s, const char *set);
 
 #endif

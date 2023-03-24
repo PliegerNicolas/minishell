@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/23 16:23:33 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/24 13:41:40 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,8 +43,8 @@ SRCS				:=		minishell \
 							parsing/substitute_variables_1 \
 							parsing/substitute_variables_2 \
 							parsing/generate_commands \
-							parsing/generate_lexer_1 \
-							parsing/generate_lexer_2 \
+							parsing/generate_lexer \
+							parsing/populate_lexer \
 							parsing/quote \
 							parsing/free_commands \
 							utils/ft_strchr \
@@ -66,6 +66,7 @@ SRCS				:=		minishell \
 							utils/ft_memcpy \
 							utils/ft_itoa \
 							utils/ft_followed_chars \
+							utils/ft_isnextcharset \
 
 DEPS				:=		minishell \
 
