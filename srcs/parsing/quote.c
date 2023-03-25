@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:17:40 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/23 14:48:39 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/25 19:40:58 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -59,4 +59,34 @@ t_bool	quote_error(char *s, enum e_quote_status quote_status)
 	if (quote_status != none)
 		return (TRUE);
 	return (FALSE);
+}
+
+/*
+	A simple function that removes quotes from a given string.
+*/
+char	*remove_quotes(char *line, enum e_quote_status quote_status)
+{
+	char				*new_line;
+	size_t				i;
+	size_t				len;
+
+	i = 0;
+	len = 0;
+	while (line[i])
+		if (!set_quotestatus(line + i++, &quote_status))
+			len++;
+	new_line = malloc((len + 1) * sizeof(*new_line));
+	if (!new_line)
+		return (free(line), perror_malloc("@new_line (srcs/parsing/substitute_v\
+ariables.c #remove_quotes)"), NULL);
+	i = 0;
+	len = 0;
+	while (line[i])
+	{
+		if (!set_quotestatus(line + i, &quote_status))
+			new_line[len++] = line[i];
+		i++;
+	}
+	new_line[len] = '\0';
+	return (free(line), new_line);
 }

@@ -6,11 +6,20 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 13:11:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/24 14:39:46 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/25 19:48:05 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd, size_t i)
+{
+	if (!lexer)
+		return (NULL);
+	printf("%s\n", cmd);
+	(void)i;
+	return (lexer);
+}
+/*
 static char	*get_exec(const char *cmd, size_t *i)
 {
 	char	*exec;
@@ -39,7 +48,7 @@ static char	*malloc_options_str(const char *cmd, size_t *i)
 	size_t	j;
 	size_t	len;
 
-	if (!cmd || !cmd[*i])
+	if (!cmd)
 		return (NULL);
 	j = 0;
 	len = 0;
@@ -94,15 +103,17 @@ static t_bool	get_arguments(const char *cmd, size_t *i, char ***args)
 		return (FALSE);
 	else if (args && *args)
 		return (free_str_arr(*args), TRUE);
-	split = ft_setsplit(cmd + *i, WHITE_SPACES);
+	if ((cmd + *i) && !*(cmd + *i))
+		return (*args = NULL, FALSE);
+	split = ft_setsplit_quotesafe(cmd + *i, WHITE_SPACES, none);
 	if (!split)
 		return (*args = NULL, TRUE);
 	*args = split;
 	return (FALSE);
 }
+*/
 
-t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd, size_t i)
-{
+	/*
 	if (!lexer)
 		return (NULL);
 	if (ft_isnextcharset(cmd, "-"))
@@ -115,4 +126,4 @@ t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd, size_t i)
 	if (get_arguments(cmd, &i, &lexer->args))
 		return (free_lexer(lexer), NULL);
 	return (lexer);
-}
+	*/

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/23 14:15:01 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/25 19:41:25 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -84,40 +84,13 @@ stitute_variables)");
 	return (free(line), new_line);
 }
 
-char	*remove_quotes(char *line, enum e_quote_status quote_status)
-{
-	char				*new_line;
-	size_t				i;
-	size_t				len;
-
-	i = 0;
-	len = 0;
-	while (line[i])
-		if (!set_quotestatus(line + i++, &quote_status))
-			len++;
-	new_line = malloc((len + 1) * sizeof(*new_line));
-	if (!new_line)
-		return (free(line), perror_malloc("@new_line (srcs/parsing/substitute_v\
-ariables.c #remove_quotes)"), NULL);
-	i = 0;
-	len = 0;
-	while (line[i])
-	{
-		if (!set_quotestatus(line + i, &quote_status))
-			new_line[len++] = line[i];
-		i++;
-	}
-	new_line[len] = '\0';
-	return (free(line), new_line);
-}
-
 char	*substitute_line_content(char *line, size_t i,
 	enum e_quote_status quote_status)
 {
 	char	**var_landmarks;
 
 	if (!line || !line[i] || scan_line(line, &i, &quote_status))
-		return (remove_quotes(line, none));
+		return (line);
 	var_landmarks = get_var_landmarks(line, i);
 	if (!var_landmarks)
 		return (free(line), NULL);

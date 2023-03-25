@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 23:30:48 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/23 19:20:16 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/25 19:54:05 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -23,7 +23,7 @@ static t_commands	*new_command(char *cmd)
 command"), NULL);
 	command->lexer = NULL;
 	command->next = NULL;
-	command->cmd = ft_strtrim(cmd, " ");
+	command->cmd = ft_strtrim(cmd, WHITE_SPACES);
 	if (!command->cmd)
 	{
 		perror_malloc("@command->cmd (srcs/parsing/generate_commands.c #new_com\
@@ -66,7 +66,7 @@ t_commands	*generate_commands(const char *line)
 
 	if (!line || !*line)
 		return (NULL);
-	splitted_line = ft_setsplit(line, ";");
+	splitted_line = ft_setsplit_quotesafe(line, ";", none);
 	if (!splitted_line)
 		return (perror_malloc("@splitted_line (srcs/parsing/generate_commands.c\
 #generate_commands)"), NULL);
