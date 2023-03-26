@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/25 19:41:58 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/26 15:13:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -162,7 +162,11 @@ enum e_status	exec(char **envp, char *line);
 t_commands		*parse_user_input(char *line);
 t_commands		*generate_commands(const char *line);
 t_lexer			*generate_lexer(const char *cmd);
-t_lexer			*populate_lexer(t_lexer *lexer, const char *cmd, size_t i);
+
+char			*get_exec(const char *cmd, size_t *i,
+					enum e_quote_status *quote_status);
+t_bool			get_options(const char *cmd, size_t *i, char **options);
+t_bool			get_arguments(const char *cmd, size_t *i, char ***arguments);
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);

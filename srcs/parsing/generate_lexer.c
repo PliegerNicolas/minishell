@@ -6,10 +6,31 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/25 19:54:14 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/26 15:13:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
+
+static t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd, size_t i)
+{
+	enum e_quote_status	quote_status;
+
+	if (!lexer)
+		return (NULL);
+	while (ft_isspace(cmd[i]))
+		i++;
+	if (ft_isnextcharset(cmd + i, "-"))
+		return (perror_command_not_found(), free_lexer(lexer), NULL);
+	quote_status = none;
+	lexer->exec = get_exec(cmd, &i, &quote_status);
+	if (!lexer->exec)
+		return (free_lexer(lexer), NULL);
+	if (get_options(cmd, &i, &lexer->options))
+		return (free_lexer(lexer), NULL);
+	if (get_arguments(cmd, &i, &lexer->args))
+		return (free_lexer(lexer), NULL);
+	return (lexer);
+}
 
 static t_lexer	*new_lexer(char *cmd)
 {
@@ -19,10 +40,8 @@ static t_lexer	*new_lexer(char *cmd)
 		return (NULL);
 	lexer = ft_calloc(1, sizeof(*lexer));
 	if (!lexer)
-	{
-		perror_malloc("@lexer (srcs/parsing/generate_lexer.c #new_lexer)");
-		return (NULL);
-	}
+		return (perror_malloc("@lexer (srcs/parsing/generate_lexer.c #new_lexer\
+)"), NULL);
 	lexer = populate_lexer(lexer, cmd, 0);
 	if (!lexer)
 		return (NULL);
