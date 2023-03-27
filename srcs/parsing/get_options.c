@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 19:46:27 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 01:00:01 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 01:48:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -39,13 +39,10 @@ static char	*add_to_existing_options(char *options, char *added_options)
 	{
 		new_options = ft_strjoin(options, added_options);
 		free(added_options);
+		free(options);
 		if (!new_options)
-		{
-			perror_malloc("@new_options (srcs/parsing/get_options.c #get_option\
-s)");
-			free(options);
-			return (NULL);
-		}
+			return (perror_malloc("@new_options (srcs/parsing/get_options.c #ge\
+t_options)"), NULL);
 	}
 	return (new_options);
 }

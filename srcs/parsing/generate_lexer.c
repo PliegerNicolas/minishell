@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 01:01:14 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 01:37:16 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -31,10 +31,8 @@ static t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 		&& split[i][1] && ft_isnextcharset(split[i] + 1, "-"))))
 		if (get_options(split[i++], &(lexer->options)))
 			return (free_str_arr(split), free_lexer(lexer), NULL);
-	if (lexer->exec) //temp
-		printf("%s\n", lexer->exec); //temp
-	if (lexer->options) // temp
-		printf("%s\n", lexer->options); //temp
+	if (get_arguments((const char **)(split + i), &(lexer->args)))
+		return (free_str_arr(split), free_lexer(lexer), NULL);
 	return (free_str_arr(split), lexer);
 }
 
