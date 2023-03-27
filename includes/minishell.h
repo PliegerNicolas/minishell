@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/26 15:13:00 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 00:06:02 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -137,6 +137,7 @@ void			perror_malloc(char *location);
 void			perror_bad_substitution(void);
 void			perror_quote(void);
 void			perror_command_not_found(void);
+void			perror_invalid_options(void);
 
 int				ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(char *s, int fd);
@@ -155,7 +156,7 @@ void			reset_echoctl(void);
 
 /* execution */
 
-enum e_status	exec(char **envp, char *line);
+enum e_status	executer(char **envp, char *line);
 
 /* parsing */
 
@@ -163,10 +164,16 @@ t_commands		*parse_user_input(char *line);
 t_commands		*generate_commands(const char *line);
 t_lexer			*generate_lexer(const char *cmd);
 
+char			*get_exec(const char *str);
+t_bool			get_options(const char *cmd, char **options);
+/*
 char			*get_exec(const char *cmd, size_t *i,
 					enum e_quote_status *quote_status);
-t_bool			get_options(const char *cmd, size_t *i, char **options);
-t_bool			get_arguments(const char *cmd, size_t *i, char ***arguments);
+t_bool			get_options(const char *cmd, size_t *i, char **options, 
+					enum e_quote_status *quote_status);
+t_bool			get_arguments(const char *cmd, size_t *i, char ***arguments,
+					enum e_quote_status *quote_status);
+*/
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);

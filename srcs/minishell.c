@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/18 20:06:47 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/27 12:28:46 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -66,7 +66,7 @@ static void	prompt(char **envp)
 		if (!line)
 			break ;
 		add_history(line);
-		g_status = exec(envp, line);
+		g_status = executer(envp, line);
 	}
 }
 

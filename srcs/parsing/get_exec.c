@@ -6,11 +6,30 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 19:46:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/26 15:18:02 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 00:15:23 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+char	*get_exec(const char *str)
+{
+	char	*exec;
+
+	if (!str)
+		return (NULL);
+	if (*str == '-')
+		return (perror_command_not_found(), NULL);
+	exec = ft_strdup(str);
+	if (!exec)
+		return (perror_malloc("@exec (srcs/parsing/get_exec.c #get_exec)"),
+			NULL);
+	exec = remove_quotes(exec, none);
+	if (!exec)
+		return (NULL);
+	return (exec);
+}
+
+/*
 char	*get_exec(const char *cmd, size_t *i,
 	enum e_quote_status *quote_status)
 {
@@ -36,3 +55,4 @@ char	*get_exec(const char *cmd, size_t *i,
 			NULL);
 	return (substr);
 }
+*/

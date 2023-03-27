@@ -6,62 +6,90 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 19:46:27 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/26 15:12:47 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 01:00:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static char	*malloc_options(const char *cmd)
+static char	*get_quoteless_cmd(const char *cmd)
 {
-	char	*options;
-	size_t	i;
-	size_t	len;
+	char	*quoteless_cmd;
 
 	if (!cmd)
 		return (NULL);
-	i = 0;
-	len = 0;
-	while (cmd[i + len] && ft_isnextcharset(cmd + i + len, "-"))
-	{
-		while (cmd[i + len] != '-')
-			i++;
-		if (cmd[i + len])
-			i++;
-		while (cmd[i + len] && !ft_isspace(cmd[i + len]))
-			len++;
-	}
-	options = malloc((len + 1) * sizeof(*options));
-	if (!options)
-		return (perror_malloc("@options (srcs/parsing/get_options.c #malloc_opt\
-ions)"), NULL);
-	return (options);
+	quoteless_cmd = ft_strdup(cmd);
+	if (!quoteless_cmd)
+		return (perror_malloc("@quoteless_cmd (srcs/parsing/get_options.c #get_\
+quoteless_cmd)"), NULL);
+	quoteless_cmd = remove_quotes(quoteless_cmd, none);
+	if (!quoteless_cmd)
+		return (NULL);
+	return (quoteless_cmd);
 }
 
-t_bool	get_options(const char *cmd, size_t *i, char **options)
+static char	*add_to_existing_options(char *options, char *added_options)
 {
-	size_t	len;
+	char	*new_options;
 
-	if (!cmd || !options)
-		return (*options = NULL, FALSE);
-	else if (options && *options)
-		return (free(*options), TRUE);
-	while (cmd[*i] && ft_isspace(cmd[*i]))
-		(*i)++;
-	if (cmd[*i] != '-')
-		return (*options = NULL, FALSE);
-	*options = malloc_options(cmd + *i);
+	if (!added_options)
+		return (options);
+	if (!options)
+		return (added_options);
+	else
+	{
+		new_options = ft_strjoin(options, added_options);
+		free(added_options);
+		if (!new_options)
+		{
+			perror_malloc("@new_options (srcs/parsing/get_options.c #get_option\
+s)");
+			free(options);
+			return (NULL);
+		}
+	}
+	return (new_options);
+}
+
+static int	get_options_len(const char *quoteless_cmd)
+{
+	int	len;
+
+	len = 0;
+	if (quoteless_cmd[0] != '-')
+		return (perror_invalid_options(), 0);
+	while (quoteless_cmd[1 + len])
+	{
+		if (ft_isspace(quoteless_cmd[1 + len]))
+			return (perror_invalid_options(), 0);
+		else if (quoteless_cmd[1 + len] == '-')
+			return (perror_invalid_options(), 0);
+		else
+			len++;
+	}
+	return (len);
+}
+
+t_bool	get_options(const char *cmd, char **options)
+{
+	char	*quoteless_cmd;
+	char	*added_options;
+	int		len;
+
+	if (!cmd)
+		return (FALSE);
+	quoteless_cmd = get_quoteless_cmd(cmd);
+	if (!quoteless_cmd)
+		return (TRUE);
+	len = get_options_len(quoteless_cmd);
+	if (!len)
+		return (free(quoteless_cmd), TRUE);
+	added_options = ft_substr(quoteless_cmd, 1, len);
+	free(quoteless_cmd);
+	if (!added_options)
+		return (perror_malloc("@added_options (srcs/parsing/get_options.c #get_\
+options)"), TRUE);
+	*options = add_to_existing_options(*options, added_options);
 	if (!*options)
 		return (TRUE);
-	len = 0;
-	while (cmd[*i] && ft_isnextcharset(cmd + *i, "-"))
-	{
-		while (cmd[*i] != '-')
-			(*i)++;
-		if (cmd[*i])
-			(*i)++;
-		while (cmd[*i] && !ft_isspace(cmd[*i]))
-			(*options)[len++] = cmd[(*i)++];
-	}
-	(*options)[len] = '\0';
 	return (FALSE);
 }
