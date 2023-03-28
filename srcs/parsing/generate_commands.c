@@ -6,11 +6,17 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 23:30:48 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/27 13:15:47 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 02:15:59 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	This function initiazes the values of the linked list element.
+	It trims the given line and stores it and builds a lexer through the
+	trimmed line.
+	It returns the linked list command.
+*/
 static t_commands	*new_command(char *cmd)
 {
 	t_commands	*command;
@@ -31,6 +37,10 @@ command"), NULL);
 	return (command);
 }
 
+/*
+	This function creates the first element of the command linked list.
+	Else it adds a new element to the existing linked list.
+*/
 static t_commands	*add_command(t_commands *head_command, char *cmd)
 {
 	t_commands	*last_command;
@@ -53,6 +63,18 @@ static t_commands	*add_command(t_commands *head_command, char *cmd)
 	return (head_command);
 }
 
+/*
+	This function generates a linked list called commands.
+	Each "command" of the linked list is built on the splitted
+	given line, by the ";" character if not placed between quotes.
+
+	This chained list contains the following variables :
+	char				*cmd;
+	t_lexer				*lexer;
+	struct s_commands	*next;
+
+	It return's the expected chained_list's head or NULL on error.
+*/
 t_commands	*generate_commands(const char *line)
 {
 	t_commands	*commands;

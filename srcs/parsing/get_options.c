@@ -6,11 +6,15 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 19:46:27 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 01:48:21 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 02:34:37 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	It removes the quotes of the given string.
+	Returns the newly formatted string or NULL on error.
+*/
 static char	*get_quoteless_cmd(const char *cmd)
 {
 	char	*quoteless_cmd;
@@ -27,6 +31,11 @@ quoteless_cmd)"), NULL);
 	return (quoteless_cmd);
 }
 
+/*
+	This function replaces the options string and joins it with the
+	added_options string.
+	On success, returns the STRING, else NULL.
+*/
 static char	*add_to_existing_options(char *options, char *added_options)
 {
 	char	*new_options;
@@ -47,6 +56,10 @@ t_options)"), NULL);
 	return (new_options);
 }
 
+/*
+	This function returns the option's length (ex : -ab = 2). If there is
+	an error, 0 is returned.
+*/
 static int	get_options_len(const char *quoteless_cmd)
 {
 	int	len;
@@ -66,6 +79,14 @@ static int	get_options_len(const char *quoteless_cmd)
 	return (len);
 }
 
+/*
+	This function first removes the quotes of the given str.
+	It then removes unwanted characters ('-') and verifies if
+	the option format is respected. If not, an error is returned.
+	It then replaces the *options string by it's new joined version.
+
+	It returns FALSE on success and TRUE on error.
+*/
 t_bool	get_options(const char *cmd, char **options)
 {
 	char	*quoteless_cmd;

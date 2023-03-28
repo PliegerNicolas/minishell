@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/25 20:57:22 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 02:06:58 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -89,6 +89,15 @@ static void	free_split(char **splitted_commands)
 	}
 }
 
+/*
+	This function splits a str (line) following all the characters
+	contained in the given set.
+	It doesn't split the given characters contained in the set if
+	between single or double quotes.
+
+	Returns a char ** containing every string from the expected split
+	or NULL on error.
+*/
 char	**ft_setsplit_quotesafe(const char *line, const char *set,
 	enum e_quote_status quote_status)
 {

@@ -6,11 +6,18 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 01:37:16 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 02:34:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
+	This function splits the given string by whitespaces and
+	goes through every element to fill the lexer's
+	variables.
+
+	Returns the given lexer or NULL on error.
+*/
 static t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 	enum e_quote_status quote_status)
 {
@@ -36,6 +43,11 @@ static t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 	return (free_str_arr(split), lexer);
 }
 
+/*
+	This function initiazes the values of the linked list element.
+	It fills the lexer's variables through the populate_lexer() method.
+	It returns the linked list element.
+*/
 static t_lexer	*new_lexer(char *cmd)
 {
 	t_lexer	*lexer;
@@ -52,6 +64,10 @@ static t_lexer	*new_lexer(char *cmd)
 	return (lexer);
 }
 
+/*
+	This function creates the first element of the lexer linked list.
+	Else it adds a new element to the existing linked list.
+*/
 static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd)
 {
 	t_lexer	*last_lexer;
@@ -75,6 +91,21 @@ static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd)
 	return (head_lexer);
 }
 
+/*
+	This function generates a linked list called lexer.
+	Each "command" of the linked list is built on the splitted
+	given line, by the "|" character if not placed between quotes.
+
+	This chained list contains the following variables :
+	char				*exec;
+	char				*options;
+	char				**args;
+	int					pipefds[2];
+	struct s_lexer		*previous;
+	struct s_lexer		*next;
+
+	It return's the expected chained_list's head or NULL on error.
+*/
 t_lexer	*generate_lexer(const char *cmd)
 {
 	t_lexer	*lexer;
