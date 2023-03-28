@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 23:58:54 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/23 19:15:26 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 16:27:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -44,6 +44,8 @@ void	free_lexer(t_lexer *lexer)
 	{
 		temp = lexer;
 		lexer = lexer->next;
+		if (temp->cmd)
+			free(temp->cmd);
 		if (temp->exec)
 			free(temp->exec);
 		if (temp->options)

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 03:00:45 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 15:11:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -28,12 +28,10 @@ enum e_status	executer(char **envp, char *line)
 		printf("%s\n", commands->lexer->exec);
 	if (commands->lexer->options)
 		printf("%s\n", commands->lexer->options);
-	if (commands->lexer->args && commands->lexer->args[0])
-		printf("%s\n", commands->lexer->args[0]);
-	if (commands->lexer->args && commands->lexer->args[1])
-		printf("%s\n", commands->lexer->args[1]);
-	if (commands->lexer->args && commands->lexer->args[2])
-		printf("%s\n", commands->lexer->args[2]);
+	int	i;
+	i = 0;
+	while (commands->lexer->args[i])
+		printf("%s\n", commands->lexer->args[i++]);
 	// temp
 	return (free_commands(commands), success);
 }

@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/28 15:02:20 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 16:26:37 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -55,6 +55,7 @@ typedef int				t_bool;
 
 typedef struct s_lexer
 {
+	char				*cmd;
 	char				*exec;
 	char				*options;
 	char				**args;

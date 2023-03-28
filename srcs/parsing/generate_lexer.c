@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 02:34:51 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 16:27:35 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -28,6 +28,9 @@ static t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 		return (NULL);
 	split = ft_setsplit_quotesafe(cmd, WHITE_SPACES, quote_status);
 	if (!split)
+		return (free_lexer(lexer), NULL);
+	lexer->cmd = ft_strdup(cmd);
+	if (!lexer->cmd)
 		return (free_lexer(lexer), NULL);
 	i = 0;
 	lexer->exec = get_exec(split[i++]);
