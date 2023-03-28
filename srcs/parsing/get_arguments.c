@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 19:46:39 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 02:46:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 02:57:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -38,7 +38,7 @@ t_bool	get_arguments(const char **cmds, char ***arguments)
 		return (FALSE);
 	else if (arguments && *arguments)
 		return (FALSE);
-	if (!new_str_arr(cmds, arguments))
+	if (new_str_arr(cmds, arguments))
 		return (FALSE);
 	i = 0;
 	while (cmds[i])
