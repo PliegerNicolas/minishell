@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 19:46:27 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 02:34:37 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/28 15:04:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -68,14 +68,8 @@ static int	get_options_len(const char *quoteless_cmd)
 	if (quoteless_cmd[0] != '-')
 		return (perror_invalid_options(), 0);
 	while (quoteless_cmd[1 + len])
-	{
-		if (ft_isspace(quoteless_cmd[1 + len]))
+		if (!ft_isalpha(quoteless_cmd[1 + len++]))
 			return (perror_invalid_options(), 0);
-		else if (quoteless_cmd[1 + len] == '-')
-			return (perror_invalid_options(), 0);
-		else
-			len++;
-	}
 	return (len);
 }
 

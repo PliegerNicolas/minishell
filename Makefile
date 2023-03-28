@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/03/27 12:27:42 by nicolas          ###   ########.fr        #
+#    Updated: 2023/03/28 15:02:32 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,6 +68,7 @@ SRCS				:=		minishell \
 							utils/ft_strnstr \
 							utils/ft_memcpy \
 							utils/ft_itoa \
+							utils/ft_isalpha \
 							utils/ft_followed_chars \
 							utils/ft_isnextcharset \
 
