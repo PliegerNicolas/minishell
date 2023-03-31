@@ -6,45 +6,10 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 16:27:35 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/31 16:34:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-/*
-	This function splits the given string by whitespaces and
-	goes through every element to fill the lexer's
-	variables.
-
-	Returns the given lexer or NULL on error.
-*/
-static t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
-	enum e_quote_status quote_status)
-{
-	char	**split;
-	int		i;
-
-	if (!lexer)
-		return (NULL);
-	split = ft_setsplit_quotesafe(cmd, WHITE_SPACES, quote_status);
-	if (!split)
-		return (free_lexer(lexer), NULL);
-	lexer->cmd = ft_strdup(cmd);
-	if (!lexer->cmd)
-		return (free_lexer(lexer), NULL);
-	i = 0;
-	lexer->exec = get_exec(split[i++]);
-	if (!lexer->exec)
-		return (free_str_arr(split), free_lexer(lexer), NULL);
-	while (split[i] && (ft_isnextcharset(split[i], "-")
-			|| ((split[i][0] == '\'' || split[i][0] == '\"')
-		&& split[i][1] && ft_isnextcharset(split[i] + 1, "-"))))
-		if (get_options(split[i++], &(lexer->options)))
-			return (free_str_arr(split), free_lexer(lexer), NULL);
-	if (get_arguments((const char **)(split + i), &(lexer->args)))
-		return (free_str_arr(split), free_lexer(lexer), NULL);
-	return (free_str_arr(split), lexer);
-}
 
 /*
 	This function initiazes the values of the linked list element.

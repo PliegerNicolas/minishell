@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/28 16:26:37 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/03/31 17:53:30 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -47,6 +47,15 @@ enum e_quote_status
 	double_quote = 2
 };
 
+enum e_redir_type
+{
+	no_redir = 0,
+	to_file = 1,
+	append_to_file = 2,
+	from_file = 3,
+	heredoc = 4
+};
+
 /* ************************************** */
 /* * TYPEDEFS							* */
 /* ************************************** */
@@ -59,9 +68,12 @@ typedef struct s_lexer
 	char				*exec;
 	char				*options;
 	char				**args;
+	t_bool				redirection;
+	char				*redir_str;
+	enum e_redir_type	redir_type;	
+	int					pipefds[2];
 	struct s_lexer		*previous;
 	struct s_lexer		*next;
-	int					pipefds[2];
 }	t_lexer;
 
 typedef struct s_commands
@@ -164,10 +176,21 @@ enum e_status	executer(char **envp, char *line);
 t_commands		*parse_user_input(char *line);
 t_commands		*generate_commands(const char *line);
 t_lexer			*generate_lexer(const char *cmd);
+t_lexer			*populate_lexer(t_lexer *lexer, const char *cmd,
+					enum e_quote_status quote_status);
 
+t_bool			set_exec(const char *str, t_lexer *lexer,
+					t_bool *prev_is_redir);
+t_bool			set_options(const char *str, t_lexer *lexer);
+t_bool			set_arguments(const char *str, t_lexer *lexer);
+t_bool			set_redirection(const char *str, t_lexer *lexer,
+					t_bool *prev_is_redir);
+
+/*
 char			*get_exec(const char *str);
 t_bool			get_options(const char *cmd, char **options);
 t_bool			get_arguments(const char **cmds, char ***arguments);
+*/
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);
