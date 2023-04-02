@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:34:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/31 17:53:52 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 02:43:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -38,8 +38,6 @@ static t_bool	str_is_redirection(const char *str)
 {
 	if (!str)
 		return (FALSE);
-	while (*str && (*str == '\"' || *str == '\''))
-		str++;
 	if (*str && (*str == '<' || *str == '>'))
 		return (TRUE);
 	return (FALSE);
@@ -100,6 +98,10 @@ t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 	lexer->cmd = ft_strdup(cmd);
 	if (!lexer->cmd)
 		return (free_lexer(lexer), NULL);
+	lexer->redir_type[0] = no_redir;
+	lexer->redir_type[1] = no_redir;
+	lexer->pipefds[0] = STDIN;
+	lexer->pipefds[1] = STDOUT;
 	if (fill_lexer(split, lexer))
 		return (free_str_arr(split), free_lexer(lexer), NULL);
 	return (free_str_arr(split), lexer);

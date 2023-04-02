@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/31 17:53:30 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 02:44:16 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -17,6 +17,7 @@
 /* ************************************** */
 
 # include <unistd.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
@@ -68,9 +69,7 @@ typedef struct s_lexer
 	char				*exec;
 	char				*options;
 	char				**args;
-	t_bool				redirection;
-	char				*redir_str;
-	enum e_redir_type	redir_type;	
+	enum e_redir_type	redir_type[2];	
 	int					pipefds[2];
 	struct s_lexer		*previous;
 	struct s_lexer		*next;
@@ -151,6 +150,8 @@ void			perror_bad_substitution(void);
 void			perror_quote(void);
 void			perror_command_not_found(void);
 void			perror_invalid_options(void);
+void			perror_parse_error(void);
+void			perror_file(void);
 
 int				ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(char *s, int fd);
@@ -185,6 +186,11 @@ t_bool			set_options(const char *str, t_lexer *lexer);
 t_bool			set_arguments(const char *str, t_lexer *lexer);
 t_bool			set_redirection(const char *str, t_lexer *lexer,
 					t_bool *prev_is_redir);
+
+t_bool			set_fd_to_file(const char *pathname, t_lexer *lexer);
+t_bool			set_fd_append_to_file(const char *pathname, t_lexer *lexer);
+t_bool			set_fd_from_file(const char *pathname, t_lexer *lexer);
+t_bool			set_fd_heredoc(const char *pathname, t_lexer *lexer);
 
 /*
 char			*get_exec(const char *str);
