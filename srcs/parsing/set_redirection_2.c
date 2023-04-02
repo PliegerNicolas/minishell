@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 01:49:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 17:24:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 17:45:37 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -142,5 +142,6 @@ t_bool	set_fd_heredoc(const char *end, t_lexer *lexer)
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 	if (fd == -1)
 		return (perror_file(), TRUE);
+	lexer->pipefds[0] = fd;
 	return (FALSE);
 }
