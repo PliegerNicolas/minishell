@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 17:17:20 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 17:23:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -26,15 +26,18 @@ static void	put_commands(t_commands *commands)
 		printf("%s=== Command nº%ld ===%s\n", CYAN, i++, WHITE);
 		printf("commands->cmd : %s\n", commands->cmd);
 		lexer = commands->lexer;
-		printf("%s[Lexer/%s\n", CYAN, WHITE);
 		if (lexer->cmd)
 			printf("lexer->cmd : %s\n", lexer->cmd);
+		else
+			printf("lexer->cmd : NULL\n");
 		if (lexer->exec)
 			printf("lexer->exec : %s\n", lexer->exec);
+		else
+			printf("lexer->exec : NULL\n");
 		if (lexer->options)
 			printf("lexer->options : %s\n", lexer->options);
-		printf("lexer->pipefds[0] : %d\n", lexer->pipefds[0]);
-		printf("lexer->pipefds[1] : %d\n", lexer->pipefds[1]);
+		else
+			printf("lexer->options : NULL\n");
 		if (lexer->args)
 		{
 			j = 0;
@@ -44,9 +47,14 @@ static void	put_commands(t_commands *commands)
 				j++;
 			}
 		}
-		printf("%s/Lexer]%s\n", CYAN, WHITE);
+		else
+			printf("lexer->args : NULL\n");
+		printf("lexer->pipefds[0] : %d\n", lexer->pipefds[0]);
+		printf("lexer->pipefds[1] : %d\n", lexer->pipefds[1]);
 		commands = commands->next;
-		printf("%s=== === ==== === ===%s\n\n", CYAN, WHITE);
+		printf("%s=== === ==== === ===%s\n", CYAN, WHITE);
+		if (commands)
+			printf("\n");
 	}
 }
 
