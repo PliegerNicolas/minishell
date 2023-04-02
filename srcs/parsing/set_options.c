@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:09 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/01 00:37:30 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 04:03:09 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -103,7 +103,7 @@ static t_bool	join_options(t_lexer *lexer, char *additional_options)
 {
 	char	*joined_options;
 
-	if (!lexer || !additional_options)
+	if (!additional_options)
 		return (FALSE);
 	if (!lexer->options)
 		lexer->options = additional_options;
@@ -145,7 +145,7 @@ t_bool	set_options(const char *str, t_lexer *lexer)
 	char	*quoteless_str;
 	char	*additional_options;
 
-	if (!str || !lexer)
+	if (!str)
 		return (FALSE);
 	quoteless_str = get_quoteless_str(str);
 	if (!quoteless_str)

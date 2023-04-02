@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 03:53:56 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 04:02:37 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -59,7 +59,7 @@ static t_bool	set_redir_type(const char *str, size_t *i, t_lexer *lexer)
 static t_bool	set_fds(char *pathname, t_lexer *lexer,
 	enum e_redir_type redir_type)
 {
-	if (!lexer || !pathname)
+	if (!pathname)
 		return (FALSE);
 	if (redir_type == to_file)
 	{
@@ -90,7 +90,7 @@ t_bool	set_redirection(const char *str, t_lexer *lexer, t_bool *prev_is_redir)
 	static enum e_redir_type	redir_type;
 	size_t						i;
 
-	if (!lexer)
+	if (!str)
 		return (FALSE);
 	if (!redir_type)
 		redir_type = no_redir;
