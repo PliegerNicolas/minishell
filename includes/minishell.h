@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/02 02:44:16 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 17:00:50 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -191,12 +191,6 @@ t_bool			set_fd_to_file(const char *pathname, t_lexer *lexer);
 t_bool			set_fd_append_to_file(const char *pathname, t_lexer *lexer);
 t_bool			set_fd_from_file(const char *pathname, t_lexer *lexer);
 t_bool			set_fd_heredoc(const char *pathname, t_lexer *lexer);
-
-/*
-char			*get_exec(const char *str);
-t_bool			get_options(const char *cmd, char **options);
-t_bool			get_arguments(const char **cmds, char ***arguments);
-*/
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);
