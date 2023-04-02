@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 01:49:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 03:33:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 04:00:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -90,13 +90,40 @@ t_bool	set_fd_from_file(const char *pathname, t_lexer *lexer)
 	return (FALSE);
 }
 
-t_bool	set_fd_heredoc(const char *end, t_lexer *lexer)
+static t_bool	write_to_heredoc(const int fd, const char *end)
 {
 	char	*line;
-	int		fd;
-	size_t	len;
 	ssize_t	written_bytes;
+	size_t	len;
 
+	while (1)
+	{
+		line = readline("heredoc> ");
+		if (!line)
+			return (TRUE);
+		len = ft_strlen(line);
+		if (ft_strncmp(line, end, len) == 0)
+		{
+			free(line);
+			break ;
+		}
+		written_bytes = write(fd, line, len);
+		if (written_bytes != (ssize_t)len)
+			return (free(line), printf("%sError%s\n", RED, WHITE), TRUE);
+		written_bytes = write(fd, "\n", 1);
+		if (written_bytes != (ssize_t)1)
+			return (free(line), printf("%sError%s\n", RED, WHITE), TRUE);
+		free(line);
+	}
+	return (FALSE);
+}
+
+t_bool	set_fd_heredoc(const char *end, t_lexer *lexer)
+{
+	int		fd;
+
+	if (!end || !lexer)
+		return (FALSE);
 	if (lexer->pipefds[0] > 2)
 		close(lexer->pipefds[0]);
 	fd = access(".heredoc", F_OK);
@@ -108,22 +135,7 @@ t_bool	set_fd_heredoc(const char *end, t_lexer *lexer)
 				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 	if (fd == -1)
 		return (perror_file(), TRUE);
-	written_bytes = 0;
-	while (1)
-	{
-		line = readline("heredoc> ");
-		if (!line)
-			return (TRUE);
-		len = ft_strlen(line);
-		if (ft_strncmp(line, end, len) == 0)
-			break ;
-		written_bytes = write(fd, line, len);
-		if (written_bytes != (ssize_t)len)
-			return (free(line), printf("%sError%s\n", RED, WHITE), TRUE);
-		written_bytes = write(fd, "\n", 1);
-		if (written_bytes != (ssize_t)1)
-			return (free(line), printf("%sError%s\n", RED, WHITE), TRUE);
-		free(line);
-	}
-	return (free(line), FALSE);
+	if (write_to_heredoc(fd, end))
+		return (TRUE);
+	return (FALSE);
 }

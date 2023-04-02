@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 02:42:55 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 03:53:56 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static char	*get_quoteless_str(const char *str)
+static char	*get_quoteless_str(const char *str, t_bool *prev_is_redir)
 {
 	char	*quoteless_str;
 
@@ -24,6 +24,7 @@ quoteless_str)"), NULL);
 	quoteless_str = remove_quotes(quoteless_str, none);
 	if (!quoteless_str)
 		return (NULL);
+	*prev_is_redir = FALSE;
 	return (quoteless_str);
 }
 
@@ -95,26 +96,18 @@ t_bool	set_redirection(const char *str, t_lexer *lexer, t_bool *prev_is_redir)
 		redir_type = no_redir;
 	i = 0;
 	if (*prev_is_redir)
-	{
-		quoteless_str = get_quoteless_str(str);
-		if (!quoteless_str)
-			return (TRUE);
-		*prev_is_redir = FALSE;
-	}
+		quoteless_str = get_quoteless_str(str, prev_is_redir);
 	else
 	{
 		redir_type = set_redir_type(str, &i, lexer);
-		if (redir_type == no_redir)
-			return (TRUE);
 		if (!str[i])
 			return (*prev_is_redir = TRUE, FALSE);
 		quoteless_str = ft_strdup(str + i);
-		if (!quoteless_str)
-			return (TRUE);
 	}	
+	if (!quoteless_str)
+		return (TRUE);
 	if (set_fds(quoteless_str, lexer, redir_type))
 		return (free(quoteless_str), TRUE);
 	redir_type = no_redir;
-	free(quoteless_str);
-	return (FALSE);
+	return (free(quoteless_str), FALSE);
 }
