@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 17:28:26 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/02 17:33:09 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -22,9 +22,10 @@ static void	put_commands(t_commands *commands)
 	if (!commands)
 		return ;
 	i = 1;
+	printf("%s===== ===== ===== ===== =====%s\n", YELLOW, WHITE);
 	while (commands)
 	{
-		printf("%s=== Command nº%ld ===%s\n", CYAN, i++, WHITE);
+		printf("%s=== Command nº%ld ===%s\n", PURPLE, i++, WHITE);
 		printf("commands->cmd : %s\n", commands->cmd);
 		lexer = commands->lexer;
 		k = 0;
@@ -60,10 +61,11 @@ static void	put_commands(t_commands *commands)
 			printf("%s< End lexer >%s\n", CYAN, WHITE);
 		 }
 		commands = commands->next;
-		printf("%s=== === ==== === ===%s\n", CYAN, WHITE);
+		printf("%s=== === ==== === ===%s\n", PURPLE, WHITE);
 		if (commands)
 			printf("\n");
 	}
+	printf("%s===== ===== ===== ===== =====%s\n", YELLOW, WHITE);
 }
 
 enum e_status	executer(char **envp, char *line)
