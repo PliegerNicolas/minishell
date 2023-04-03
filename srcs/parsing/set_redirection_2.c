@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 01:49:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 17:45:37 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/03 03:42:25 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -101,12 +101,12 @@ static t_bool	write_to_heredoc(const int fd, const char *end)
 		line = readline("heredoc> ");
 		if (!line)
 			return (TRUE);
+		line = substitute_line_content(line, 0, none);
+		if (!line)
+			return (TRUE);
 		len = ft_strlen(line);
 		if (ft_strncmp(line, end, len) == 0)
-		{
-			free(line);
-			break ;
-		}
+			return (free(line), FALSE);
 		written_bytes = write(fd, line, len);
 		if (written_bytes != (ssize_t)len)
 			return (free(line), printf("%sError%s\n", RED, WHITE), TRUE);
@@ -131,7 +131,7 @@ t_bool	set_fd_heredoc(const char *end, t_lexer *lexer)
 		fd = open(".heredoc", O_CREAT | O_WRONLY,
 				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 	else
-		fd = open(".heredoc", O_WRONLY,
+		fd = open(".heredoc", O_WRONLY | O_TRUNC,
 				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 	if (fd == -1)
 		return (perror_file(), TRUE);
