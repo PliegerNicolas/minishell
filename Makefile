@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/04/02 01:55:27 by nicolas          ###   ########.fr        #
+#    Updated: 2023/04/04 18:41:57 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,15 @@ SRCS				:=		minishell \
 							signals/sig_handlers \
 							signals/echoctl_handlers \
 							execution/executer \
+							execution/execute_other \
+							execution/builtins/execute_builtin \
+							execution/builtins/echo_builtin \
+							execution/builtins/cd_builtin \
+							execution/builtins/pwd_builtin \
+							execution/builtins/export_builtin \
+							execution/builtins/unset_builtin \
+							execution/builtins/env_builtin \
+							execution/builtins/exit_builtin \
 							parsing/parse_user_input \
 							parsing/substitute_variables_1 \
 							parsing/substitute_variables_2 \

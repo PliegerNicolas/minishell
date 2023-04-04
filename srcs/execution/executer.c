@@ -6,12 +6,13 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 17:33:09 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/04 18:36:42 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 // temp function for testing.
+/*
 static void	put_commands(t_commands *commands)
 {
 	t_lexer	*lexer;
@@ -67,6 +68,29 @@ static void	put_commands(t_commands *commands)
 	}
 	printf("%s===== ===== ===== ===== =====%s\n", YELLOW, WHITE);
 }
+*/
+
+static t_bool	linear_command_execution(t_commands	*commands, char	**envp)
+{
+	t_lexer	*lexer;
+
+	if (!commands || !envp)
+		return (FALSE);
+	while (commands)
+	{
+		lexer = commands->lexer;
+		while (lexer)
+		{
+			if (execute_builtin(lexer, envp))
+				return (TRUE);
+			else if (execute_other(lexer, envp))
+				return (TRUE);
+			lexer = lexer->next;
+		}
+		commands = commands->next;
+	}
+	return (FALSE);
+}
 
 enum e_status	executer(char **envp, char *line)
 {
@@ -79,8 +103,8 @@ enum e_status	executer(char **envp, char *line)
 	commands = parse_user_input(line);
 	if (!commands)
 		return (general_failure);
-	// temp
-	put_commands(commands);
-	// temp
+	//put_commands(commands);
+	if (linear_command_execution(commands, envp))
+		return (free_commands(commands), g_status);
 	return (free_commands(commands), success);
 }
