@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:07:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/04 19:19:28 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/04 19:24:48 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -27,7 +27,7 @@ static char	*get_home_directory(void)
 
 static t_bool	change_directory(char *path)
 {
-	if (!path)
+	if (!path || ft_strncmp(path, "~", 2) == 0)
 	{
 		path = get_home_directory();
 		if (!path)
