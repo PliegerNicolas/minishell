@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/05 15:36:10 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 22:29:29 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -178,17 +178,17 @@ void			reset_echoctl(void);
 
 /* execution */
 
-enum e_status	executer(char **envp, char *line);
+enum e_status	executer(char ***envp, char *line);
 
-t_bool			execute_builtin(t_lexer *lexer, char **envp);
-t_bool			execute_other(t_lexer *lexer, char **envp);
+t_bool			execute_builtin(t_lexer *lexer, char ***envp);
+t_bool			execute_other(t_lexer *lexer, char ***envp);
 
-t_bool			echo_builtin(t_lexer *lexer, char **envp);
-t_bool			cd_builtin(t_lexer *lexer, char **envp);
-t_bool			pwd_builtin(t_lexer *lexer, char **envp);
-t_bool			export_builtin(t_lexer *lexer, char **envp);
-t_bool			unset_builtin(t_lexer *lexer, char **envp);
-t_bool			env_builtin(t_lexer *lexer, char **envp);
+t_bool			echo_builtin(t_lexer *lexer, char ***envp);
+t_bool			cd_builtin(t_lexer *lexer, char ***envp);
+t_bool			pwd_builtin(t_lexer *lexer, char ***envp);
+t_bool			export_builtin(t_lexer *lexer, char ***envp);
+t_bool			unset_builtin(t_lexer *lexer, char ***envp);
+t_bool			env_builtin(t_lexer *lexer, char ***envp);
 
 /* parsing */
 

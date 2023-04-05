@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/04 18:36:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 22:23:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -70,11 +70,11 @@ static void	put_commands(t_commands *commands)
 }
 */
 
-static t_bool	linear_command_execution(t_commands	*commands, char	**envp)
+static t_bool	linear_command_execution(t_commands	*commands, char	***envp)
 {
 	t_lexer	*lexer;
 
-	if (!commands || !envp)
+	if (!commands)
 		return (FALSE);
 	while (commands)
 	{
@@ -92,11 +92,11 @@ static t_bool	linear_command_execution(t_commands	*commands, char	**envp)
 	return (FALSE);
 }
 
-enum e_status	executer(char **envp, char *line)
+enum e_status	executer(char ***envp, char *line)
 {
 	t_commands	*commands;
 
-	if (!line || !envp)
+	if (!line || !*envp)
 		return (free(line), general_failure);
 	if (!*line)
 		return (free(line), success);

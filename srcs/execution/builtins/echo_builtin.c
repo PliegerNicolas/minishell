@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:46:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/04 18:56:39 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 22:28:24 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_bool	echo_builtin(t_lexer *lexer, char **envp)
+t_bool	echo_builtin(t_lexer *lexer, char ***envp)
 {
 	char	*line;
 	size_t	i;

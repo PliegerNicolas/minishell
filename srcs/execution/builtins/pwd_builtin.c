@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:59:52 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/04 19:06:01 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 22:28:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_bool	pwd_builtin(t_lexer *lexer, char **envp)
+t_bool	pwd_builtin(t_lexer *lexer, char ***envp)
 {
 	char	cwd[1024];
 
