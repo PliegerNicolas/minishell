@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 14:01:10 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 14:47:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 23:47:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -25,11 +25,12 @@ char	**remove_env_var(char *var_name, char **envp)
 _var)"), free_envp(envp), NULL);
 	i = 0;
 	j = 0;
-	while (envp[i] && ft_strncmp(var_name, envp[i], ft_strlen(var_name) != 0))
+	while (envp[i] && ft_strncmp(var_name, envp[i], ft_strlen(var_name)) != 0)
 		new_envp[i++] = envp[j++];
-	j++;
-	while (envp[i])
+	free(envp[j++]);
+	while (envp[j])
 		new_envp[i++] = envp[j++];
 	new_envp[i] = 0;
+	free(envp);
 	return (new_envp);
 }

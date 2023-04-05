@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 01:05:50 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 15:10:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 23:36:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,6 +19,11 @@ void	perror_unexpected_option(void)
 void	perror_too_many_arguments(void)
 {
 	ft_putendl_fd("Too many arguments. (҂◡_◡)", STDERR);
+}
+
+void	perror_not_enough_arguments(void)
+{
+	ft_putendl_fd("Not enough arguments. (._.)", STDERR);
 }
 
 void	perror_no_such_file_or_dir(char *path)

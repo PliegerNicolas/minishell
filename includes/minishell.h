@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/05 22:29:29 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 23:36:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -159,6 +159,7 @@ void			perror_parse_error(void);
 void			perror_file(void);
 void			perror_unexpected_option(void);
 void			perror_too_many_arguments(void);
+void			perror_not_enough_arguments(void);
 void			perror_no_such_file_or_dir(char *path);
 
 int				ft_putchar_fd(char c, int fd);
