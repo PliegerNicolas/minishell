@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:43:50 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 14:27:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 15:21:11 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -51,7 +51,7 @@ char	**set_env_var(char *name, char *value, char **envp)
 	}
 	else
 	{
-		envp = ft_prepend_to_string_array(envp, new_env_data);
+		envp = ft_append_to_string_array(envp, new_env_data);
 		if (!envp)
 			return (free_envp(envp), NULL);
 	}
