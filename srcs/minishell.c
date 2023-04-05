@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/03/27 12:28:46 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 04:29:22 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -88,8 +88,8 @@ int	main(int argc, char **argv, char **env)
 	if (argc != 1)
 		return (perror_minishell_arguments(argc - 1), 1);
 	envp = initialize_env(argc, argv, env);
-	if (!envp)
-		return (perror_environnement_copy(), 1);
+	if (!envp || (envp && !*envp))
+		return (perror_environnement(), 1);
 	prompt_init();
 	prompt(envp);
 	prompt_exit();

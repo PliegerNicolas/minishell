@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/04 19:08:45 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 14:27:11 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -135,6 +135,11 @@ extern enum e_status	g_status;
 /* env */
 
 char			**initialize_env(int argc, char **argv, char **env);
+
+char			*get_env_var(const char *var, const char **envp);
+char			**set_env_var(char *name, char *value, char **envp);
+char			**remove_env_var(char *var_name, char **envp);
+
 void			put_env(char **envp);
 size_t			env_len(char **envp);
 void			free_envp(char **envp);
@@ -144,7 +149,7 @@ void			free_envp(char **envp);
 char			*prompt_prefix(void);
 
 void			perror_minishell_arguments(int nbr_args);
-void			perror_environnement_copy(void);
+void			perror_environnement(void);
 void			perror_malloc(char *location);
 void			perror_bad_substitution(void);
 void			perror_quote(void);
@@ -152,6 +157,9 @@ void			perror_command_not_found(void);
 void			perror_invalid_options(void);
 void			perror_parse_error(void);
 void			perror_file(void);
+void			perror_unexpected_option(void);
+void			perror_too_many_arguments(void);
+void			perror_no_such_file_or_dir(char *path);
 
 int				ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(char *s, int fd);
@@ -236,9 +244,10 @@ int				ft_isalpha(int c);
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
 
+char			**ft_append_to_string_array(char **str_arr, char *str);
+char			**ft_prepend_to_string_array(char **str_arr, char *str);
 char			**ft_setsplit(const char *line, const char *set);
 char			**ft_trimsplit(const char **split, const char *set);
-
 int				ft_followed_chars(const char *s, const int c1, const int c2);
 int				ft_isnextcharset(const char *s, const char *set);
 

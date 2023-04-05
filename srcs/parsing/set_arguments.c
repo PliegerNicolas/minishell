@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:47:14 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 16:59:49 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 13:57:39 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -40,34 +40,6 @@ ialize_arguments)"), TRUE);
 	return (FALSE);
 }
 
-static t_bool	append_str_to_arguments(char *quoteless_str, t_lexer *lexer)
-{
-	char	**new_args;
-	size_t	len;
-	size_t	i;
-
-	if (!quoteless_str || (lexer && !lexer->args))
-		return (FALSE);
-	len = 0;
-	while (lexer->args[len])
-		len++;
-	new_args = malloc((len + 2) * sizeof(*new_args));
-	if (!new_args)
-		return (perror_malloc("@new_args (srcs/parsing/set_arguments.c #append_\
-str_to_arguments)"), TRUE);
-	i = 0;
-	while (i < len)
-	{
-		new_args[i] = lexer->args[i];
-		i++;
-	}
-	new_args[i++] = quoteless_str;
-	new_args[i] = NULL;
-	free(lexer->args);
-	lexer->args = new_args;
-	return (FALSE);
-}
-
 t_bool	set_arguments(const char *str, t_lexer *lexer)
 {
 	char	*quoteless_str;
@@ -84,7 +56,8 @@ t_bool	set_arguments(const char *str, t_lexer *lexer)
 	}
 	else
 	{
-		if (append_str_to_arguments(quoteless_str, lexer))
+		lexer->args = ft_append_to_string_array(lexer->args, quoteless_str);
+		if (!lexer->args)
 			return (free(quoteless_str), TRUE);
 	}
 	return (FALSE);

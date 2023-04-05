@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 11:30:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/22 17:48:03 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/05 03:47:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -24,7 +24,7 @@ void	perror_minishell_arguments(int nbr_args)
 	reset_write_color(STDERR);
 }
 
-void	perror_environnement_copy(void)
+void	perror_environnement(void)
 {
 	set_write_color(RED, STDERR);
 	ft_putendl_fd("Error ... ╚(•⌂•)╝", STDERR);

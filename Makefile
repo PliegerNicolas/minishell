@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/04/04 18:41:57 by nicolas          ###   ########.fr        #
+#    Updated: 2023/04/05 14:01:26 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,9 +28,13 @@ SRCS				:=		minishell \
 							env/initialize_env \
 							env/env_utils \
 							env/free_env \
+							env/get_env_var \
+							env/set_env_var \
+							env/remove_env_var \
 							output/prompt_prefix \
 							output/error_messages_1 \
 							output/error_messages_2 \
+							output/error_messages_3 \
 							output/utils/ft_putchar_fd \
 							output/utils/ft_putstr_fd \
 							output/utils/ft_putendl_fd \
@@ -83,6 +87,8 @@ SRCS				:=		minishell \
 							utils/ft_isalpha \
 							utils/ft_followed_chars \
 							utils/ft_isnextcharset \
+							utils/ft_prepend_to_string_array \
+							utils/ft_append_to_string_array \
 
 DEPS				:=		minishell \
 
