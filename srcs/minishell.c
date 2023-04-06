@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/05 22:22:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/06 15:56:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -53,7 +53,7 @@ static void	prompt(char ***envp)
 	char			*line;
 	char			*prompt_msg;
 
-	while (1)
+	while (g_status != exit_program)
 	{
 		prompt_msg = prompt_prefix();
 		if (!prompt_msg)

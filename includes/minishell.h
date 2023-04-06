@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/05 23:36:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/06 15:56:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -38,7 +38,8 @@ enum e_status
 	command_not_found = 127,
 	invalid_argument_to_exit = 128,
 	termination_by_ctrl_c = 130,
-	exit_status_out_of_range = 255
+	exit_status_out_of_range = 255,
+	exit_program = 256
 };
 
 enum e_quote_status
@@ -190,6 +191,7 @@ t_bool			pwd_builtin(t_lexer *lexer, char ***envp);
 t_bool			export_builtin(t_lexer *lexer, char ***envp);
 t_bool			unset_builtin(t_lexer *lexer, char ***envp);
 t_bool			env_builtin(t_lexer *lexer, char ***envp);
+t_bool			exit_builtin(void);
 
 /* parsing */
 
