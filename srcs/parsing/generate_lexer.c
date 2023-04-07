@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/31 16:34:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/08 01:18:07 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,7 +16,7 @@
 	It fills the lexer's variables through the populate_lexer() method.
 	It returns the linked list element.
 */
-static t_lexer	*new_lexer(char *cmd)
+static t_lexer	*new_lexer(char *cmd, char ***envp)
 {
 	t_lexer	*lexer;
 
@@ -26,7 +26,7 @@ static t_lexer	*new_lexer(char *cmd)
 	if (!lexer)
 		return (perror_malloc("@lexer (srcs/parsing/generate_lexer.c #new_lexer\
 )"), NULL);
-	lexer = populate_lexer(lexer, cmd, none);
+	lexer = populate_lexer(lexer, cmd, none, envp);
 	if (!lexer)
 		return (NULL);
 	return (lexer);
@@ -36,13 +36,13 @@ static t_lexer	*new_lexer(char *cmd)
 	This function creates the first element of the lexer linked list.
 	Else it adds a new element to the existing linked list.
 */
-static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd)
+static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd, char ***envp)
 {
 	t_lexer	*last_lexer;
 
 	if (!head_lexer)
 	{
-		head_lexer = new_lexer(cmd);
+		head_lexer = new_lexer(cmd, envp);
 		last_lexer = head_lexer;
 	}
 	else
@@ -50,7 +50,7 @@ static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd)
 		last_lexer = head_lexer;
 		while (last_lexer->next)
 			last_lexer = last_lexer->next;
-		last_lexer->next = new_lexer(cmd);
+		last_lexer->next = new_lexer(cmd, envp);
 		last_lexer->next->previous = last_lexer;
 		last_lexer = last_lexer->next;
 	}
@@ -74,7 +74,7 @@ static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd)
 
 	It return's the expected chained_list's head or NULL on error.
 */
-t_lexer	*generate_lexer(const char *cmd)
+t_lexer	*generate_lexer(const char *cmd, char ***envp)
 {
 	t_lexer	*lexer;
 	char	**splitted_cmd;
@@ -89,7 +89,7 @@ t_lexer	*generate_lexer(const char *cmd)
 	i = 0;
 	while (splitted_cmd[i])
 	{
-		lexer = add_lexer(lexer, splitted_cmd[i++]);
+		lexer = add_lexer(lexer, splitted_cmd[i++], envp);
 		if (!lexer)
 			return (free_str_arr(splitted_cmd), NULL);
 	}

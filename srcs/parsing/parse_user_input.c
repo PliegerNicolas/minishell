@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 23:54:01 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/25 19:47:56 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/08 01:19:56 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_commands	*parse_user_input(char *line)
+t_commands	*parse_user_input(char *line, char ***envp)
 {
 	t_commands	*commands;
 
@@ -22,7 +22,7 @@ t_commands	*parse_user_input(char *line)
 	line = substitute_line_content(line, 0, none);
 	if (!line)
 		return (NULL);
-	commands = generate_commands(line);
+	commands = generate_commands(line, envp);
 	if (!commands)
 		return (free(line), NULL);
 	return (free(line), commands);

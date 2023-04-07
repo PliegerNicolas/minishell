@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 23:30:48 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 02:15:59 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/08 01:38:42 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -17,7 +17,7 @@
 	trimmed line.
 	It returns the linked list command.
 */
-static t_commands	*new_command(char *cmd)
+static t_commands	*new_command(char *cmd, char ***envp)
 {
 	t_commands	*command;
 
@@ -31,7 +31,7 @@ command"), NULL);
 	if (!command->cmd)
 		return (perror_malloc("@command->cmd (srcs/parsing/generate_commands.c \
 #new_command"), free_commands(command), NULL);
-	command->lexer = generate_lexer(command->cmd);
+	command->lexer = generate_lexer(command->cmd, envp);
 	if (!command->lexer)
 		return (free_commands(command), NULL);
 	return (command);
@@ -41,13 +41,14 @@ command"), NULL);
 	This function creates the first element of the command linked list.
 	Else it adds a new element to the existing linked list.
 */
-static t_commands	*add_command(t_commands *head_command, char *cmd)
+static t_commands	*add_command(t_commands *head_command, char *cmd,
+	char ***envp)
 {
 	t_commands	*last_command;
 
 	if (!head_command)
 	{
-		head_command = new_command(cmd);
+		head_command = new_command(cmd, envp);
 		last_command = head_command;
 	}
 	else
@@ -55,7 +56,7 @@ static t_commands	*add_command(t_commands *head_command, char *cmd)
 		last_command = head_command;
 		while (last_command->next)
 			last_command = last_command->next;
-		last_command->next = new_command(cmd);
+		last_command->next = new_command(cmd, envp);
 		last_command = last_command->next;
 	}
 	if (!last_command)
@@ -75,7 +76,7 @@ static t_commands	*add_command(t_commands *head_command, char *cmd)
 
 	It return's the expected chained_list's head or NULL on error.
 */
-t_commands	*generate_commands(const char *line)
+t_commands	*generate_commands(const char *line, char ***envp)
 {
 	t_commands	*commands;
 	char		**splitted_line;
@@ -91,7 +92,7 @@ t_commands	*generate_commands(const char *line)
 	commands = NULL;
 	while (splitted_line[i])
 	{
-		commands = add_command(commands, splitted_line[i++]);
+		commands = add_command(commands, splitted_line[i++], envp);
 		if (!commands)
 			return (free_str_arr(splitted_line), NULL);
 	}

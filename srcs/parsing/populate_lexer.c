@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:34:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/07 11:54:15 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/08 01:16:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -56,7 +56,7 @@ static t_bool	str_is_redirection(const char *str)
 						goes here.
 	Return TRUE on error. Else returns  FALSE.
 */
-static t_bool	fill_lexer(char **split, t_lexer *lexer)
+static t_bool	fill_lexer(char **split, t_lexer *lexer, char ***envp)
 {
 	int		i;
 	t_bool	prev_is_redir;
@@ -65,7 +65,7 @@ static t_bool	fill_lexer(char **split, t_lexer *lexer)
 		return (FALSE);
 	prev_is_redir = FALSE;
 	i = 0;
-	if (split[i] && set_exec(split[i], lexer, &prev_is_redir))
+	if (split[i] && set_exec(split[i], lexer, &prev_is_redir, envp))
 		return (TRUE);
 	while (split[++i])
 	{
@@ -86,7 +86,7 @@ static t_bool	fill_lexer(char **split, t_lexer *lexer)
 }
 
 t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
-	enum e_quote_status quote_status)
+	enum e_quote_status quote_status, char ***envp)
 {
 	char	**split;
 
@@ -102,7 +102,7 @@ t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 	lexer->redir_type[1] = no_redir;
 	lexer->redir_path[0] = NULL;
 	lexer->redir_path[1] = NULL;
-	if (fill_lexer(split, lexer))
+	if (fill_lexer(split, lexer, envp))
 		return (free_str_arr(split), free_lexer(lexer), NULL);
 	return (free_str_arr(split), lexer);
 }
