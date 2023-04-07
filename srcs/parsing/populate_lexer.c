@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:34:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 02:43:21 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/07 11:54:15 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -100,8 +100,8 @@ t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 		return (free_lexer(lexer), NULL);
 	lexer->redir_type[0] = no_redir;
 	lexer->redir_type[1] = no_redir;
-	lexer->pipefds[0] = STDIN;
-	lexer->pipefds[1] = STDOUT;
+	lexer->redir_path[0] = NULL;
+	lexer->redir_path[1] = NULL;
 	if (fill_lexer(split, lexer))
 		return (free_str_arr(split), free_lexer(lexer), NULL);
 	return (free_str_arr(split), lexer);

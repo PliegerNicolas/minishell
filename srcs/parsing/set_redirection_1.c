@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 04:02:37 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/07 12:12:46 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -56,29 +56,26 @@ static t_bool	set_redir_type(const char *str, size_t *i, t_lexer *lexer)
 	return (redir_type);
 }
 
-static t_bool	set_fds(char *pathname, t_lexer *lexer,
+static t_bool	set_redir(char *pathname, t_lexer *lexer,
 	enum e_redir_type redir_type)
 {
 	if (!pathname)
 		return (FALSE);
-	if (redir_type == to_file)
+	if (redir_type == heredoc)
 	{
-		if (set_fd_to_file(pathname, lexer))
-			return (TRUE);
+		if (set_redir_path_heredoc(pathname, lexer))
+			return (free(pathname), TRUE);
+		free(pathname);
+		pathname = NULL;
 	}
-	else if (redir_type == append_to_file)
+	else if (redir_type == to_file || redir_type == append_to_file)
 	{
-		if (set_fd_append_to_file(pathname, lexer))
+		if (set_redir_path(pathname, lexer, 1))
 			return (TRUE);
 	}
 	else if (redir_type == from_file)
 	{
-		if (set_fd_from_file(pathname, lexer))
-			return (TRUE);
-	}
-	else if (redir_type == heredoc)
-	{
-		if (set_fd_heredoc(pathname, lexer))
+		if (set_redir_path(pathname, lexer, 0))
 			return (TRUE);
 	}
 	return (FALSE);
@@ -106,8 +103,8 @@ t_bool	set_redirection(const char *str, t_lexer *lexer, t_bool *prev_is_redir)
 	}	
 	if (!quoteless_str)
 		return (TRUE);
-	if (set_fds(quoteless_str, lexer, redir_type))
+	if (set_redir(quoteless_str, lexer, redir_type))
 		return (free(quoteless_str), TRUE);
 	redir_type = no_redir;
-	return (free(quoteless_str), FALSE);
+	return (FALSE);
 }

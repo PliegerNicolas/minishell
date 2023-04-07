@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/06 15:56:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/07 12:04:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -71,7 +71,7 @@ typedef struct s_lexer
 	char				*options;
 	char				**args;
 	enum e_redir_type	redir_type[2];	
-	int					pipefds[2];
+	char				*redir_path[2];
 	struct s_lexer		*previous;
 	struct s_lexer		*next;
 }	t_lexer;
@@ -208,10 +208,12 @@ t_bool			set_arguments(const char *str, t_lexer *lexer);
 t_bool			set_redirection(const char *str, t_lexer *lexer,
 					t_bool *prev_is_redir);
 
-t_bool			set_fd_to_file(const char *pathname, t_lexer *lexer);
-t_bool			set_fd_append_to_file(const char *pathname, t_lexer *lexer);
-t_bool			set_fd_from_file(const char *pathname, t_lexer *lexer);
-t_bool			set_fd_heredoc(const char *pathname, t_lexer *lexer);
+t_bool			set_redir_path(char *pathname, t_lexer *lexer, int slot);
+t_bool			set_redir_path_heredoc(const char *end, t_lexer *lexer);
+//t_bool			set_fd_to_file(const char *pathname, t_lexer *lexer);
+//t_bool			set_fd_append_to_file(const char *pathname, t_lexer *lexer);
+//t_bool			set_fd_from_file(const char *pathname, t_lexer *lexer);
+//t_bool			set_fd_heredoc(const char *pathname, t_lexer *lexer);
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);

@@ -6,87 +6,18 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 01:49:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/03 03:42:25 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/07 12:16:54 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_bool	set_fd_to_file(const char *pathname, t_lexer *lexer)
+t_bool	set_redir_path(char *pathname, t_lexer *lexer, int slot)
 {
-	int	fd;
-
-	if (lexer->pipefds[1] > 2)
-		close(lexer->pipefds[1]);
-	fd = access(pathname, F_OK);
-	if (fd == -1)
-	{
-		fd = open(pathname, O_CREAT | O_WRONLY,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-	}
-	else
-	{
-		fd = access(pathname, W_OK);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-		fd = open(pathname, O_WRONLY,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-	}
-	lexer->pipefds[1] = fd;
-	return (FALSE);
-}
-
-t_bool	set_fd_append_to_file(const char *pathname, t_lexer *lexer)
-{
-	int	fd;
-
-	if (lexer->pipefds[1] > 2)
-		close(lexer->pipefds[1]);
-	fd = access(pathname, F_OK);
-	if (fd == -1)
-	{
-		fd = open(pathname, O_CREAT | O_APPEND,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-	}
-	else
-	{
-		fd = access(pathname, W_OK);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-		fd = open(pathname, O_APPEND,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-	}
-	lexer->pipefds[1] = fd;
-	return (FALSE);
-}
-
-t_bool	set_fd_from_file(const char *pathname, t_lexer *lexer)
-{
-	int	fd;
-
-	if (lexer->pipefds[0] > 2)
-		close(lexer->pipefds[0]);
-	fd = access(pathname, F_OK);
-	if (fd == -1)
-		return (perror_file(), TRUE);
-	else
-	{
-		fd = access(pathname, R_OK);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-		fd = open(pathname, O_RDONLY,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-		if (fd == -1)
-			return (perror_file(), TRUE);
-	}
-	lexer->pipefds[0] = fd;
+	if (!pathname)
+		return (TRUE);
+	if (lexer->redir_path[slot])
+		free(lexer->redir_path[slot]);
+	lexer->redir_path[slot] = pathname;
 	return (FALSE);
 }
 
@@ -118,14 +49,14 @@ static t_bool	write_to_heredoc(const int fd, const char *end)
 	return (FALSE);
 }
 
-t_bool	set_fd_heredoc(const char *end, t_lexer *lexer)
+t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer)
 {
 	int		fd;
 
 	if (!end)
 		return (FALSE);
-	if (lexer->pipefds[0] > 2)
-		close(lexer->pipefds[0]);
+	if (lexer->redir_path[0])
+		free(lexer->redir_path[0]);
 	fd = access(".heredoc", F_OK);
 	if (fd == -1)
 		fd = open(".heredoc", O_CREAT | O_WRONLY,
@@ -137,11 +68,11 @@ t_bool	set_fd_heredoc(const char *end, t_lexer *lexer)
 		return (perror_file(), TRUE);
 	if (write_to_heredoc(fd, end))
 		return (TRUE);
-	close(fd);
-	fd = open(".heredoc", O_RDONLY,
-			S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-	if (fd == -1)
+	if (close(fd) == -1)
 		return (perror_file(), TRUE);
-	lexer->pipefds[0] = fd;
+	lexer->redir_path[0] = ft_strdup(".heredoc");
+	if (!lexer->redir_path[0])
+		return (perror_malloc("lexer->lexer_redir (srcs/parsing/set_redirection\
+_2.c #set_redir_path_heredoc)"), TRUE);
 	return (FALSE);
 }

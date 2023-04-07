@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 23:58:54 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/02 02:52:11 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/07 12:02:52 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -52,10 +52,10 @@ void	free_lexer(t_lexer *lexer)
 			free(temp->options);
 		if (temp->args)
 			free_str_arr(temp->args);
-		if (temp->pipefds[0] > 2)
-			close(temp->pipefds[0]);
-		if (temp->pipefds[1] > 2)
-			close(temp->pipefds[1]);
+		if (temp->redir_path[0])
+			free(temp->redir_path[0]);
+		if (temp->redir_path[1])
+			free(temp->redir_path[1]);
 		free(temp);
 	}
 }
