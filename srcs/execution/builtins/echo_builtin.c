@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:46:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/06 15:54:16 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/10 00:11:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -52,7 +52,8 @@ t_bool	echo_builtin(t_lexer *lexer, char ***envp)
 		return (g_status = general_failure, TRUE);
 	i = 4;
 	skip_command(quoteless_line, &i);
-	if (lexer->options && ft_strncmp(lexer->options, "n", 2) == 0)
+	//if (lexer->options && ft_strncmp(lexer->options, "n", 2) == 0)
+	if (lexer->options && ft_strncmp(*lexer->options, "n", 2) == 0)
 	{
 		ft_putstr_fd(quoteless_line + i, STDOUT);
 		ft_putendl_fd("$", STDOUT);

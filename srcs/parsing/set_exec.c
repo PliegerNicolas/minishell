@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:39:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/08 01:48:17 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/10 01:01:58 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -109,8 +109,6 @@ t_bool	set_exec(const char *str, t_lexer *lexer, t_bool *prev_is_redir,
 	}
 	lexer->exec = get_path(quoteless_str, envp);
 	if (!lexer->exec)
-		return (TRUE);
-	if (set_arguments(str, lexer))
 		return (TRUE);
 	return (FALSE);
 }

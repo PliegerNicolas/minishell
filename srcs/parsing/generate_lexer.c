@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/08 01:18:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/10 00:36:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -44,6 +44,8 @@ static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd, char ***envp)
 	{
 		head_lexer = new_lexer(cmd, envp);
 		last_lexer = head_lexer;
+		if (last_lexer)
+			last_lexer->id = 1;
 	}
 	else
 	{
@@ -51,7 +53,11 @@ static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd, char ***envp)
 		while (last_lexer->next)
 			last_lexer = last_lexer->next;
 		last_lexer->next = new_lexer(cmd, envp);
-		last_lexer->next->previous = last_lexer;
+		if (last_lexer->next)
+		{
+			last_lexer->next->id = last_lexer->id + 1;
+			last_lexer->next->previous = last_lexer;
+		}
 		last_lexer = last_lexer->next;
 	}
 	if (!last_lexer)

@@ -6,13 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/08 01:21:23 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/10 01:05:20 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 // temp function for testing.
-/*
 static void	put_commands(t_commands *commands)
 {
 	t_lexer	*lexer;
@@ -42,7 +41,14 @@ static void	put_commands(t_commands *commands)
 			else
 				printf("lexer->exec : NULL\n");
 			if (lexer->options)
-				printf("lexer->options : %s\n", lexer->options);
+			{
+				j = 0;
+				while (lexer->options[j])
+				{
+					printf("lexer->options[%ld] : %s\n", j, lexer->options[j]);
+					j++;
+				}
+			}
 			else
 				printf("lexer->options : NULL\n");
 			if (lexer->args)
@@ -56,8 +62,8 @@ static void	put_commands(t_commands *commands)
 			}
 			else
 				printf("lexer->args : NULL\n");
-			printf("lexer->pipefds[0] : %d\n", lexer->pipefds[0]);
-			printf("lexer->pipefds[1] : %d\n", lexer->pipefds[1]);
+			printf("lexer->redir_path[0] : %s\n", lexer->redir_path[0]);
+			printf("lexer->redir_path[1] : %s\n", lexer->redir_path[1]);
 			lexer = lexer->next;
 			printf("%s< End lexer >%s\n", CYAN, WHITE);
 		 }
@@ -68,65 +74,11 @@ static void	put_commands(t_commands *commands)
 	}
 	printf("%s===== ===== ===== ===== =====%s\n", YELLOW, WHITE);
 }
-*/
-
-/*
-static char	*get_input_str(t_lexer *lexer, char *filename)
-{
-	char			*input_str;
-	struct stat		st;
-	int				fd;
-	ssize_t			bytes_read;
-
-	if (!lexer || !filename || lexer->redir_type[0] == no_redir)
-		return (NULL);
-	if (access(filename, F_OK) == -1)
-		return (perror_no_such_file_or_dir(filename), NULL);
-	if (stat(filename, &st) == -1)
-		return (perror_file(), NULL);
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-		return (perror_file(), NULL);
-	input_str = malloc(((off_t)st.st_size + 1) * sizeof(*input_str));
-	if (!input_str)
-		return (perror_malloc("@input_str (srcs/execution/executer.c #get_input\
-_str)"), close(fd), NULL);
-	bytes_read = read(fd, input_str, (off_t)st.st_size);
-	input_str[bytes_read] = '\0';
-	return (close(fd), input_str);
-}
-
-static t_bool	linear_command_execution(t_commands	*commands, char	***envp)
-{
-	t_lexer	*lexer;
-	char	*input_str;
-	char	*output_str;
-
-	if (!commands)
-		return (FALSE);
-	while (commands)
-	{
-		lexer = commands->lexer;
-		while (lexer)
-		{
-			input_str = get_input_str(lexer, lexer->redir_path[0]);
-			if (input_str)
-			{
-				printf("%s\n", input_str);
-				free(input_str);
-			}
-			lexer = lexer->next;
-		}
-		commands = commands->next;
-	}
-	(void)envp;
-	return (FALSE);
-}
-*/
 
 // Si redirect > ou >>, mise en fichier de sortie.
 // Si redirect < ou <<, ne pas transmettre.
 // Si next pas de redirection < ou << et actuel pas de redirect > ou >>, transmission
+/*
 static t_bool	linear_command_execution(t_commands *commands, char ***envp)
 {
 	t_commands	*current_command;
@@ -178,6 +130,7 @@ static t_bool	linear_command_execution(t_commands *commands, char ***envp)
 	(void)envp;
 	return (FALSE);
 }
+*/
 
 enum e_status	executer(char ***envp, char *line)
 {
@@ -190,8 +143,8 @@ enum e_status	executer(char ***envp, char *line)
 	commands = parse_user_input(line, envp);
 	if (!commands)
 		return (general_failure);
-	//put_commands(commands);
-	if (linear_command_execution(commands, envp))
-		return (free_commands(commands), g_status);
+	put_commands(commands);
+	//if (linear_command_execution(commands, envp))
+	//	return (free_commands(commands), g_status);
 	return (free_commands(commands), success);
 }
