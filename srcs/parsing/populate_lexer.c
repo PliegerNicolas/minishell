@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:34:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/10 02:13:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/10 02:31:11 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -92,17 +92,25 @@ static t_bool	group_lexer_args(t_lexer *lexer)
 
 	if (!lexer)
 		return (FALSE);
-	new_lexer = ft_join_str_arr(lexer->options, lexer->args);
-	if (!new_lexer)
-		return (TRUE);
-	exec = ft_strdup(lexer->exec);
-	if (!exec)
-		return (free_str_arr(new_lexer), TRUE);
-	new_lexer = ft_prepend_to_string_array(new_lexer, exec);
-	if (!new_lexer)
-		return (TRUE);
-	free_str_arr(lexer->args);
-	lexer->args = new_lexer;
+	if (!lexer->args && !lexer->options)
+	{
+		if (lexer->exec && set_arguments(lexer->exec, lexer))
+			return (TRUE);
+	}
+	else
+	{
+		new_lexer = ft_join_str_arr(lexer->options, lexer->args);
+		if (!new_lexer)
+			return (TRUE);
+		exec = ft_strdup(lexer->exec);
+		if (!exec)
+			return (free_str_arr(new_lexer), TRUE);
+		new_lexer = ft_prepend_to_string_array(new_lexer, exec);
+		if (!new_lexer)
+			return (TRUE);
+		free_str_arr(lexer->args);
+		lexer->args = new_lexer;
+	}
 	return (FALSE);
 }
 

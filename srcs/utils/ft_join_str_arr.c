@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 01:26:30 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/10 02:17:37 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/10 02:22:08 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -47,7 +47,7 @@ char	**ft_join_str_arr(char **arr1, char **arr2)
 	if (!new_arr)
 		return (NULL);
 	i = 0;
-	while (arr1[i])
+	while (arr1 && arr1[i])
 	{
 		new_arr[i] = ft_strdup(arr1[i]);
 		if (!new_arr[i++])
@@ -55,7 +55,7 @@ char	**ft_join_str_arr(char **arr1, char **arr2)
 oin_str_arr)"), free_array(new_arr), NULL);
 	}
 	j = 0;
-	while (arr2[j])
+	while (arr2 && arr2[j])
 	{
 		new_arr[i + j] = ft_strdup(arr2[j]);
 		if (!new_arr[j++])
