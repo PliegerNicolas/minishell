@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:34:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/08 01:16:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/10 02:13:40 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -85,6 +85,27 @@ static t_bool	fill_lexer(char **split, t_lexer *lexer, char ***envp)
 	return (FALSE);
 }
 
+static t_bool	group_lexer_args(t_lexer *lexer)
+{
+	char	**new_lexer;
+	char	*exec;
+
+	if (!lexer)
+		return (FALSE);
+	new_lexer = ft_join_str_arr(lexer->options, lexer->args);
+	if (!new_lexer)
+		return (TRUE);
+	exec = ft_strdup(lexer->exec);
+	if (!exec)
+		return (free_str_arr(new_lexer), TRUE);
+	new_lexer = ft_prepend_to_string_array(new_lexer, exec);
+	if (!new_lexer)
+		return (TRUE);
+	free_str_arr(lexer->args);
+	lexer->args = new_lexer;
+	return (FALSE);
+}
+
 t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 	enum e_quote_status quote_status, char ***envp)
 {
@@ -104,5 +125,8 @@ t_lexer	*populate_lexer(t_lexer *lexer, const char *cmd,
 	lexer->redir_path[1] = NULL;
 	if (fill_lexer(split, lexer, envp))
 		return (free_str_arr(split), free_lexer(lexer), NULL);
-	return (free_str_arr(split), lexer);
+	free_str_arr(split);
+	if (group_lexer_args(lexer))
+		return (free_lexer(lexer), NULL);
+	return (lexer);
 }
