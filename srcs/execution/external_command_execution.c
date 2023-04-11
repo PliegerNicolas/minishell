@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/11 22:01:04 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/11 22:04:10 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -115,7 +115,6 @@ t_bool	external_execution(t_lexer *lexer, int *previous_fd, char ***envp)
 		if (*previous_fd)
 			close(*previous_fd);
 		*previous_fd = pipefds[0];
-		close(pipefds[1]);
+		return (close(pipefds[1]), FALSE);
 	}
-	return (FALSE);
 }

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/11 22:02:24 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/11 22:05:06 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -108,10 +108,8 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 				return (TRUE);
 		}
 		else
-		{
 			if (external_execution(lexer, &previous_fd, envp))
 				return (TRUE);
-		}
 		lexer = lexer->next;
 	}
 	if (previous_fd)
