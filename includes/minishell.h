@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/10 01:32:51 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/11 18:41:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -76,6 +76,7 @@ typedef struct s_lexer
 	char				**args;
 	enum e_redir_type	redir_type[2];	
 	char				*redir_path[2];
+	int					pipe[2];
 	struct s_lexer		*previous;
 	struct s_lexer		*next;
 }	t_lexer;
@@ -186,6 +187,7 @@ void			reset_echoctl(void);
 
 enum e_status	executer(char ***envp, char *line);
 
+t_bool			is_builtin(const char *str);
 t_bool			execute_builtin(t_lexer *lexer, char ***envp);
 t_bool			execute_other(t_lexer *lexer, char ***envp);
 

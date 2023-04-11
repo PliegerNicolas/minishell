@@ -6,18 +6,18 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/10 01:05:20 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/11 19:14:24 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 // temp function for testing.
+/*
 static void	put_commands(t_commands *commands)
 {
 	t_lexer	*lexer;
 	size_t	i;
 	size_t	j;
-	size_t	k;
 
 	if (!commands)
 		return ;
@@ -28,10 +28,9 @@ static void	put_commands(t_commands *commands)
 		printf("%s=== Command nº%ld ===%s\n", PURPLE, i++, WHITE);
 		printf("commands->cmd : %s\n", commands->cmd);
 		lexer = commands->lexer;
-		k = 0;
 		while (lexer)
 		{
-			printf("%s< Lexer nº%ld >%s\n", CYAN, k++, WHITE);
+			printf("%s< Lexer nº%ld >%s\n", CYAN, lexer->id, WHITE);
 			if (lexer->cmd)
 				printf("lexer->cmd : %s\n", lexer->cmd);
 			else
@@ -74,63 +73,115 @@ static void	put_commands(t_commands *commands)
 	}
 	printf("%s===== ===== ===== ===== =====%s\n", YELLOW, WHITE);
 }
+*/
 
-// Si redirect > ou >>, mise en fichier de sortie.
-// Si redirect < ou <<, ne pas transmettre.
-// Si next pas de redirection < ou << et actuel pas de redirect > ou >>, transmission
-/*
-static t_bool	linear_command_execution(t_commands *commands, char ***envp)
+static void	close_fds(int *pipefds)
 {
-	t_commands	*current_command;
-	t_lexer		*current_lexer;
+	if (pipefds[0] != -1)
+		close(pipefds[0]);
+	if (pipefds[1] != -1)
+		close(pipefds[1]);
+}
+
+static t_bool	builtin_execution(t_lexer *lexer, char ***envp)
+{
+	if (!lexer)
+		return (FALSE);
+	printf("Builtin exec\n");
+	(void)envp;
+	return (FALSE);
+}
+
+static t_bool	external_execution(t_lexer *lexer, char ***envp)
+{
 	pid_t		pid;
 	int			pipefds[2];
+	static int	previous_fd;
+
+	if (!lexer)
+		return (FALSE);
+	if (lexer->id == 1)
+		previous_fd = -1;
+	if (pipe(pipefds) == -1)
+		return (perror("pipe"), TRUE);
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), close_fds(pipefds), TRUE);
+	else if (pid == 0)
+	{
+		if (previous_fd != -1)
+		{
+			if (dup2(previous_fd, STDIN_FILENO) == -1)
+			{
+				close_fds(pipefds);
+				close(previous_fd);
+				exit(TRUE);
+			}
+			close(previous_fd);
+		}
+		if (lexer->next)
+		{
+			if (dup2(pipefds[1], STDOUT_FILENO) == -1)
+			{
+				close_fds(pipefds);
+				exit(TRUE);
+			}
+			close(pipefds[1]);
+		}
+		if (execve(lexer->exec, lexer->args, *envp) == -1)
+		{
+			perror("execve");
+			close_fds(pipefds);
+			exit(TRUE);
+		}
+		close_fds(pipefds);
+		exit(FALSE);
+	}
+	else
+	{
+		previous_fd = pipefds[0];
+		close(pipefds[1]);
+		waitpid(pid, NULL, 0);
+	}
+	return (FALSE);
+}
+
+static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
+{
+	if (!lexer)
+		return (FALSE);
+	while (lexer)
+	{
+		if (is_builtin(lexer->exec))
+		{
+			if (builtin_execution(lexer, envp))
+				return (TRUE);
+		}
+		else
+		{
+			if (external_execution(lexer, envp))
+				return (TRUE);
+		}
+		lexer = lexer->next;
+	}
+	return (FALSE);
+}
+
+static t_bool	commands_execution(t_commands *commands, char ***envp)
+{
+	t_commands	*current_command;
 
 	if (!commands)
 		return (FALSE);
 	current_command = commands;
-	while (current_command)
+	while (current_command && current_command->lexer)
 	{
-		current_lexer = current_command->lexer;
-		while (current_lexer)
-		{
-			if (current_lexer->next && pipe(pipefds) == -1)
-				return (TRUE); // pipe error or stop
-			pid = fork();
-			if (pid == -1)
-				return (TRUE); // fork error
-			else if (pid == 0)
-			{
-				if (current_lexer->next)
-				{
-					dup2(pipefds[1], STDOUT_FILENO);
-					close(pipefds[0]);
-				}
-				if (current_lexer != commands->lexer)
-				{
-					dup2(pipefds[0], STDIN_FILENO);
-					close(pipefds[1]);
-				}
-				if (execve(current_lexer->exec, current_lexer->args, *envp) == -1)
-				{
-					perror("execve");
-					return (free_commands(commands), TRUE);
-				}
-				return (free_commands(commands), TRUE);
-			}
-			if (current_lexer != commands->lexer)
-				close(pipefds[0]);
-			if (current_lexer->next)
-				close(pipefds[1]);
-			current_lexer = current_lexer->next;
-		}
-		waitpid(pid, NULL, 0);
+		if (lexer_execution(current_command->lexer, envp))
+			return (TRUE);
 		current_command = current_command->next;
 	}
-	(void)envp;
 	return (FALSE);
 }
-*/
 
 enum e_status	executer(char ***envp, char *line)
 {
@@ -143,8 +194,9 @@ enum e_status	executer(char ***envp, char *line)
 	commands = parse_user_input(line, envp);
 	if (!commands)
 		return (general_failure);
-	put_commands(commands);
-	//if (linear_command_execution(commands, envp))
-	//	return (free_commands(commands), g_status);
+	//put_commands(commands);
+	if (commands_execution(commands, envp))
+		return (free_commands(commands), g_status);
+	unlink(".heredoc");
 	return (free_commands(commands), success);
 }
