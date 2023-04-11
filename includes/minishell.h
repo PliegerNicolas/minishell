@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/11 21:37:19 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/11 22:20:39 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -187,12 +187,10 @@ void			reset_echoctl(void);
 
 enum e_status	executer(char ***envp, char *line);
 void			close_fds(int *pipefds, int *previous_fd);
+t_bool			is_builtin(const char *str);
 t_bool			builtin_execution(t_lexer *lexer, char ***envp);
 t_bool			external_execution(t_lexer *lexer, int *previous_fd,
 					char ***envp);
-
-t_bool			is_builtin(const char *str);
-t_bool			execute_builtin(t_lexer *lexer, char ***envp);
 
 t_bool			echo_builtin(t_lexer *lexer, char ***envp);
 t_bool			cd_builtin(t_lexer *lexer, char ***envp);
