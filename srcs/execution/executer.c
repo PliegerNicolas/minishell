@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/11 19:14:24 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/11 19:18:58 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -92,16 +92,14 @@ static t_bool	builtin_execution(t_lexer *lexer, char ***envp)
 	return (FALSE);
 }
 
-static t_bool	external_execution(t_lexer *lexer, char ***envp)
+static t_bool	external_execution(t_lexer *lexer, int *previous_fd,
+	char ***envp)
 {
 	pid_t		pid;
 	int			pipefds[2];
-	static int	previous_fd;
 
 	if (!lexer)
 		return (FALSE);
-	if (lexer->id == 1)
-		previous_fd = -1;
 	if (pipe(pipefds) == -1)
 		return (perror("pipe"), TRUE);
 	pid = fork();
@@ -109,15 +107,15 @@ static t_bool	external_execution(t_lexer *lexer, char ***envp)
 		return (perror("fork"), close_fds(pipefds), TRUE);
 	else if (pid == 0)
 	{
-		if (previous_fd != -1)
+		if (*previous_fd != -1)
 		{
-			if (dup2(previous_fd, STDIN_FILENO) == -1)
+			if (dup2(*previous_fd, STDIN_FILENO) == -1)
 			{
 				close_fds(pipefds);
-				close(previous_fd);
+				close(*previous_fd);
 				exit(TRUE);
 			}
-			close(previous_fd);
+			close(*previous_fd);
 		}
 		if (lexer->next)
 		{
@@ -139,7 +137,7 @@ static t_bool	external_execution(t_lexer *lexer, char ***envp)
 	}
 	else
 	{
-		previous_fd = pipefds[0];
+		*previous_fd = pipefds[0];
 		close(pipefds[1]);
 		waitpid(pid, NULL, 0);
 	}
@@ -148,8 +146,11 @@ static t_bool	external_execution(t_lexer *lexer, char ***envp)
 
 static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 {
+	static int	previous_fd;
+
 	if (!lexer)
 		return (FALSE);
+	previous_fd = -1;
 	while (lexer)
 	{
 		if (is_builtin(lexer->exec))
@@ -159,7 +160,7 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 		}
 		else
 		{
-			if (external_execution(lexer, envp))
+			if (external_execution(lexer, &previous_fd, envp))
 				return (TRUE);
 		}
 		lexer = lexer->next;
