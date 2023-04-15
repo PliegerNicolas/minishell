@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/04/11 22:19:44 by nicolas          ###   ########.fr        #
+#    Updated: 2023/04/15 19:27:54 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,9 +43,10 @@ SRCS				:=		minishell \
 							signals/sig_handlers \
 							signals/echoctl_handlers \
 							execution/executer \
+							execution/builtin_execution \
 							execution/external_command_execution \
 							execution/is_builtin \
-							execution/builtin_execution \
+							execution/utils \
 							execution/builtins/echo_builtin \
 							execution/builtins/cd_builtin \
 							execution/builtins/pwd_builtin \

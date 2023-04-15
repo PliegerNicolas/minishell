@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/11 22:29:13 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/15 23:40:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -75,6 +75,7 @@ static void	put_commands(t_commands *commands)
 }
 */
 
+/*
 void	close_fds(int *pipefds, int *previous_fd)
 {
 	if (pipefds[0] != -1)
@@ -87,33 +88,32 @@ void	close_fds(int *pipefds, int *previous_fd)
 		*previous_fd = -1;
 	}
 }
+*/
 
 static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 {
-	int	previous_fd;
+	int	prev_fd;
 
 	if (!lexer)
 		return (FALSE);
-	previous_fd = STDIN_FILENO;
+	prev_fd = -1;
 	while (lexer)
 	{
 		if (is_builtin(lexer->exec))
 		{
-			if (previous_fd != -1)
-			{
-				close(previous_fd);
-				previous_fd = -1;
-			}
-			if (builtin_execution(lexer, envp))
+			if (builtin_execution(lexer, &prev_fd, envp))
 				return (TRUE);
 		}
 		else
-			if (external_execution(lexer, &previous_fd, envp))
+			if (external_execution(lexer, &prev_fd, envp))
 				return (TRUE);
+		if (!lexer->next && prev_fd)
+		{
+			put_fd(prev_fd);
+			close(prev_fd);
+		}
 		lexer = lexer->next;
 	}
-	if (previous_fd)
-		close(previous_fd);
 	return (FALSE);
 }
 

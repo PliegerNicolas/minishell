@@ -6,11 +6,20 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/11 22:24:11 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/15 19:28:37 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+t_bool	builtin_execution(t_lexer *lexer, int *pipefds, char ***envp)
+{
+	if (!lexer)
+		return (FALSE);
+	(void)pipefds;
+	(void)envp;
+	return (FALSE);
+}
+/*
 t_bool	builtin_execution(t_lexer *lexer, char ***envp)
 {
 	t_bool	status;
@@ -35,3 +44,4 @@ t_bool	builtin_execution(t_lexer *lexer, char ***envp)
 		status = exit_builtin();
 	return (status);
 }
+*/
