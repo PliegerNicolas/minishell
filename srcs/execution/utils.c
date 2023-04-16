@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/15 23:39:13 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/16 17:40:25 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -25,7 +25,7 @@ void	put_fd(int fd)
 		written_bytes = 0;
 		while (written_bytes < read_bytes)
 		{
-			hold_bytes = write(fd, buffer + written_bytes,
+			hold_bytes = write(STDOUT_FILENO, buffer + written_bytes,
 					read_bytes - written_bytes);
 			if (hold_bytes < 0)
 			{

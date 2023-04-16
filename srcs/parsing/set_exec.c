@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:39:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/10 01:01:58 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/16 17:37:50 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -69,6 +69,8 @@ static char	*get_path(char *cmd, char ***envp)
 
 	if (!cmd)
 		return (NULL);
+	if (is_builtin(cmd))
+		return (cmd);
 	paths = get_paths(envp);
 	if (!paths)
 		return (free(cmd), NULL);

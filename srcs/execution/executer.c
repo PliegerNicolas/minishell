@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/15 23:40:00 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/16 17:49:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -107,7 +107,7 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 		else
 			if (external_execution(lexer, &prev_fd, envp))
 				return (TRUE);
-		if (!lexer->next && prev_fd)
+		if (!lexer->next && prev_fd != -1)
 		{
 			put_fd(prev_fd);
 			close(prev_fd);
