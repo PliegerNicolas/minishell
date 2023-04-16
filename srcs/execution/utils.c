@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/16 17:40:25 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/16 23:08:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -25,7 +25,7 @@ void	put_fd(int fd)
 		written_bytes = 0;
 		while (written_bytes < read_bytes)
 		{
-			hold_bytes = write(STDOUT_FILENO, buffer + written_bytes,
+			hold_bytes = write(STDOUT, buffer + written_bytes,
 					read_bytes - written_bytes);
 			if (hold_bytes < 0)
 			{
@@ -34,6 +34,7 @@ void	put_fd(int fd)
 			}
 			written_bytes += hold_bytes;
 		}
+		read_bytes = 0;
 	}
 	if (read_bytes < 0)
 		perror("read");
@@ -58,11 +59,11 @@ int	open_file(const char *path, const enum e_redir_type redir_type)
 
 void	close_fds(int *pipefds, int *prev_fd)
 {
-	if (pipefds[0])
+	if (pipefds[0] != -1)
 		close(pipefds[0]);
-	if (pipefds[1])
+	if (pipefds[1] != -1)
 		close(pipefds[1]);
-	if (*prev_fd)
+	if (*prev_fd != -1)
 	{
 		close(*prev_fd);
 		*prev_fd = -1;
