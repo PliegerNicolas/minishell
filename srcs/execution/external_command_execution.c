@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/16 17:49:04 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/18 17:04:05 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -126,14 +126,14 @@ t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 	if (!lexer)
 		return (FALSE);
 	if (pipe(pipefds) == -1)
-		return (perror("pipe"), close_fds(pipefds, prev_fd), TRUE);
+		return (g_status = general_failure, perror("pipe"), close_fds(pipefds, prev_fd), TRUE);
 	pid = fork();
 	if (pid == -1)
-		return (perror("fork"), close_fds(pipefds, prev_fd), TRUE);
+		return (g_status = general_failure, perror("fork"), close_fds(pipefds, prev_fd), TRUE);
 	else if (pid == 0)
 		child(lexer, pipefds, prev_fd, envp);
 	else
 		if (parent(lexer, pipefds, prev_fd, pid))
-			return (TRUE);
+			return (g_status = general_failure, TRUE);
 	return (FALSE);
 }

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/18 16:55:01 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/18 17:06:45 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -56,6 +56,30 @@ static t_bool	set_prev_fd(t_lexer *lexer, int *prev_fd)
 	return (FALSE);
 }
 
+static t_bool	execute_builtin(t_lexer *lexer, char ***envp)
+{
+	t_bool	status;
+
+	if (!lexer)
+		return (FALSE);
+	status = FALSE;
+	if (ft_strncmp(lexer->exec, "echo", 5) == 0)
+		status = echo_builtin(lexer, envp);
+	else if (ft_strncmp(lexer->exec, "cd", 3) == 0)
+		status = cd_builtin(lexer, envp);
+	else if (ft_strncmp(lexer->exec, "pwd", 4) == 0)
+		status = pwd_builtin(lexer, envp);
+	else if (ft_strncmp(lexer->exec, "export", 7) == 0)
+		status = export_builtin(lexer, envp);
+	else if (ft_strncmp(lexer->exec, "unset", 6) == 0)
+		status = unset_builtin(lexer, envp);
+	else if (ft_strncmp(lexer->exec, "env", 4) == 0)
+		status = env_builtin(lexer, envp);
+	else if (ft_strncmp(lexer->exec, "exit", 5) == 0)
+		status = exit_builtin();
+	return (status);
+}
+
 t_bool	builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 {
 	int	stdout_cpy;
@@ -69,8 +93,9 @@ t_bool	builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 	if (stdout_redirection(lexer) == -1)
 		return (close(stdout_cpy), TRUE);
 	// output function
-	(void)envp;
-	printf("%s\n", lexer->exec);
+	//(void)envp;
+	//printf("%s\n", lexer->exec);
+	execute_builtin(lexer, envp);
 	//
 	if (dup2(stdout_cpy, STDOUT_FILENO) == -1)
 		return (perror("dup2"), close(stdout_cpy), TRUE);
