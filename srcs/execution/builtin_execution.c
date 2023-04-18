@@ -6,39 +6,81 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/17 00:26:09 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/18 16:55:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static void	stdin_redirection(int *prev_fd)
+static void	clear_stdin(int *prev_fd)
 {
-	if (*prev_fd != -1)
-	{
-		close(*prev_fd);
-		*prev_fd = -1;
-	}
+	if (*prev_fd == -1)
+		return ;
+	close(*prev_fd);
+	*prev_fd = -1;
 }
 
-static t_bool	stdout_redirection(t_lexer *lexer, int *prev_fd)
+static t_bool	stdout_redirection(t_lexer *lexer)
+{
+	int	fd;
+
+	if (!lexer)
+		return (FALSE);
+	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
+			|| lexer->redir_type[1] == append_to_file))
+		fd = open_file(lexer->redir_path[1], lexer->redir_type[1]);
+	else
+		fd = open(".tmp_builtin", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd == -1)
+		return (perror("open"), TRUE);
+	if (dup2(fd, STDOUT_FILENO) == -1)
+		return (perror("dup2"), close(fd), TRUE);
+	close(fd);
+	return (FALSE);
+}
+
+static t_bool	set_prev_fd(t_lexer *lexer, int *prev_fd)
 {
 	if (!lexer)
 		return (FALSE);
-	(void)prev_fd;
+	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
+			|| lexer->redir_type[1] == append_to_file))
+	{
+		if (!lexer->next)
+			return (FALSE);
+		*prev_fd = open(lexer->redir_path[1], O_RDONLY);
+	}
+	else
+		*prev_fd = open(".tmp_builtin", O_RDONLY, 0644);
+	if (*prev_fd == -1)
+		return (perror("open"), TRUE);
 	return (FALSE);
 }
 
 t_bool	builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 {
+	int	stdout_cpy;
+
 	if (!lexer)
 		return (FALSE);
-	stdin_redirection(prev_fd);
-	if (stdout_redirection(lexer, prev_fd))
-		return (close(*prev_fd), TRUE);
-	printf("%s\n", lexer->exec);
+	clear_stdin(prev_fd);
+	stdout_cpy = dup(STDOUT_FILENO);
+	if (stdout_cpy == -1)
+		return (TRUE);
+	if (stdout_redirection(lexer) == -1)
+		return (close(stdout_cpy), TRUE);
+	// output function
 	(void)envp;
+	printf("%s\n", lexer->exec);
+	//
+	if (dup2(stdout_cpy, STDOUT_FILENO) == -1)
+		return (perror("dup2"), close(stdout_cpy), TRUE);
+	close(stdout_cpy);
+	if (set_prev_fd(lexer, prev_fd))
+		return (TRUE);
+	unlink(".tmp_builtin");
 	return (FALSE);
 }
+
 /*
 t_bool	builtin_execution(t_lexer *lexer, char ***envp)
 {

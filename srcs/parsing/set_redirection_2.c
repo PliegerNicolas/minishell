@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 01:49:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/07 12:16:54 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/18 16:22:41 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -59,11 +59,9 @@ t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer)
 		free(lexer->redir_path[0]);
 	fd = access(".heredoc", F_OK);
 	if (fd == -1)
-		fd = open(".heredoc", O_CREAT | O_WRONLY,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+		fd = open(".heredoc", O_CREAT | O_WRONLY, 0644);
 	else
-		fd = open(".heredoc", O_WRONLY | O_TRUNC,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+		fd = open(".heredoc", O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 		return (perror_file(), TRUE);
 	if (write_to_heredoc(fd, end))
