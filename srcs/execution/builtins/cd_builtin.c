@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:07:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 22:33:50 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/18 21:23:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -42,26 +42,30 @@ static t_bool	change_directory(char *path, char ***envp)
 	if (!oldpwd)
 		return (TRUE);
 	if (chdir(path) == -1)
-		return (g_status = general_failure, perror_no_such_file_or_dir(path),
-			free(oldpwd), TRUE);
+		return (perror("chdir"), free(oldpwd), TRUE);
 	getcwd(newpwd, sizeof(newpwd));
 	*envp = set_env_var("OLDPWD", oldpwd, *envp);
 	if (!*envp)
-		return (g_status = general_failure, free(oldpwd), TRUE);
+		return (free(oldpwd), TRUE);
 	*envp = set_env_var("PWD", newpwd, *envp);
 	if (!*envp)
-		return (g_status = general_failure, free(oldpwd), TRUE);
+		return (free(oldpwd), TRUE);
 	return (free(oldpwd), FALSE);
 }
 
 t_bool	cd_builtin(t_lexer *lexer, char ***envp)
 {
-	if (lexer->options)
-		return (perror_unexpected_option(),
-			g_status = misuse_of_shell_builtins, TRUE);
-	if (lexer && *(lexer->args + 2))
-		return (perror_too_many_arguments(), g_status = general_failure, TRUE);
+	size_t	len;
+
+	if (!lexer)
+		return (FALSE);
+	len = ft_strarrlen((const char **)lexer->args);
+	if (len > 2)
+	{
+		errno = E2BIG;
+		return (perror("cd"), g_status = misuse_of_shell_builtins, TRUE);
+	}
 	if (change_directory(*(lexer->args + 1), envp))
-		return (TRUE);
-	return (FALSE);
+		return (g_status = general_failure, TRUE);
+	return (g_status = success, FALSE);
 }

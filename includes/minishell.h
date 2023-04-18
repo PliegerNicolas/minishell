@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/17 00:08:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/18 20:52:37 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <errno.h>
 
 /* ************************************** */
 /* * ENUMERATORS						* */
@@ -220,10 +221,6 @@ t_bool			set_redirection(const char *str, t_lexer *lexer,
 
 t_bool			set_redir_path(char *pathname, t_lexer *lexer, int slot);
 t_bool			set_redir_path_heredoc(const char *end, t_lexer *lexer);
-//t_bool			set_fd_to_file(const char *pathname, t_lexer *lexer);
-//t_bool			set_fd_append_to_file(const char *pathname, t_lexer *lexer);
-//t_bool			set_fd_from_file(const char *pathname, t_lexer *lexer);
-//t_bool			set_fd_heredoc(const char *pathname, t_lexer *lexer);
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status);
@@ -268,5 +265,6 @@ char			**ft_setsplit(const char *line, const char *set);
 char			**ft_trimsplit(const char **split, const char *set);
 int				ft_followed_chars(const char *s, const int c1, const int c2);
 int				ft_isnextcharset(const char *s, const char *set);
+size_t			ft_strarrlen(const char **strarr);
 
 #endif

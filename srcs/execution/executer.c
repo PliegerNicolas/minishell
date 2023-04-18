@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/17 00:19:22 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/18 21:41:22 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -75,21 +75,6 @@ static void	put_commands(t_commands *commands)
 }
 */
 
-/*
-void	close_fds(int *pipefds, int *previous_fd)
-{
-	if (pipefds[0] != -1)
-		close(pipefds[0]);
-	if (pipefds[1] != -1)
-		close(pipefds[1]);
-	if (*previous_fd != -1)
-	{
-		close(*previous_fd);
-		*previous_fd = -1;
-	}
-}
-*/
-
 static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 {
 	int	prev_fd;
@@ -148,5 +133,5 @@ enum e_status	executer(char ***envp, char *line)
 	if (commands_execution(commands, envp))
 		return (free_commands(commands), g_status);
 	unlink(".heredoc");
-	return (free_commands(commands), success);
+	return (free_commands(commands), g_status);
 }
