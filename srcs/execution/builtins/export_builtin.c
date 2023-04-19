@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:14:22 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 23:28:20 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/19 16:28:14 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -91,14 +91,22 @@ t_bool	export(char *arg, char ***envp)
 
 t_bool	export_builtin(t_lexer *lexer, char ***envp)
 {
-	if (lexer->options)
-		return (perror_unexpected_option(),
-			g_status = misuse_of_shell_builtins, TRUE);
-	if (lexer && *(lexer->args + 2))
-		return (perror_too_many_arguments(), g_status = general_failure, TRUE);
-	if (lexer && !*(lexer->args + 1))
+	size_t	len;
+
+	if (!lexer)
+		return (FALSE);
+	len = ft_strarrlen((const char **)lexer->args);
+	if (len > 2)
+	{
+		errno = E2BIG;
+		return (perror("export"), g_status = misuse_of_shell_builtins, TRUE);
+	}
+	if (len == 1)
 		return (env_builtin(lexer, envp));
-	else if (lexer && export(*(lexer->args + 1), envp))
-		return (g_status = general_failure, TRUE);
+	else
+	{
+		if (export(lexer->args[1], envp))
+			return (g_status = general_failure, TRUE);
+	}
 	return (FALSE);
 }
