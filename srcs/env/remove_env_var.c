@@ -6,10 +6,20 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 14:01:10 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 23:47:03 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/19 18:42:22 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
+
+static t_bool	verify_if_var_exists(const char *var_name, const char **envp)
+{
+	char	*found_var;
+
+	found_var = get_env_var(var_name, envp);
+	if (!found_var)
+		return (TRUE);
+	return (free(found_var), FALSE);
+}
 
 char	**remove_env_var(char *var_name, char **envp)
 {
@@ -19,6 +29,10 @@ char	**remove_env_var(char *var_name, char **envp)
 
 	if (!envp)
 		return (NULL);
+	if (!var_name)
+		return (free_envp(envp), NULL);
+	if (verify_if_var_exists(var_name, (const char **)envp))
+		return (envp);
 	new_envp = malloc(env_len(envp) * sizeof(*new_envp));
 	if (!new_envp)
 		return (perror_malloc("@new_envp (srcs/env/remove_env_var.c #remove_env\
@@ -31,6 +45,5 @@ _var)"), free_envp(envp), NULL);
 	while (envp[j])
 		new_envp[i++] = envp[j++];
 	new_envp[i] = 0;
-	free(envp);
-	return (new_envp);
+	return (free(envp), new_envp);
 }

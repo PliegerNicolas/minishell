@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 23:31:30 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 23:41:00 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/19 18:46:18 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -29,15 +29,19 @@ t_bool	unset_env_variables(char **unset_args, char ***envp)
 
 t_bool	unset_builtin(t_lexer *lexer, char ***envp)
 {
-	if (lexer->options)
-		return (perror_unexpected_option(),
-			g_status = misuse_of_shell_builtins, TRUE);
-	if (lexer && !*(lexer->args + 1))
+	size_t	len;
+
+	if (!lexer)
+		return (FALSE);
+	len = ft_strarrlen((const char **)lexer->args);
+	if (len <= 1)
 	{
-		perror_not_enough_arguments();
-		return (g_status = misuse_of_shell_builtins, TRUE);
+		if (len <= 1)
+			errno = EINVAL;
+		perror("unset");
+		return (g_status = command_invoked_cannot_execute, TRUE);
 	}
 	if (unset_env_variables(lexer->args + 1, envp))
 		return (g_status = general_failure, TRUE);
-	return (FALSE);
+	return (g_status = success, FALSE);
 }
