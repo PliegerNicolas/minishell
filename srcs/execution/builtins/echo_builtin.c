@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:46:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/19 15:37:10 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/19 16:17:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -48,13 +48,18 @@ static t_bool	put(t_lexer *lexer, t_bool n_option, size_t i)
 	return (FALSE);
 }
 
+/* Problème avec l'impression des options dû à la stratégie de parsing. */
 t_bool	echo_builtin(t_lexer *lexer)
 {
+	char	*quoteless_str;
 	t_bool	n_option;
 	size_t	i;
 
 	if (!lexer)
 		return (FALSE);
+	quoteless_str = get_quoteless_str(lexer->cmd);
+	if (!quoteless_str)
+		return (g_status = general_failure, TRUE);
 	n_option = FALSE;
 	i = 1;
 	if (lexer->args[i] && strncmp(lexer->args[i], "-n", 2) == 0)
@@ -64,5 +69,5 @@ t_bool	echo_builtin(t_lexer *lexer)
 	}
 	if (put(lexer, n_option, i))
 		return (g_status = general_failure, TRUE);
-	return (FALSE);
+	return (g_status = success, FALSE);
 }

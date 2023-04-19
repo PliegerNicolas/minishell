@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/19 15:16:54 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/19 15:40:18 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -198,7 +198,7 @@ void			close_fds(int *pipefds, int *prev_fd);
 
 t_bool			echo_builtin(t_lexer *lexer);
 t_bool			cd_builtin(t_lexer *lexer, char ***envp);
-t_bool			pwd_builtin(t_lexer *lexer, char ***envp);
+t_bool			pwd_builtin(t_lexer *lexer);
 t_bool			export_builtin(t_lexer *lexer, char ***envp);
 t_bool			unset_builtin(t_lexer *lexer, char ***envp);
 t_bool			env_builtin(t_lexer *lexer, char ***envp);
