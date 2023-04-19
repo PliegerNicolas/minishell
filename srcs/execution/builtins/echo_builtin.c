@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:46:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/10 00:11:49 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/19 15:37:10 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -27,38 +27,42 @@ ltin.c #get_quoteless_str)"), NULL);
 	return (quoteless_str);
 }
 
-static void	skip_command(const char *quoteless_line, size_t *i)
+static t_bool	put(t_lexer *lexer, t_bool n_option, size_t i)
 {
-	while (quoteless_line[*i])
+	char	*quoteless_str;
+
+	while (lexer->args[i])
 	{
-		while (quoteless_line[*i] && ft_isspace(quoteless_line[*i]))
-			(*i)++;
-		if (quoteless_line[*i] != '-')
-			break ;
-		while (!ft_isspace(quoteless_line[*i]))
-			(*i)++;
+		quoteless_str = get_quoteless_str(lexer->args[i++]);
+		if (!quoteless_str)
+			return (TRUE);
+		ft_putstr_fd(quoteless_str, STDOUT);
+		free(quoteless_str);
+		if (lexer->args[i])
+			ft_putchar_fd(' ', STDOUT);
 	}
+	if (!n_option)
+		ft_putchar_fd('\n', STDOUT);
+	else if (n_option && i > 2)
+		ft_putendl_fd("$", STDOUT);
+	return (FALSE);
 }
 
-t_bool	echo_builtin(t_lexer *lexer, char ***envp)
+t_bool	echo_builtin(t_lexer *lexer)
 {
-	char	*quoteless_line;
+	t_bool	n_option;
 	size_t	i;
 
-	if (!envp || !lexer->cmd)
-		return (g_status = command_invoked_cannot_execute, TRUE);
-	quoteless_line = get_quoteless_str(lexer->cmd);
-	if (!quoteless_line)
-		return (g_status = general_failure, TRUE);
-	i = 4;
-	skip_command(quoteless_line, &i);
-	//if (lexer->options && ft_strncmp(lexer->options, "n", 2) == 0)
-	if (lexer->options && ft_strncmp(*lexer->options, "n", 2) == 0)
+	if (!lexer)
+		return (FALSE);
+	n_option = FALSE;
+	i = 1;
+	if (lexer->args[i] && strncmp(lexer->args[i], "-n", 2) == 0)
 	{
-		ft_putstr_fd(quoteless_line + i, STDOUT);
-		ft_putendl_fd("$", STDOUT);
+		n_option = TRUE;
+		i++;
 	}
-	else
-		ft_putendl_fd(quoteless_line + i, STDOUT);
-	return (free(quoteless_line), FALSE);
+	if (put(lexer, n_option, i))
+		return (g_status = general_failure, TRUE);
+	return (FALSE);
 }

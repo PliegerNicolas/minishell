@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/18 21:36:51 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/19 15:17:06 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -71,7 +71,7 @@ static t_bool	execute_builtin(t_lexer *lexer, char ***envp)
 		return (FALSE);
 	status = FALSE;
 	if (ft_strncmp(lexer->exec, "echo", 5) == 0)
-		status = echo_builtin(lexer, envp);
+		status = echo_builtin(lexer);
 	else if (ft_strncmp(lexer->exec, "cd", 3) == 0)
 		status = cd_builtin(lexer, envp);
 	else if (ft_strncmp(lexer->exec, "pwd", 4) == 0)
