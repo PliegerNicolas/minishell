@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:43:50 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 15:21:11 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/23 18:24:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -41,11 +41,11 @@ char	**set_env_var(char *name, char *value, char **envp)
 	new_env_data = NULL;
 	while (envp[i] && ft_strncmp(name, envp[i], ft_strlen(name) != 0))
 		i++;
+	new_env_data = join_env(name, value, '=');
+	if (!new_env_data)
+		return (free_envp(envp), NULL);
 	if (envp[i])
 	{
-		new_env_data = join_env(name, value, '=');
-		if (!new_env_data)
-			return (free_envp(envp), NULL);
 		free(envp[i]);
 		envp[i] = new_env_data;
 	}
@@ -53,7 +53,7 @@ char	**set_env_var(char *name, char *value, char **envp)
 	{
 		envp = ft_append_to_string_array(envp, new_env_data);
 		if (!envp)
-			return (free_envp(envp), NULL);
+			return (free(new_env_data), NULL);
 	}
 	return (envp);
 }

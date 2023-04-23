@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:31:57 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 14:52:10 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/23 18:34:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -20,7 +20,7 @@ char	*get_env_var(const char *var, const char **envp)
 	if (!var || !envp)
 		return (NULL);
 	i = 0;
-	while (envp[i] && ft_strncmp(var, envp[i], ft_strlen(var) != 0))
+	while (envp[i] && ft_strncmp(var, envp[i], ft_strlen(var)) != 0)
 		i++;
 	if (!envp[i])
 		return (NULL);
