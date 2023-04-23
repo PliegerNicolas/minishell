@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/19 15:40:18 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/23 18:02:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -214,6 +214,7 @@ t_lexer			*populate_lexer(t_lexer *lexer, const char *cmd,
 
 t_bool			set_exec(const char *str, t_lexer *lexer,
 					t_bool *prev_is_redir, char ***envp);
+char			*get_path(char *cmd, char ***envp);
 t_bool			set_options(const char *str, t_lexer *lexer);
 t_bool			set_arguments(const char *str, t_lexer *lexer);
 t_bool			set_redirection(const char *str, t_lexer *lexer,

@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/04/18 20:43:10 by nicolas          ###   ########.fr        #
+#    Updated: 2023/04/23 18:02:10 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ SRCS				:=		minishell \
 							parsing/generate_lexer \
 							parsing/populate_lexer \
 							parsing/set_exec \
+							parsing/get_path \
 							parsing/set_options \
 							parsing/set_arguments \
 							parsing/set_redirection_1 \
