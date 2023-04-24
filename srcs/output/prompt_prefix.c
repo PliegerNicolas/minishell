@@ -6,40 +6,83 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/18 20:06:19 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 12:56:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
+
+static char	*get_user(char ***envp)
+{
+	char	*user;
+
+	user = get_env_var("USER", (const char **)*envp);
+	if (!user)
+	{
+		*envp = set_env_var("USER", "username", *envp);
+		free(user);
+		if (!envp)
+			return (NULL);
+		user = get_env_var("USER", (const char **)*envp);
+	}
+	if (!user)
+		return (NULL);
+	return (user);
+}
+
+/*
+	delimiters[0] = start;
+	delimiters[1] = end;
+*/
+static char	*set_path(char *path, char *parsed_path)
+{
+	size_t	delimiters[2];
+
+	if (ft_strncmp(path, parsed_path, ft_strlen(parsed_path) + 1) == 0)
+	{
+		free(parsed_path);
+		parsed_path = ft_strdup("~");
+		if (!parsed_path)
+			return (NULL);
+		return (parsed_path);
+	}
+	free(parsed_path);
+	if (ft_strncmp(path, "/", 2) == 0)
+		parsed_path = ft_strdup("/");
+	else
+	{
+		delimiters[0] = 0;
+		delimiters[1] = 0;
+		while (path[delimiters[1]])
+			if (path[delimiters[1]++] == '/')
+				delimiters[0] = delimiters[1];
+		parsed_path = ft_substr(path, delimiters[0], delimiters[1]);
+	}
+	if (!parsed_path)
+		return (NULL);
+	return (parsed_path);
+}
 
 /*
 	This function gets the last element of a string splitted by '/'.
 	It's purpose is to get the name of the last directory of the given path.
 	If the given path is /home/USER. It returns ~.
+
+	@delimiters[0] = start of substr.
+	@delimiters[1] = end of substr.
 */
-static char	*parse_prompt_prefix(char *path)
+static char	*parse_prompt_prefix(char *path, char ***envp)
 {
 	char	*parsed_path;
-	size_t	start;
-	size_t	end;
+	char	*user;
 
-	start = 0;
-	end = 0;
-	parsed_path = ft_strjoin("/home/", getenv("USER"));
+	user = get_user(envp);
+	if (!user)
+		return (free(path), NULL);
+	parsed_path = ft_strjoin("/home/", user);
+	free(user);
 	if (!parsed_path)
 		return (free(path), NULL);
-	if (strncmp(path, parsed_path, ft_strlen(parsed_path) + 1) == 0)
-	{
-		free(parsed_path);
-		parsed_path = ft_substr("~", 0, 1);
-	}
-	else
-	{
-		free(parsed_path);
-		while (path[end])
-			if (path[end++] == '/')
-				start = end;
-		parsed_path = ft_substr(path, start, end);
-	}
+	parsed_path = set_path(path, parsed_path);
 	if (!parsed_path)
 		return (free(path), NULL);
 	return (free(path), parsed_path);
@@ -76,15 +119,16 @@ static char	*compose_prompt_prefix(char *dir_name)
 	This function creates the "prompt_prefix". A small and colored message to
 	indicate when prompt is open.
 */
-char	*prompt_prefix(void)
+char	*prompt_prefix(char ***envp)
 {
 	char	*cwd;
 
 	cwd = malloc((BUFFER_SIZE + 1) * sizeof(*cwd));
 	if (!cwd)
 		return (NULL);
-	getcwd(cwd, BUFFER_SIZE);
-	cwd = parse_prompt_prefix(cwd);
+	if (!getcwd(cwd, BUFFER_SIZE))
+		return (free(cwd), NULL);
+	cwd = parse_prompt_prefix(cwd, envp);
 	if (!cwd)
 		return (NULL);
 	if (g_status == success)

@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/18 20:11:47 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 11:32:06 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -55,7 +55,7 @@ static void	prompt(char ***envp)
 
 	while (g_status != exit_program)
 	{
-		prompt_msg = prompt_prefix();
+		prompt_msg = prompt_prefix(envp);
 		if (!prompt_msg)
 		{
 			perror_malloc("@prompt_msg (srcs/minishell.c #prompt)");
@@ -88,7 +88,7 @@ int	main(int argc, char **argv, char **env)
 	if (argc != 1)
 		return (perror_minishell_arguments(argc - 1), 1);
 	envp = initialize_env(argc, argv, env);
-	if (!envp || (envp && !*envp))
+	if (!envp)
 		return (perror_environnement(), 1);
 	prompt_init();
 	prompt(&envp);

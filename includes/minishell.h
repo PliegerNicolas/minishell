@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/23 18:07:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 11:32:19 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -153,7 +153,7 @@ void			free_envp(char **envp);
 
 /* ouput */
 
-char			*prompt_prefix(void);
+char			*prompt_prefix(char ***envp);
 
 void			perror_minishell_arguments(int nbr_args);
 void			perror_environnement(void);

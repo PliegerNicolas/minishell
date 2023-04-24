@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 21:38:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/11 11:49:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 12:47:34 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -20,9 +20,7 @@ char	**initialize_env(int argc, char **argv, char **env)
 	char	**envp;
 	int		i;
 
-	if (!env_len(env))
-		return (NULL);
-	envp = ft_calloc((env_len(env) + 1), sizeof(*envp));
+	envp = malloc((env_len(env) + 1) * sizeof(*envp));
 	if (!envp)
 		return (NULL);
 	i = 0;
