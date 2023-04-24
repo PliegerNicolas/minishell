@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 13:06:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 14:19:49 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 15:05:40 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -101,23 +101,21 @@ static t_bool	write_to_heredoc(t_lexer *lexer, const int fd, const char *end)
 t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer)
 {
 	int		fd;
-	char	*heredoc;
 
 	if (!end)
 		return (FALSE);
 	if (lexer->redir_path[0])
 		free(lexer->redir_path[0]);
-	heredoc = set_heredoc_filename(lexer);
-	if (!heredoc)
+	lexer->redir_path[0] = set_heredoc_filename(lexer);
+	if (!lexer->redir_path[0])
 		return (TRUE);
-	fd = open(heredoc, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd = open(lexer->redir_path[0], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 		return (perror_file(), TRUE);
 	if (write_to_heredoc(lexer, fd, end))
-		return (TRUE);
+		return (close(fd), TRUE);
 	if (close(fd) == -1)
 		return (perror_file(), TRUE);
-	lexer->redir_path[0] = heredoc;
 	if (!lexer->redir_path[0])
 		return (perror_malloc("lexer->lexer_redir (srcs/parsing/set_redirection\
 _2.c #set_redir_path_heredoc)"), TRUE);
