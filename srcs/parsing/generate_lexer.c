@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/10 00:36:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 13:40:42 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,7 +16,7 @@
 	It fills the lexer's variables through the populate_lexer() method.
 	It returns the linked list element.
 */
-static t_lexer	*new_lexer(char *cmd, char ***envp)
+static t_lexer	*new_lexer(char *cmd, size_t id, char ***envp)
 {
 	t_lexer	*lexer;
 
@@ -26,6 +26,7 @@ static t_lexer	*new_lexer(char *cmd, char ***envp)
 	if (!lexer)
 		return (perror_malloc("@lexer (srcs/parsing/generate_lexer.c #new_lexer\
 )"), NULL);
+	lexer->id = id;
 	lexer = populate_lexer(lexer, cmd, none, envp);
 	if (!lexer)
 		return (NULL);
@@ -36,28 +37,24 @@ static t_lexer	*new_lexer(char *cmd, char ***envp)
 	This function creates the first element of the lexer linked list.
 	Else it adds a new element to the existing linked list.
 */
-static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd, char ***envp)
+static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd, size_t id,
+	char ***envp)
 {
 	t_lexer	*last_lexer;
 
 	if (!head_lexer)
 	{
-		head_lexer = new_lexer(cmd, envp);
+		head_lexer = new_lexer(cmd, id, envp);
 		last_lexer = head_lexer;
-		if (last_lexer)
-			last_lexer->id = 1;
 	}
 	else
 	{
 		last_lexer = head_lexer;
 		while (last_lexer->next)
 			last_lexer = last_lexer->next;
-		last_lexer->next = new_lexer(cmd, envp);
+		last_lexer->next = new_lexer(cmd, id, envp);
 		if (last_lexer->next)
-		{
-			last_lexer->next->id = last_lexer->id + 1;
 			last_lexer->next->previous = last_lexer;
-		}
 		last_lexer = last_lexer->next;
 	}
 	if (!last_lexer)
@@ -95,7 +92,8 @@ t_lexer	*generate_lexer(const char *cmd, char ***envp)
 	i = 0;
 	while (splitted_cmd[i])
 	{
-		lexer = add_lexer(lexer, splitted_cmd[i++], envp);
+		lexer = add_lexer(lexer, splitted_cmd[i], i + 1, envp);
+		i++;
 		if (!lexer)
 			return (free_str_arr(splitted_cmd), NULL);
 	}

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/07 12:12:46 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 14:09:05 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -46,7 +46,7 @@ static t_bool	set_redir_type(const char *str, size_t *i, t_lexer *lexer)
 		else if (str[*i] == '>' && redir_type == to_file)
 			redir_type = append_to_file;
 		else
-			return (perror_parse_error(), no_redir);
+			return (perror_parse_error(), error);
 		(*i)++;
 	}
 	if (redir_type == 1 || redir_type == 2)
@@ -97,6 +97,8 @@ t_bool	set_redirection(const char *str, t_lexer *lexer, t_bool *prev_is_redir)
 	else
 	{
 		redir_type = set_redir_type(str, &i, lexer);
+		if (redir_type == error)
+			return (TRUE);
 		if (!str[i])
 			return (*prev_is_redir = TRUE, FALSE);
 		quoteless_str = ft_strdup(str + i);

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 01:05:50 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 23:36:21 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 14:02:56 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -34,5 +34,16 @@ void	perror_no_such_file_or_dir(char *path)
 	ft_putstr_fd(path, STDERR);
 	set_write_color(RED, STDERR);
 	ft_putendl_fd(" 눈_눈", STDERR);
+	set_write_color(WHITE, STDERR);
+}
+
+void	perror_heredoc(char *path)
+{
+	set_write_color(RED, STDERR);
+	ft_putstr_fd("Error while writing in heredoc : ", STDERR);
+	set_write_color(WHITE, STDERR);
+	ft_putstr_fd(path, STDERR);
+	set_write_color(RED, STDERR);
+	ft_putendl_fd(" ⥀.⥀", STDERR);
 	set_write_color(WHITE, STDERR);
 }

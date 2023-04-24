@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/24 11:32:19 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 14:08:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -59,7 +59,8 @@ enum e_redir_type
 	to_file = 1,
 	append_to_file = 2,
 	from_file = 3,
-	heredoc = 4
+	heredoc = 4,
+	error = 5
 };
 
 /* ************************************** */
@@ -168,6 +169,7 @@ void			perror_unexpected_option(void);
 void			perror_too_many_arguments(void);
 void			perror_not_enough_arguments(void);
 void			perror_no_such_file_or_dir(char *path);
+void			perror_heredoc(char *path);
 
 int				ft_putchar_fd(char c, int fd);
 int				ft_putstr_fd(char *s, int fd);

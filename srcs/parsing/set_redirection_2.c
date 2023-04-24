@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 01:49:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/18 16:22:41 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 13:07:22 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -21,6 +21,7 @@ t_bool	set_redir_path(char *pathname, t_lexer *lexer, int slot)
 	return (FALSE);
 }
 
+/*
 static t_bool	write_to_heredoc(const int fd, const char *end)
 {
 	char	*line;
@@ -74,3 +75,4 @@ t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer)
 _2.c #set_redir_path_heredoc)"), TRUE);
 	return (FALSE);
 }
+*/
