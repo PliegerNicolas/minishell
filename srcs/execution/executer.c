@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 14:17:24 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 15:40:24 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -118,23 +118,6 @@ static t_bool	commands_execution(t_commands *commands, char ***envp)
 	return (FALSE);
 }
 
-static void	destroy_heredocs(t_commands *commands)
-{
-	t_lexer	*lexer;
-
-	while (commands)
-	{
-		lexer = commands->lexer;
-		while (lexer)
-		{
-			if (lexer->redir_type[0] == heredoc)
-				unlink(lexer->redir_path[0]);
-			lexer = lexer->next;
-		}
-		commands = commands->next;
-	}
-}
-
 enum e_status	executer(char ***envp, char *line)
 {
 	t_commands	*commands;
@@ -148,7 +131,8 @@ enum e_status	executer(char ***envp, char *line)
 		return (general_failure);
 	//put_commands(commands);
 	if (commands_execution(commands, envp))
-		return (destroy_heredocs(commands), free_commands(commands), g_status);
-	destroy_heredocs(commands);
+		return (from_commands_destroy_heredocs(commands),
+			free_commands(commands), g_status);
+	from_commands_destroy_heredocs(commands);
 	return (free_commands(commands), g_status);
 }

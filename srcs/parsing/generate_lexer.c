@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 13:40:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 15:40:14 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -58,7 +58,8 @@ static t_lexer	*add_lexer(t_lexer *head_lexer, char *cmd, size_t id,
 		last_lexer = last_lexer->next;
 	}
 	if (!last_lexer)
-		return (free_lexer(head_lexer), NULL);
+		return (from_lexer_destroy_heredocs(head_lexer),
+			free_lexer(head_lexer), NULL);
 	return (head_lexer);
 }
 
