@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/24 15:39:56 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 15:49:14 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -261,6 +261,7 @@ int				ft_isalpha(int c);
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
 
+t_bool			ft_only_whitespace(const char *str);
 char			**ft_join_str_arr(char **arr1, char **arr2);
 char			**ft_append_to_string_array(char **str_arr, char *str);
 char			**ft_prepend_to_string_array(char **str_arr, char *str);
