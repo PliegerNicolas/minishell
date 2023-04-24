@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 13:06:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 14:00:50 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 14:19:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -63,10 +63,10 @@ static t_bool	fill_heredoc(char *line, const int fd, const size_t len)
 		return (TRUE);
 	written_bytes = write(fd, line, len);
 	if (written_bytes != (ssize_t)len)
-		return (printf("%serror%s\n", RED, WHITE), TRUE); //create func
+		return (perror_heredoc(), TRUE);
 	written_bytes = write(fd, "\n", 1);
 	if (written_bytes != (ssize_t)1)
-		return (printf("%serror%s\n", RED, WHITE), TRUE); //create func
+		return (perror_heredoc(), TRUE);
 	return (FALSE);
 }
 

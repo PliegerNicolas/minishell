@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 14:09:05 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/24 14:12:09 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -107,6 +107,5 @@ t_bool	set_redirection(const char *str, t_lexer *lexer, t_bool *prev_is_redir)
 		return (TRUE);
 	if (set_redir(quoteless_str, lexer, redir_type))
 		return (free(quoteless_str), TRUE);
-	redir_type = no_redir;
-	return (FALSE);
+	return (redir_type = no_redir, FALSE);
 }
