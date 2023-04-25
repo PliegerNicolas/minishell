@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/19 19:01:43 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/25 14:23:52 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -73,14 +73,20 @@ static void	child(t_lexer *lexer, int *pipefds, int *prev_fd, char ***envp)
 		close_fds(pipefds, prev_fd);
 		free_lexer(lexer);
 		free_envp(*envp);
-		exit(TRUE);
+		exit(general_failure);
 	}
-	execve(lexer->exec, lexer->args, *envp);
-	perror("execve");
+	if (execve(lexer->exec, lexer->args, *envp) == -1)
+	{
+		perror("execve");
+		close_fds(pipefds, prev_fd);
+		free_lexer(lexer);
+		free_envp(*envp);
+		exit(command_not_found);
+	}
 	close_fds(pipefds, prev_fd);
 	free_lexer(lexer);
 	free_envp(*envp);
-	exit(TRUE);
+	exit(success);
 }
 
 static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
@@ -89,8 +95,8 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 
 	close(pipefds[1]);
 	waitpid(pid, &status, 0);
-	if (!lexer)
-		return (FALSE);
+	if (WIFEXITED(status))
+		g_status = WEXITSTATUS(status);
 	if (*prev_fd)
 		close(*prev_fd);
 	if (lexer->next && lexer->redir_path[1] && (lexer->redir_type[1] == to_file
@@ -104,12 +110,9 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 		*prev_fd = pipefds[0];
 	else
 		*prev_fd = -1;
-	if (status == 0)
-		return (g_status = success, FALSE);
-	else if (status == 256)
-		return (g_status = command_not_found, FALSE);
-	else
-		return (g_status = general_failure, FALSE);
+	if (g_status == general_failure)
+		return (TRUE);
+	return (FALSE);
 }
 
 t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
