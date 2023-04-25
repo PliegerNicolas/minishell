@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/25 14:59:55 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/25 15:13:37 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -68,4 +68,14 @@ void	close_fds(int *pipefds, int *prev_fd)
 		close(*prev_fd);
 		*prev_fd = -1;
 	}
+}
+
+void	close_stds(void)
+{
+	if (STDIN_FILENO != -1)
+		close(STDIN_FILENO);
+	if (STDOUT_FILENO != -1)
+		close(STDOUT_FILENO);
+	if (STDERR_FILENO != -1)
+		close(STDERR_FILENO);
 }

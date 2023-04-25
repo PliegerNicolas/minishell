@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/25 15:07:14 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/25 15:14:29 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -69,6 +69,7 @@ static void	child(t_lexer *lexer, int *pipefds, int *prev_fd, char ***envp)
 	if (stdin_redirection(lexer, prev_fd) || stdout_redirection(lexer, pipefds))
 	{
 		close_fds(pipefds, prev_fd);
+		close_stds();
 		free_lexer(lexer);
 		free_envp(*envp);
 		exit(general_failure);
@@ -77,11 +78,13 @@ static void	child(t_lexer *lexer, int *pipefds, int *prev_fd, char ***envp)
 	{
 		perror("execve");
 		close_fds(pipefds, prev_fd);
+		close_stds();
 		free_lexer(lexer);
 		free_envp(*envp);
 		exit(command_not_found);
 	}
 	close_fds(pipefds, prev_fd);
+	close_stds();
 	free_lexer(lexer);
 	free_envp(*envp);
 	exit(success);

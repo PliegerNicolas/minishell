@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/24 15:49:14 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/25 15:11:53 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -76,7 +76,7 @@ typedef struct s_lexer
 	char				*exec;
 	char				**options;
 	char				**args;
-	enum e_redir_type	redir_type[2];	
+	enum e_redir_type	redir_type[2];
 	char				*redir_path[2];
 	int					pipe[2];
 	struct s_lexer		*previous;
@@ -194,6 +194,7 @@ t_bool			external_execution(t_lexer *lexer, int *prev_fd, char ***envp);
 void			put_fd(int fd);
 int				open_file(const char *path, const enum e_redir_type redir_type);
 void			close_fds(int *pipefds, int *prev_fd);
+void			close_stds(void);
 
 t_bool			echo_builtin(t_lexer *lexer);
 t_bool			cd_builtin(t_lexer *lexer, char ***envp);
