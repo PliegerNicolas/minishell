@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/25 15:05:09 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/25 15:07:14 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -95,7 +95,7 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		g_status = WEXITSTATUS(status);
-	if (*prev_fd)
+	if (*prev_fd != -1)
 		close(*prev_fd);
 	if (lexer->next && lexer->redir_path[1] && (lexer->redir_type[1] == to_file
 			|| lexer->redir_type[1] == append_to_file))
