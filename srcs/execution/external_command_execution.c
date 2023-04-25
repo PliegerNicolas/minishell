@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/25 14:23:52 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/25 15:05:09 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -17,8 +17,6 @@ static t_bool	stdin_redirection(t_lexer *lexer, int *prev_fd)
 
 	if (!lexer)
 		return (FALSE);
-	if (lexer->id == 1)
-		*prev_fd = STDIN_FILENO;
 	if (lexer->redir_path[0] && (lexer->redir_type[0] == from_file
 			|| lexer->redir_type[0] == heredoc))
 	{
@@ -29,12 +27,12 @@ static t_bool	stdin_redirection(t_lexer *lexer, int *prev_fd)
 			return (perror("dup2"), close(fd), TRUE);
 		close(fd);
 	}
-	else if (*prev_fd)
+	else if (*prev_fd != -1)
 	{
 		if (dup2(*prev_fd, STDIN_FILENO) == -1)
-			return (perror("dup2"), TRUE);
+			return (perror("dup2"), close(*prev_fd), TRUE);
 	}
-	if (*prev_fd)
+	if (*prev_fd != -1)
 		close(*prev_fd);
 	*prev_fd = -1;
 	return (FALSE);
@@ -107,12 +105,15 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 			return (perror("open"), close_fds(pipefds, prev_fd), TRUE);
 	}
 	else if (lexer->next)
-		*prev_fd = pipefds[0];
-	else
-		*prev_fd = -1;
+	{
+		*prev_fd = dup(pipefds[0]);
+		if (*prev_fd == -1)
+			return (g_status = general_failure,
+				close_fds(pipefds, prev_fd), TRUE);
+	}
 	if (g_status == general_failure)
-		return (TRUE);
-	return (FALSE);
+		return (close_fds(pipefds, prev_fd), TRUE);
+	return (close(pipefds[0]), FALSE);
 }
 
 t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
