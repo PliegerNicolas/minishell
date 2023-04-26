@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/26 17:37:20 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/26 18:44:40 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -44,7 +44,7 @@ static int	initialize_put(char *str, char ***args, t_bool *n_opt)
 	while (str[i] && ft_isspace(str[i]))
 		i++;
 	if (str + i && ft_strncmp(str + i, "-n", 2) == 0
-		&& str + i + 2 && ft_isspace(str[i + 2]))
+		&& str + i + 2 && (ft_isspace(str[i + 2]) || !str[i + 2]))
 	{
 		*n_opt = TRUE;
 		i += 3;
