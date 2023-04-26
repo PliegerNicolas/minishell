@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/25 15:13:37 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/26 18:29:18 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -59,9 +59,9 @@ int	open_file(const char *path, const enum e_redir_type redir_type)
 
 void	close_fds(int *pipefds, int *prev_fd)
 {
-	if (pipefds[0] && pipefds[0] != -1)
+	if (pipefds[0] != -1)
 		close(pipefds[0]);
-	if (pipefds[1] && pipefds[1] != -1)
+	if (pipefds[1] != -1)
 		close(pipefds[1]);
 	if (*prev_fd && *prev_fd != -1)
 	{

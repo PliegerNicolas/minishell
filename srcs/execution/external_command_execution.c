@@ -6,11 +6,15 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/25 15:14:29 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/26 18:35:25 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+// prev_fd = -1
+// rien stdin
+// pipefds open 0 et 1
+// rien
 static t_bool	stdin_redirection(t_lexer *lexer, int *prev_fd)
 {
 	int	fd;
@@ -32,6 +36,8 @@ static t_bool	stdin_redirection(t_lexer *lexer, int *prev_fd)
 		if (dup2(*prev_fd, STDIN_FILENO) == -1)
 			return (perror("dup2"), close(*prev_fd), TRUE);
 	}
+	else
+		close(STDIN_FILENO);
 	if (*prev_fd != -1)
 		close(*prev_fd);
 	*prev_fd = -1;
@@ -60,6 +66,8 @@ static t_bool	stdout_redirection(t_lexer *lexer, int *pipefds)
 			return (perror("dup2"), TRUE);
 		close(pipefds[1]);
 	}
+	else
+		close(pipefds[1]);
 	return (FALSE);
 }
 
