@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/26 17:36:08 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/26 17:37:20 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -103,4 +103,3 @@ t_bool	echo_builtin(t_lexer *lexer)
 	}
 	return (g_status = success, FALSE);
 }
-
