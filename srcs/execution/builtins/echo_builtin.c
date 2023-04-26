@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/04 18:46:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/26 17:33:11 by nplieger         ###   ########.fr       */
+/*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
+/*   Updated: 2023/04/26 17:36:08 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -103,3 +103,4 @@ t_bool	echo_builtin(t_lexer *lexer)
 	}
 	return (g_status = success, FALSE);
 }
+
