@@ -6,15 +6,11 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/26 18:41:03 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/26 18:54:40 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-// prev_fd = -1
-// rien stdin
-// pipefds open 0 et 1
-// rien
 static t_bool	stdin_redirection(t_lexer *lexer, int *prev_fd)
 {
 	int	fd;
