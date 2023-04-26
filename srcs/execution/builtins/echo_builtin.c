@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:46:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/19 16:17:00 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/26 17:33:11 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -27,47 +27,79 @@ ltin.c #get_quoteless_str)"), NULL);
 	return (quoteless_str);
 }
 
-static t_bool	put(t_lexer *lexer, t_bool n_option, size_t i)
+static t_bool	next_is_valid_word(char *str)
 {
-	char	*quoteless_str;
-
-	while (lexer->args[i])
-	{
-		quoteless_str = get_quoteless_str(lexer->args[i++]);
-		if (!quoteless_str)
-			return (TRUE);
-		ft_putstr_fd(quoteless_str, STDOUT);
-		free(quoteless_str);
-		if (lexer->args[i])
-			ft_putchar_fd(' ', STDOUT);
-	}
-	if (!n_option)
-		ft_putchar_fd('\n', STDOUT);
-	else if (n_option && i > 2)
-		ft_putendl_fd("$", STDOUT);
+	while (*str && ft_isspace(*str))
+		str++;
+	if (*str && *str != '<' && *str != '>')
+		return (TRUE);
 	return (FALSE);
 }
 
-/* Problème avec l'impression des options dû à la stratégie de parsing. */
+static int	initialize_put(char *str, char ***args, t_bool *n_opt)
+{
+	size_t	i;
+
+	i = 5;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	if (str + i && ft_strncmp(str + i, "-n", 2) == 0
+		&& str + i + 2 && ft_isspace(str[i + 2]))
+	{
+		*n_opt = TRUE;
+		i += 3;
+	}
+	while (**args && ***args == '-')
+		(*args)++;
+	return (i);
+}
+
+static t_bool	put(char *str, char **args, t_bool *n_opt)
+{
+	size_t	i;
+
+	i = initialize_put(str, &args, n_opt);
+	while (str[i] && next_is_valid_word(str + i))
+	{
+		if (str[i] == '-')
+		{
+			while (str[i] && !ft_isspace(str[i]))
+				ft_putchar_fd(str[i++], STDOUT);
+			if (next_is_valid_word(str + i))
+				ft_putchar_fd(' ', STDOUT);
+		}
+		else if (*args && ft_strncmp(str + i, *args, ft_strlen(*args)) == 0)
+		{
+			ft_putstr_fd(*args, STDOUT);
+			i += ft_strlen(*args);
+			args++;
+			if (next_is_valid_word(str + i))
+				ft_putchar_fd(' ', STDOUT);
+		}
+		else
+			i++;
+	}
+	return (FALSE);
+}
+
 t_bool	echo_builtin(t_lexer *lexer)
 {
 	char	*quoteless_str;
-	t_bool	n_option;
-	size_t	i;
+	t_bool	n_opt;
 
 	if (!lexer)
 		return (FALSE);
-	quoteless_str = get_quoteless_str(lexer->cmd);
-	if (!quoteless_str)
-		return (g_status = general_failure, TRUE);
-	n_option = FALSE;
-	i = 1;
-	if (lexer->args[i] && strncmp(lexer->args[i], "-n", 2) == 0)
+	if (ft_strarrlen((const char **)lexer->args) > 1)
 	{
-		n_option = TRUE;
-		i++;
+		quoteless_str = get_quoteless_str(lexer->cmd);
+		if (!quoteless_str)
+			return (g_status = general_failure, TRUE);
+		n_opt = FALSE;
+		if (put(quoteless_str, lexer->args + 1, &n_opt))
+			return (g_status = general_failure, free(quoteless_str), TRUE);
+		free(quoteless_str);
+		if (!n_opt)
+			ft_putchar_fd('\n', STDOUT);
 	}
-	if (put(lexer, n_option, i))
-		return (g_status = general_failure, TRUE);
 	return (g_status = success, FALSE);
 }
