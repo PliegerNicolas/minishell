@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/04/24 15:50:24 by nicolas          ###   ########.fr        #
+#    Updated: 2023/04/26 19:04:00 by nplieger         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,7 +115,7 @@ OBJS				:=		$(SRCS_C:%.c=$(OBJ_DIR)/%.o)
 CC					:=		gcc
 AR					:=		ar -rcs
 INCS				:=		-I $(INC_DIR)
-CFLAGS				:=		-Wall -Wextra -Werror -g3 #-O3
+CFLAGS				:=		-Wall -Wextra -Werror -O3
 RM					:=		rm -f
 
 #------------------------------------------------#

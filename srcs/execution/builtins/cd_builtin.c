@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:07:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/23 18:38:16 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/26 19:05:11 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -41,7 +41,8 @@ static t_bool	change_directory(char *path, char ***envp)
 	oldpwd = get_env_var("PWD", (const char **)*envp);
 	if (chdir(path) == -1)
 		return (perror("chdir"), free(oldpwd), TRUE);
-	getcwd(newpwd, sizeof(newpwd));
+	if (!getcwd(newpwd, sizeof(newpwd)))
+		return (free(oldpwd), TRUE);
 	if (oldpwd)
 		*envp = set_env_var("OLDPWD", oldpwd, *envp);
 	if (!*envp)
