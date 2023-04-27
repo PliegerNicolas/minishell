@@ -6,10 +6,11 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 02:06:58 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/27 13:59:14 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+//#include "minishell.h"
+#include "../../includes/minishell.h"
 
 static t_bool	is_inset(char c, const char *set)
 {
@@ -32,10 +33,14 @@ static size_t	ft_sections(const char *s, const char *set,
 
 	if (!s || !*s || !set || !*set)
 		return (0);
-	count = 0;
+	count = 1;
 	i = 0;
 	while (s[i])
 	{
+		set_quotestatus((char *)(s + i), &quote_status);
+		if (s[i] && (is_inset(s[i++], set) && !quote_status) && s[i + 1] && !ft_only_whitespace(s + i + 1))
+			count++;
+	/*
 		while ((s[i] && is_inset(s[i], set)) || ft_isspace(s[i])
 			|| set_quotestatus((char *)(s + i), &quote_status))
 			i++;
@@ -46,6 +51,7 @@ static size_t	ft_sections(const char *s, const char *set,
 		is_inset(s[i], set);
 		if (s[i++])
 			count++;
+	*/
 	}
 	return (count);
 }

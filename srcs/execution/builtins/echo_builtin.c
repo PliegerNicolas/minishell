@@ -6,26 +6,10 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/26 18:44:40 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/27 14:52:39 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-static char	*get_quoteless_str(const char *str)
-{
-	char	*quoteless_str;
-
-	if (!str)
-		return (NULL);
-	quoteless_str = ft_strdup(str);
-	if (!quoteless_str)
-		return (perror_malloc("@quoteless_str (srcs/execution/builtins/echo_bui\
-ltin.c #get_quoteless_str)"), NULL);
-	quoteless_str = remove_quotes(quoteless_str, none);
-	if (!quoteless_str)
-		return (NULL);
-	return (quoteless_str);
-}
 
 static t_bool	next_is_valid_word(char *str)
 {
@@ -54,14 +38,29 @@ static int	initialize_put(char *str, char ***args, t_bool *n_opt)
 	return (i);
 }
 
-static t_bool	put(char *str, char **args, t_bool *n_opt)
+// normer
+// decaller les espaces d'arg qui ont ete imprimes dans ""
+// gerer les echo -nnnnnn ou echo -n -n
+static t_bool	put(char *str, char **args, t_bool *n_opt, enum e_quote_status quote_status)
 {
 	size_t	i;
 
 	i = initialize_put(str, &args, n_opt);
 	while (str[i] && next_is_valid_word(str + i))
 	{
-		if (str[i] == '-')
+		set_quotestatus((char *)(str + i), &quote_status);
+		if (quote_status)
+		{
+			i++;
+			while (str[i] && quote_status)
+			{
+				if (!set_quotestatus((char *)(str + i), &quote_status))
+					ft_putchar_fd(str[i], STDOUT);
+				i++;
+				(*args)++;
+			}
+		}
+		else if (str[i] == '-')
 		{
 			while (str[i] && !ft_isspace(str[i]))
 				ft_putchar_fd(str[i++], STDOUT);
@@ -84,20 +83,15 @@ static t_bool	put(char *str, char **args, t_bool *n_opt)
 
 t_bool	echo_builtin(t_lexer *lexer)
 {
-	char	*quoteless_str;
 	t_bool	n_opt;
 
 	if (!lexer)
 		return (FALSE);
 	if (ft_strarrlen((const char **)lexer->args) > 1)
 	{
-		quoteless_str = get_quoteless_str(lexer->cmd);
-		if (!quoteless_str)
-			return (g_status = general_failure, TRUE);
 		n_opt = FALSE;
-		if (put(quoteless_str, lexer->args + 1, &n_opt))
-			return (g_status = general_failure, free(quoteless_str), TRUE);
-		free(quoteless_str);
+		if (put(lexer->cmd, lexer->args + 1, &n_opt, none))
+			return (g_status = general_failure, TRUE);
 		if (!n_opt)
 			ft_putchar_fd('\n', STDOUT);
 	}
