@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/29 15:08:21 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 15:12:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -226,9 +226,8 @@ t_bool			set_redir_path_heredoc(const char *end, t_lexer *lexer,
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status, char ***envp);
-char			**set_var_landmarks(char *line, size_t i, size_t len,
+char			**set_var_landmarks(char *line, size_t i,
 					t_bool brackets, char ***envp);
-size_t			get_placeholder_len(char *line, size_t i, t_bool brackets);
 
 t_bool			set_quotestatus(char *s, enum e_quote_status *quote_status);
 t_bool			quote_error(char *s, enum e_quote_status quote_status);

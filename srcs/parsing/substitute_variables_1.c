@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/29 15:07:03 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 15:13:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -56,7 +56,6 @@ static t_bool	scan_line(char *line, size_t *i,
 static char	**get_var_landmarks(char *line, size_t i, char ***envp)
 {
 	char	**var_landmarks;
-	size_t	len;
 	t_bool	brackets;
 
 	if (!line && !*line)
@@ -66,8 +65,7 @@ static char	**get_var_landmarks(char *line, size_t i, char ***envp)
 	brackets = FALSE;
 	if (line[i + 1] && line[i + 1] == '{')
 		brackets = TRUE;
-	len = get_placeholder_len(line, i, brackets);
-	var_landmarks = set_var_landmarks(line, i, ++len, brackets, envp);
+	var_landmarks = set_var_landmarks(line, i, brackets, envp);
 	if (!var_landmarks)
 		return (NULL);
 	return (var_landmarks);
