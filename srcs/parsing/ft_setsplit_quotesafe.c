@@ -6,11 +6,10 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/27 13:59:14 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/29 14:38:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-//#include "minishell.h"
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 static t_bool	is_inset(char c, const char *set)
 {
@@ -38,20 +37,9 @@ static size_t	ft_sections(const char *s, const char *set,
 	while (s[i])
 	{
 		set_quotestatus((char *)(s + i), &quote_status);
-		if (s[i] && (is_inset(s[i++], set) && !quote_status) && s[i + 1] && !ft_only_whitespace(s + i + 1))
+		if (s[i] && (is_inset(s[i++], set) && !quote_status) && s[i + 1]
+			&& !ft_only_whitespace(s + i + 1))
 			count++;
-	/*
-		while ((s[i] && is_inset(s[i], set)) || ft_isspace(s[i])
-			|| set_quotestatus((char *)(s + i), &quote_status))
-			i++;
-		if (!s[i])
-			break ;
-		while (s[i + 1] && (!is_inset(s[i], set) || quote_status))
-			set_quotestatus((char *)(s + i++), &quote_status);
-		is_inset(s[i], set);
-		if (s[i++])
-			count++;
-	*/
 	}
 	return (count);
 }
