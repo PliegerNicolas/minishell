@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/25 15:11:53 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/29 15:08:21 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -218,15 +218,16 @@ char			*get_path(char *cmd, char ***envp);
 t_bool			set_options(const char *str, t_lexer *lexer);
 t_bool			set_arguments(const char *str, t_lexer *lexer);
 t_bool			set_redirection(const char *str, t_lexer *lexer,
-					t_bool *prev_is_redir);
+					t_bool *prev_is_redir, char ***envp);
 
 t_bool			set_redir_path(char *pathname, t_lexer *lexer, int slot);
-t_bool			set_redir_path_heredoc(const char *end, t_lexer *lexer);
+t_bool			set_redir_path_heredoc(const char *end, t_lexer *lexer,
+					char ***envp);
 
 char			*substitute_line_content(char *line, size_t i,
-					enum e_quote_status quote_status);
+					enum e_quote_status quote_status, char ***envp);
 char			**set_var_landmarks(char *line, size_t i, size_t len,
-					t_bool brackets);
+					t_bool brackets, char ***envp);
 size_t			get_placeholder_len(char *line, size_t i, t_bool brackets);
 
 t_bool			set_quotestatus(char *s, enum e_quote_status *quote_status);

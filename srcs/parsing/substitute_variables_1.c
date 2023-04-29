@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 02:01:10 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 15:07:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -53,7 +53,7 @@ static t_bool	scan_line(char *line, size_t *i,
 
 	Returns var_landmarks or NULL on error.
 */
-static char	**get_var_landmarks(char *line, size_t i)
+static char	**get_var_landmarks(char *line, size_t i, char ***envp)
 {
 	char	**var_landmarks;
 	size_t	len;
@@ -67,7 +67,7 @@ static char	**get_var_landmarks(char *line, size_t i)
 	if (line[i + 1] && line[i + 1] == '{')
 		brackets = TRUE;
 	len = get_placeholder_len(line, i, brackets);
-	var_landmarks = set_var_landmarks(line, i, ++len, brackets);
+	var_landmarks = set_var_landmarks(line, i, ++len, brackets, envp);
 	if (!var_landmarks)
 		return (NULL);
 	return (var_landmarks);
@@ -126,16 +126,16 @@ stitute_variables)");
 	Returns the given line with subsituted variables.
 */
 char	*substitute_line_content(char *line, size_t i,
-	enum e_quote_status quote_status)
+	enum e_quote_status quote_status, char ***envp)
 {
 	char	**var_landmarks;
 
 	if (!line || !line[i] || scan_line(line, &i, &quote_status))
 		return (line);
-	var_landmarks = get_var_landmarks(line, i);
+	var_landmarks = get_var_landmarks(line, i, envp);
 	if (!var_landmarks)
 		return (free(line), NULL);
 	line = substitute_variable(line, var_landmarks[0], var_landmarks[2]);
 	free_str_arr(var_landmarks);
-	return (substitute_line_content(line, i, quote_status));
+	return (substitute_line_content(line, i, quote_status, envp));
 }

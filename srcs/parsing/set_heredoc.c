@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 13:06:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 15:05:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 15:04:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -70,7 +70,8 @@ static t_bool	fill_heredoc(char *line, const int fd, const size_t len)
 	return (FALSE);
 }
 
-static t_bool	write_to_heredoc(t_lexer *lexer, const int fd, const char *end)
+static t_bool	write_to_heredoc(t_lexer *lexer, const int fd,
+	const char *end, char ***envp)
 {
 	char	*prompt;
 	char	*line;
@@ -85,7 +86,7 @@ static t_bool	write_to_heredoc(t_lexer *lexer, const int fd, const char *end)
 		free(prompt);
 		if (!line)
 			return (TRUE);
-		line = substitute_line_content(line, 0, none);
+		line = substitute_line_content(line, 0, none, envp);
 		if (!line)
 			return (TRUE);
 		len = ft_strlen(line);
@@ -98,7 +99,7 @@ static t_bool	write_to_heredoc(t_lexer *lexer, const int fd, const char *end)
 	return (FALSE);
 }
 
-t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer)
+t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer, char ***envp)
 {
 	int		fd;
 
@@ -112,7 +113,7 @@ t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer)
 	fd = open(lexer->redir_path[0], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 		return (perror_file(), TRUE);
-	if (write_to_heredoc(lexer, fd, end))
+	if (write_to_heredoc(lexer, fd, end, envp))
 		return (close(fd), TRUE);
 	if (close(fd) == -1)
 		return (perror_file(), TRUE);

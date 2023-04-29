@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:14:22 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/19 16:28:14 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 15:03:10 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -102,11 +102,11 @@ t_bool	export_builtin(t_lexer *lexer, char ***envp)
 		return (perror("export"), g_status = misuse_of_shell_builtins, TRUE);
 	}
 	if (len == 1)
-		return (env_builtin(lexer, envp));
+		return (g_status = success, env_builtin(lexer, envp));
 	else
 	{
 		if (export(lexer->args[1], envp))
 			return (g_status = general_failure, TRUE);
 	}
-	return (FALSE);
+	return (g_status = success, FALSE);
 }

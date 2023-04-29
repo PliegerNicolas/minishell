@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:34:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/10 02:31:11 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 14:55:11 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -76,7 +76,7 @@ static t_bool	fill_lexer(char **split, t_lexer *lexer, char ***envp)
 		}
 		else if (prev_is_redir || str_is_redirection(split[i]))
 		{
-			if (set_redirection(split[i], lexer, &prev_is_redir))
+			if (set_redirection(split[i], lexer, &prev_is_redir, envp))
 				return (TRUE);
 		}
 		else if (set_arguments(split[i], lexer))

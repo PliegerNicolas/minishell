@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 13:24:12 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/28 02:05:14 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 14:49:16 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,7 +19,7 @@
 	On error, it returns NULL.
 	The returned variable is always malloced.
 */
-static char	*set_env_variable(char *variable_name)
+static char	*set_env_variable(char *variable_name, char ***envp)
 {
 	char	*env;
 	char	*temp_env;
@@ -30,10 +30,10 @@ static char	*set_env_variable(char *variable_name)
 		env = ft_itoa(g_status);
 	else
 	{
-		temp_env = getenv(variable_name);
+		temp_env = get_env_var(variable_name, (const char **)*envp);
 		if (!temp_env)
-			temp_env = "";
-		env = ft_strdup(temp_env);
+			temp_env = ft_strdup("");
+		env = temp_env;
 	}
 	if (!env)
 		return (perror_malloc("@env (srcs/parsing/substitute_variables.c #set_e\
@@ -53,7 +53,7 @@ nv_variable)"), NULL);
 	If there is an error, NULL is returned. Else var_landmarks.
 */
 char	**set_var_landmarks(char *line, size_t i, size_t len,
-	t_bool brackets)
+	t_bool brackets, char ***envp)
 {
 	char	**var_landmarks;
 
@@ -69,7 +69,7 @@ s.c #set_var_landmarks)"), free_str_arr(var_landmarks), NULL);
 	if (!var_landmarks[1])
 		return (perror_malloc("@var_landmarks (srcs/parsing/substitute_variable\
 s.c #set_var_landmarks)"), free_str_arr(var_landmarks), NULL);
-	var_landmarks[2] = set_env_variable(var_landmarks[1]);
+	var_landmarks[2] = set_env_variable(var_landmarks[1], envp);
 	if (!var_landmarks[2])
 		return (perror_malloc("@var_landmarks (srcs/parsing/substitute_variable\
 s.c #set_var_landmarks)"), free_str_arr(var_landmarks), NULL);

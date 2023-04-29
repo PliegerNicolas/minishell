@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 15:10:37 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 15:04:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -57,13 +57,13 @@ static t_bool	set_redir_type(const char *str, size_t *i, t_lexer *lexer)
 }
 
 static t_bool	set_redir(char *pathname, t_lexer *lexer,
-	enum e_redir_type redir_type)
+	enum e_redir_type redir_type, char ***envp)
 {
 	if (!pathname)
 		return (FALSE);
 	if (redir_type == heredoc)
 	{
-		if (set_redir_path_heredoc(pathname, lexer))
+		if (set_redir_path_heredoc(pathname, lexer, envp))
 			return (free(pathname), TRUE);
 		free(pathname);
 		pathname = NULL;
@@ -81,7 +81,8 @@ static t_bool	set_redir(char *pathname, t_lexer *lexer,
 	return (FALSE);
 }
 
-t_bool	set_redirection(const char *str, t_lexer *lexer, t_bool *prev_is_redir)
+t_bool	set_redirection(const char *str, t_lexer *lexer,
+	t_bool *prev_is_redir, char ***envp)
 {
 	char						*quoteless_str;
 	static enum e_redir_type	redir_type;
@@ -105,7 +106,7 @@ t_bool	set_redirection(const char *str, t_lexer *lexer, t_bool *prev_is_redir)
 	}	
 	if (!quoteless_str)
 		return (TRUE);
-	if (set_redir(quoteless_str, lexer, redir_type))
+	if (set_redir(quoteless_str, lexer, redir_type, envp))
 		return (free(quoteless_str), TRUE);
 	return (redir_type = no_redir, FALSE);
 }
