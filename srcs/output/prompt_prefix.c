@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 12:56:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/04/29 15:20:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -17,13 +17,7 @@ static char	*get_user(char ***envp)
 
 	user = get_env_var("USER", (const char **)*envp);
 	if (!user)
-	{
-		*envp = set_env_var("USER", "username", *envp);
-		free(user);
-		if (!envp)
-			return (NULL);
-		user = get_env_var("USER", (const char **)*envp);
-	}
+		user = ft_strdup("");
 	if (!user)
 		return (NULL);
 	return (user);
