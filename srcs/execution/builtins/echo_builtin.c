@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/27 14:52:39 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/04/30 09:25:59 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -20,69 +20,78 @@ static t_bool	next_is_valid_word(char *str)
 	return (FALSE);
 }
 
-static int	initialize_put(char *str, char ***args, t_bool *n_opt)
+static size_t	set_cursor_and_n_opt(char *cmd, t_bool *n_opt)
 {
 	size_t	i;
+	size_t	j;
 
-	i = 5;
-	while (str[i] && ft_isspace(str[i]))
+	i = 4;
+	while (cmd[i] && ft_isspace(cmd[i]))
 		i++;
-	if (str + i && ft_strncmp(str + i, "-n", 2) == 0
-		&& str + i + 2 && (ft_isspace(str[i + 2]) || !str[i + 2]))
+	j = 1;
+	if (cmd[i] && cmd[i] == '-' && cmd[i + j] == 'n')
 	{
-		*n_opt = TRUE;
-		i += 3;
+		while (cmd[i + j] && cmd[i + j] == 'n')
+			j++;
+		if (!cmd[i + j] || (cmd[i + j] && ft_isspace(cmd[i + j])))
+		{
+			*n_opt = TRUE;
+			i += j;
+		}
 	}
-	while (**args && ***args == '-')
-		(*args)++;
+	while (cmd[i] && ft_isspace(cmd[i]))
+		i++;
 	return (i);
 }
 
-// normer
-// decaller les espaces d'arg qui ont ete imprimes dans ""
-// gerer les echo -nnnnnn ou echo -n -n
-static t_bool	put(char *str, char **args, t_bool *n_opt, enum e_quote_status quote_status)
+static void	put(char *cmd, char **args, t_bool *n_opt)
 {
-	size_t	i;
+	size_t				i;
+	size_t				j;
 
-	i = initialize_put(str, &args, n_opt);
-	while (str[i] && next_is_valid_word(str + i))
+	i = set_cursor_and_n_opt(cmd, n_opt);
+	j = 1;
+	while (args[j] && *args[j] == '-')
+		j++;
+	while (cmd[i] && next_is_valid_word(cmd + i))
 	{
-		set_quotestatus((char *)(str + i), &quote_status);
-		if (quote_status)
-		{
-			i++;
-			while (str[i] && quote_status)
-			{
-				if (!set_quotestatus((char *)(str + i), &quote_status))
-					ft_putchar_fd(str[i], STDOUT);
-				i++;
-				(*args)++;
-			}
-		}
-		else if (str[i] == '-')
-		{
-			while (str[i] && !ft_isspace(str[i]))
-				ft_putchar_fd(str[i++], STDOUT);
-			if (next_is_valid_word(str + i))
-				ft_putchar_fd(' ', STDOUT);
-		}
-		else if (*args && ft_strncmp(str + i, *args, ft_strlen(*args)) == 0)
-		{
-			ft_putstr_fd(*args, STDOUT);
-			i += ft_strlen(*args);
-			args++;
-			if (next_is_valid_word(str + i))
-				ft_putchar_fd(' ', STDOUT);
-		}
+		if (cmd[i] == '-')
+			while (cmd[i] && !ft_isspace(cmd[i]))
+				ft_putchar_fd(cmd[i++], STDOUT);
 		else
-			i++;
+		{
+			ft_putstr_fd(args[j], STDOUT);
+			i += ft_strlen(args[j]);
+			j++;
+		}
+		if (next_is_valid_word(cmd + i))
+		{
+			while (cmd[i] && ft_isspace(cmd[i]))
+				i++;
+			ft_putchar_fd(' ', STDOUT);
+		}
 	}
-	return (FALSE);
+}
+
+static char	*get_quoteless_str(const char *str)
+{
+	char	*quoteless_str;
+
+	if (!str)
+		return (NULL);
+	quoteless_str = ft_strdup(str);
+	if (!quoteless_str)
+		return (perror_malloc("@quoteless_str (srcs/parsing/set_options.c #get_\
+quoteless_str)"), NULL);
+	quoteless_str = remove_quotes(quoteless_str, none);
+	if (!quoteless_str)
+		return (NULL);
+	return (quoteless_str);
 }
 
 t_bool	echo_builtin(t_lexer *lexer)
 {
+	char	*quoteless_str;
 	t_bool	n_opt;
 
 	if (!lexer)
@@ -90,10 +99,14 @@ t_bool	echo_builtin(t_lexer *lexer)
 	if (ft_strarrlen((const char **)lexer->args) > 1)
 	{
 		n_opt = FALSE;
-		if (put(lexer->cmd, lexer->args + 1, &n_opt, none))
+		quoteless_str = get_quoteless_str(lexer->cmd);
+		if (!quoteless_str)
 			return (g_status = general_failure, TRUE);
+		put(quoteless_str, lexer->args, &n_opt);
 		if (!n_opt)
 			ft_putchar_fd('\n', STDOUT);
 	}
+	else
+		ft_putchar_fd('\n', STDOUT);
 	return (g_status = success, FALSE);
 }
