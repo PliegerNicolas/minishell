@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/29 14:38:28 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/02 20:40:17 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -27,6 +27,7 @@ static t_bool	is_inset(char c, const char *set)
 static size_t	ft_sections(const char *s, const char *set,
 	enum e_quote_status quote_status)
 {
+	char				*tr_s;
 	size_t				count;
 	size_t				i;
 
@@ -34,13 +35,17 @@ static size_t	ft_sections(const char *s, const char *set,
 		return (0);
 	count = 1;
 	i = 0;
-	while (s[i])
+	tr_s = ft_strtrim(s, WHITE_SPACES);
+	if (!tr_s)
+		return (0);
+	while (tr_s[i])
 	{
-		set_quotestatus((char *)(s + i), &quote_status);
-		if (s[i] && (is_inset(s[i++], set) && !quote_status) && s[i + 1]
-			&& !ft_only_whitespace(s + i + 1))
+		set_quotestatus((char *)(tr_s + i), &quote_status);
+		if (tr_s[i] && (is_inset(tr_s[i++], set) && !quote_status) && tr_s[i + 1]
+			&& !ft_only_whitespace(tr_s + i + 1))
 			count++;
 	}
+	free(tr_s);
 	return (count);
 }
 
