@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/29 15:00:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/05 20:25:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -77,11 +77,13 @@ static void	put_commands(t_commands *commands)
 
 static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 {
+	int	stdin_cpy;
 	int	prev_fd;
 
 	if (!lexer)
 		return (FALSE);
 	prev_fd = -1;
+	stdin_cpy = dup(STDIN_FILENO);
 	while (lexer)
 	{
 		if (is_builtin(lexer->exec))
@@ -90,15 +92,13 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 				return (TRUE);
 		}
 		else
-			if (external_execution(lexer, &prev_fd, envp))
+			if (external_execution(lexer, envp))
 				return (TRUE);
-		if (!lexer->next && prev_fd != -1)
-		{
-			put_fd(prev_fd);
-			close(prev_fd);
-		}
 		lexer = lexer->next;
 	}
+	if (dup2(stdin_cpy, STDIN_FILENO) == -1)
+		return (TRUE);
+	close(stdin_cpy);
 	return (FALSE);
 }
 
