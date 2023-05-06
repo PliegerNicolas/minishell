@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/06 14:53:58 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/06 19:14:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -29,6 +29,29 @@ t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 		// Child
 		close(pipefds[0]);
 
+		// if infile redirection
+		if (lexer->redir_path[0] && (lexer->redir_type[0] == from_file
+				|| lexer->redir_type[0] == heredoc))
+		{
+			if (*prev_fd != -1)
+				close(*prev_fd);
+			*prev_fd = open_file(lexer->redir_path[0], lexer->redir_type[0]);
+			if (*prev_fd == -1)
+			{
+				g_status = general_failure;
+				exit(1);
+			}
+			if (dup2(*prev_fd, STDIN_FILENO) == -1)
+			{
+				perror("dup2");
+				g_status = general_failure;
+				exit(1);
+			}
+			close(*prev_fd);
+			*prev_fd = -1;
+		}
+
+		// Redirect *prev_fd to stdin
 		if (*prev_fd != -1)
 		{
 			if (dup2(*prev_fd, STDIN_FILENO) == -1)
@@ -38,10 +61,32 @@ t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 				exit(1);
 			}
 			close(*prev_fd);
+			*prev_fd = -1;
 		}
 
-		if (lexer->next)
+		// if outfile redirection
+		if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
+				|| lexer->redir_type[1] == append_to_file))
 		{
+			close(pipefds[1]);
+			pipefds[1] = -1;
+			pipefds[1] = open_file(lexer->redir_path[1], lexer->redir_type[1]);
+			if (pipefds[1] == -1)
+			{
+				g_status = general_failure;
+				exit(1);
+			}
+			if (dup2(pipefds[1], STDOUT_FILENO) == -1)
+			{
+				perror("dup2");
+				g_status = general_failure;
+				exit(1);
+			}
+			close(pipefds[1]);
+		}
+		else if (lexer->next)
+		{
+			// redirect output to stdout
 			if (dup2(pipefds[1], STDOUT_FILENO) == -1)
 			{
 				perror("dup2");
@@ -52,7 +97,7 @@ t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 		}
 		else
 			close(pipefds[1]);
-
+		
 		// Execution
 		execve(lexer->exec, lexer->args, *envp);
 		perror(lexer->exec);
@@ -69,8 +114,22 @@ t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 			close(*prev_fd);
 			*prev_fd = -1;
 		}
+
+
+		// if outfile redirection
 		if (lexer->next)
+		{
+			if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
+					|| lexer->redir_type[1] == append_to_file))
+			{
+				close(pipefds[0]);
+				pipefds[0] = -1;
+				pipefds[0] = open(lexer->redir_path[1], O_RDONLY);
+				if (pipefds[0] == -1)
+					return (perror("open"), g_status = general_failure, TRUE); // correct
+			}
 			*prev_fd = dup(pipefds[0]);
+		}
 		else
 			if  (waitpid(pid, NULL, 0) == -1)
 				return (perror("waitpid"), g_status = general_failure, TRUE); // correct

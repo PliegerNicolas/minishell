@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/27 13:12:47 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/05/06 19:11:30 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -44,14 +44,20 @@ int	open_file(const char *path, const enum e_redir_type redir_type)
 {
 	int	fd;
 
-	if (!path || !redir_type || access(path, F_OK) == -1)
+	if (!path || !redir_type)
 		return (-1);
-	if (redir_type == to_file)
+	if (redir_type == from_file || redir_type == heredoc)
+	{
+		if (access(path, F_OK) == -1)
+			return (perror("access"), -1);
+		fd = open(path, O_RDONLY, 0644);
+	}
+	else if (redir_type == to_file)
 		fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (redir_type == append_to_file)
 		fd = open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
-		fd = open(path, O_RDONLY, 0644);
+		return (-1);
 	if (fd == -1)
 		return (perror("open"), -1);
 	return (fd);
