@@ -6,11 +6,71 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/05 20:27:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/06 14:22:23 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
+{
+	pid_t	pid;
+	int		pipefds[2];
+
+	// Pipe
+	if (pipe(pipefds) == -1)
+		return (perror("pipe"), g_status = general_failure, TRUE); // correct
+
+	// Fork
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), g_status = general_failure, TRUE); // correct
+	else if (pid == 0)
+	{
+		// Child
+		close(pipefds[0]);
+
+		if (*prev_fd != -1)
+		{
+			if (dup2(*prev_fd, STDIN_FILENO) == -1)
+				return (perror("dup2"), g_status = general_failure, TRUE); // correct
+			close(*prev_fd);
+			*prev_fd = -1;
+		}
+
+		if (lexer->next)
+		{
+			if (dup2(pipefds[1], STDOUT_FILENO) == -1)
+				return (perror("dup2"), g_status = general_failure, TRUE); // correct
+			close(pipefds[1]);
+		}
+		else
+			close(pipefds[1]);
+
+		// Execution
+		execve(lexer->exec, lexer->args, *envp);
+		perror(lexer->exec);
+
+		exit(0);
+	}
+	else
+	{
+		// Parent
+		close(pipefds[1]);
+
+		if  (*prev_fd != -1)
+		{
+			close(*prev_fd);
+			*prev_fd = -1;
+		}
+		if (lexer->next)
+			*prev_fd = pipefds[0];
+		else
+			close(pipefds[0]);
+
+		return (g_status = success, FALSE);
+	}
+}
+/*
 t_bool	external_execution(t_lexer *lexer, char ***envp)
 {
 	pid_t	pid;
@@ -66,6 +126,7 @@ t_bool	external_execution(t_lexer *lexer, char ***envp)
 		return (g_status = success, FALSE);
 	}
 }
+*/
 
 /*
 t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)

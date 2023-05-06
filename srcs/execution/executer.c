@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/05 20:25:00 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/06 13:57:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -77,13 +77,13 @@ static void	put_commands(t_commands *commands)
 
 static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 {
-	int	stdin_cpy;
-	int	prev_fd;
+	pid_t	pid;
+	int		status;
+	int		prev_fd;
 
 	if (!lexer)
 		return (FALSE);
 	prev_fd = -1;
-	stdin_cpy = dup(STDIN_FILENO);
 	while (lexer)
 	{
 		if (is_builtin(lexer->exec))
@@ -92,13 +92,23 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 				return (TRUE);
 		}
 		else
-			if (external_execution(lexer, envp))
+			if (external_execution(lexer, &prev_fd, envp))
 				return (TRUE);
 		lexer = lexer->next;
 	}
-	if (dup2(stdin_cpy, STDIN_FILENO) == -1)
-		return (TRUE);
-	close(stdin_cpy);
+	while (1)
+	{
+		pid = waitpid(-1, &status, 0);
+		if (pid == -1)
+		{
+			if (errno == ECHILD)
+				break ;
+			else if (errno == EINTR)
+				continue ;
+			else
+				return (g_status = general_failure, TRUE);
+		}
+	}
 	return (FALSE);
 }
 

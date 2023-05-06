@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/05 20:21:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/06 14:01:33 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -189,7 +189,7 @@ enum e_status	executer(char ***envp, char *line);
 void			close_fds(int *pipefds, int *previous_fd);
 t_bool			is_builtin(const char *str);
 t_bool			builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp);
-t_bool			external_execution(t_lexer *lexer, char ***envp);
+t_bool			external_execution(t_lexer *lexer, int *prev_fd, char ***envp);
 //t_bool			external_execution(t_lexer *lexer, int *prev_fd, char ***envp);
 
 void			put_fd(int fd);
