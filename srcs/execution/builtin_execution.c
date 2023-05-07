@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 16:29:58 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 17:51:24 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -90,7 +90,7 @@ t_bool	builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 	if (outfile_redirection(lexer, pipefds, prev_fd))
 		return (close(stdout_cpy), TRUE);
 	if (execute_builtin(lexer, envp))
-		return (close_fds(pipefds, prev_fd, TRUE), close(stdout_cpy), TRUE); // Correct ?
+		return (close_fds(pipefds, prev_fd, TRUE), close(stdout_cpy), TRUE);
 	if (set_prev_fd(lexer, pipefds, prev_fd))
 		return (close(stdout_cpy), TRUE);
 	if (dup2(stdout_cpy, STDOUT_FILENO) == -1)

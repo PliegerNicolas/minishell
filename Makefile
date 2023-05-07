@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/05/07 15:30:57 by nicolas          ###   ########.fr        #
+#    Updated: 2023/05/07 17:35:48 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,6 +70,7 @@ SRCS				:=		minishell \
 							parsing/destroy_heredocs \
 							parsing/quote \
 							parsing/ft_setsplit_quotesafe \
+							parsing/get_quoteless_str \
 							parsing/free_commands \
 							utils/ft_strchr \
 							utils/ft_substr \

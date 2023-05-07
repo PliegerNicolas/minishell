@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/29 15:04:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 17:43:26 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static char	*get_quoteless_str(const char *str, t_bool *prev_is_redir)
+static char	*set_quoteless_str(const char *str, t_bool *prev_is_redir)
 {
 	char	*quoteless_str;
 
@@ -94,7 +94,7 @@ t_bool	set_redirection(const char *str, t_lexer *lexer,
 		redir_type = no_redir;
 	i = 0;
 	if (*prev_is_redir)
-		quoteless_str = get_quoteless_str(str, prev_is_redir);
+		quoteless_str = set_quoteless_str(str, prev_is_redir);
 	else
 	{
 		redir_type = set_redir_type(str, &i, lexer);

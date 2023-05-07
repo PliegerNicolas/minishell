@@ -6,26 +6,10 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:47:14 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/05 13:57:39 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 17:41:57 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-static char	*get_quoteless_str(const char *str)
-{
-	char	*quoteless_str;
-
-	if (!str)
-		return (NULL);
-	quoteless_str = ft_strdup(str);
-	if (!quoteless_str)
-		return (perror_malloc("@quoteless_str (srcs/parsing/set_arguments.c #ge\
-t_quoteless_str)"), NULL);
-	quoteless_str = remove_quotes(quoteless_str, none);
-	if (!quoteless_str)
-		return (NULL);
-	return (quoteless_str);
-}
 
 static t_bool	initialize_arguments(char *quoteless_str, t_lexer *lexer)
 {

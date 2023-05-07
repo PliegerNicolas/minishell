@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/07 15:31:33 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 17:36:34 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -233,6 +233,8 @@ t_bool			quote_error(char *s, enum e_quote_status quote_status);
 char			*remove_quotes(char *line, enum e_quote_status quote_status);
 char			**ft_setsplit_quotesafe(const char *line, const char *set,
 					enum e_quote_status quote_status);
+
+char			*get_quoteless_str(const char *str);
 
 void			free_commands(t_commands *commands);
 void			free_lexer(t_lexer *lexer);
