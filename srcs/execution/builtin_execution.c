@@ -6,63 +6,10 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 14:18:22 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 16:18:54 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-/*
-static void	clear_stdin(int *prev_fd)
-{
-	if (*prev_fd == -1)
-		return ;
-	close(*prev_fd);
-	*prev_fd = -1;
-}
-
-static t_bool	stdout_redirection(t_lexer *lexer, int *pipefds)
-{
-	int	fd;
-
-	if (!lexer)
-		return (FALSE);
-	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
-			|| lexer->redir_type[1] == append_to_file))
-	{
-		fd = open_file(lexer->redir_path[1], lexer->redir_type[1]);
-		if (fd == -1)
-			return (perror("open"), close_fds(pipefds, NULL), TRUE);
-		if (dup2(fd, pipefds[1]) == -1)
-			return (close_fds(pipefds, NULL), close(fd), TRUE);
-		close(fd);
-	}
-	if (dup2(pipefds[1], STDOUT_FILENO) == -1)
-		return (perror("dup2"), close(pipefds[1]), TRUE);
-	close(pipefds[1]);
-	return (FALSE);
-}
-
-static t_bool	set_prev_fd(t_lexer *lexer, int *pipefds, int *prev_fd)
-{
-	if (!lexer)
-		return (FALSE);
-	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
-			|| lexer->redir_type[1] == append_to_file))
-	{
-		if (!lexer->next)
-			return (FALSE);
-		*prev_fd = open(lexer->redir_path[1], O_RDONLY);
-		if (*prev_fd == -1)
-			return (perror("open"), close_fds(pipefds, prev_fd), TRUE);
-	}
-	else
-	{
-		*prev_fd = pipefds[0];
-		if (*prev_fd == -1)
-			return (perror("open"), close_fds(pipefds, prev_fd), TRUE);
-	}
-	return (FALSE);
-}
 
 static t_bool	execute_builtin(t_lexer *lexer, char ***envp)
 {
@@ -95,20 +42,73 @@ t_bool	builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 
 	if (!lexer)
 		return (FALSE);
-	clear_stdin(prev_fd);
+	// Close previous entry
+	close_prev_fd(prev_fd);
+
+	// Pipe
 	if (pipe(pipefds) == -1)
-		return (perror("pipe"), TRUE);
+		return (perror("pipe"), close_fds(NULL, prev_fd, TRUE),
+			g_status = general_failure, TRUE);
+
+	// copy stdout
 	stdout_cpy = dup(STDOUT_FILENO);
-	if (stdout_cpy == -1)
-		return (TRUE);
-	if (stdout_redirection(lexer, pipefds) == -1)
-		return (close(stdout_cpy), TRUE);
-	(void)execute_builtin(lexer, envp);
+
+	// ignore infile redirection.
+	
+	// outfile redirection.
+	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
+			|| lexer->redir_type[1] == append_to_file))
+	{
+		*prev_fd = open_file(lexer->redir_path[1], lexer->redir_type[1]);
+		if (*prev_fd == -1)
+			return (close_fds(pipefds, prev_fd, TRUE),
+				close(stdout_cpy), g_status = general_failure, TRUE);
+		if (dup2(*prev_fd, STDOUT_FILENO) == -1)
+			return (perror("dup2"), close_fds(pipefds, prev_fd, TRUE),
+				close(stdout_cpy), g_status = general_failure, TRUE);
+		close_prev_fd(prev_fd);
+		close(pipefds[1]);
+	}
+	else if (lexer->next)
+	{
+		if (dup2(pipefds[1], STDOUT_FILENO) == -1)
+			return (perror("dup2"), close_fds(pipefds, prev_fd, TRUE),
+				close(stdout_cpy), g_status = general_failure, TRUE);
+		close(pipefds[1]);
+	}
+	else
+		close(pipefds[1]);
+
+	ft_putendl_fd("test", STDOUT);
+	(void)execute_builtin;
+	(void)envp;
+
+	/*
+	// execute lexer
+	if (execute_builtin(lexer, envp))
+		return (TRUE); // Correct
+	*/
+
+	// set prev_fd
+	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
+			|| lexer->redir_type[1] == append_to_file))
+	{
+		close(pipefds[0]);
+		pipefds[0] = -1;
+		pipefds[0] = open(lexer->redir_path[1], O_RDONLY);
+		if (pipefds[0] == -1)
+			return (perror("open"), close_fds(pipefds, prev_fd, TRUE),
+				close(stdout_cpy), g_status = general_failure, TRUE);
+	}
+	if (lexer->next)
+		*prev_fd = dup(pipefds[0]);
+	close(pipefds[0]);
+
+	// restore stdout
 	if (dup2(stdout_cpy, STDOUT_FILENO) == -1)
-		return (perror("dup2"), close(stdout_cpy), TRUE);
+			return (perror("dup2"), close_fds(pipefds, prev_fd, TRUE),
+				g_status = general_failure, TRUE);
 	close(stdout_cpy);
-	if (set_prev_fd(lexer, pipefds, prev_fd))
-		return (TRUE);
+
 	return (FALSE);
 }
-*/

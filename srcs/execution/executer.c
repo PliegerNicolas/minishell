@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 14:18:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 15:38:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -75,27 +75,11 @@ static void	put_commands(t_commands *commands)
 }
 */
 
-static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
+static t_bool	wait_for_processes(void)
 {
 	pid_t	pid;
 	int		status;
-	int		prev_fd;
 
-	if (!lexer)
-		return (FALSE);
-	prev_fd = -1;
-	while (lexer)
-	{
-		if (is_builtin(lexer->exec))
-		{
-			//if (builtin_execution(lexer, &prev_fd, envp))
-				return (TRUE);
-		}
-		else
-			if (external_execution(lexer, &prev_fd, envp))
-				return (TRUE);
-		lexer = lexer->next;
-	}
 	while (1)
 	{
 		pid = waitpid(-1, &status, 0);
@@ -109,6 +93,30 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 				return (g_status = general_failure, TRUE);
 		}
 	}
+	return (FALSE);
+}
+
+static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
+{
+	int		prev_fd;
+
+	if (!lexer)
+		return (FALSE);
+	prev_fd = -1;
+	while (lexer)
+	{
+		if (is_builtin(lexer->exec))
+		{
+			if (builtin_execution(lexer, &prev_fd, envp))
+				return (TRUE);
+		}
+		else
+			if (external_execution(lexer, &prev_fd, envp))
+				return (TRUE);
+		lexer = lexer->next;
+	}
+	if (wait_for_processes())
+		return (TRUE);
 	return (FALSE);
 }
 
