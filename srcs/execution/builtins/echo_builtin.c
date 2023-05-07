@@ -6,16 +6,19 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/30 09:25:59 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 16:37:04 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 static t_bool	next_is_valid_word(char *str)
 {
-	while (*str && ft_isspace(*str))
-		str++;
-	if (*str && *str != '<' && *str != '>')
+	size_t	i;
+
+	i = 0;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	if (str[i] && str[i] != '<' && str[i] != '>')
 		return (TRUE);
 	return (FALSE);
 }
@@ -64,7 +67,7 @@ static void	put(char *cmd, char **args, t_bool *n_opt)
 			i += ft_strlen(args[j]);
 			j++;
 		}
-		if (next_is_valid_word(cmd + i))
+		if (cmd[i] && next_is_valid_word(cmd + i))
 		{
 			while (cmd[i] && ft_isspace(cmd[i]))
 				i++;
@@ -103,6 +106,7 @@ t_bool	echo_builtin(t_lexer *lexer)
 		if (!quoteless_str)
 			return (g_status = general_failure, TRUE);
 		put(quoteless_str, lexer->args, &n_opt);
+		free(quoteless_str);
 		if (!n_opt)
 			ft_putchar_fd('\n', STDOUT);
 	}
