@@ -6,11 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/23 18:07:55 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 14:18:22 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
 static void	clear_stdin(int *prev_fd)
 {
 	if (*prev_fd == -1)
@@ -110,3 +111,4 @@ t_bool	builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 		return (TRUE);
 	return (FALSE);
 }
+*/

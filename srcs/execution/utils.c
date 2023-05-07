@@ -6,39 +6,10 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/06 19:11:30 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 15:30:29 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-void	put_fd(int fd)
-{
-	char		buffer[BUFFER_SIZE];
-	ssize_t		written_bytes;
-	ssize_t		read_bytes;
-	ssize_t		hold_bytes;
-
-	read_bytes = 1;
-	while (read_bytes > 0)
-	{
-		read_bytes = read(fd, buffer, sizeof(buffer));
-		written_bytes = 0;
-		while (written_bytes < read_bytes)
-		{
-			hold_bytes = write(STDOUT, buffer + written_bytes,
-					read_bytes - written_bytes);
-			if (hold_bytes < 0)
-			{
-				perror("write");
-				return ;
-			}
-			written_bytes += hold_bytes;
-		}
-		read_bytes = 0;
-	}
-	if (read_bytes < 0)
-		perror("read");
-}
 
 int	open_file(const char *path, const enum e_redir_type redir_type)
 {
@@ -63,17 +34,11 @@ int	open_file(const char *path, const enum e_redir_type redir_type)
 	return (fd);
 }
 
-void	close_fds(int *pipefds, int *prev_fd)
+void	close_prev_fd(int *prev_fd)
 {
-	if (pipefds[0] != -1)
-		close(pipefds[0]);
-	if (pipefds[1] != -1)
-		close(pipefds[1]);
-	if (*prev_fd && *prev_fd != -1)
-	{
+	if (*prev_fd != -1)
 		close(*prev_fd);
-		*prev_fd = -1;
-	}
+	*prev_fd = -1;
 }
 
 void	close_stds(void)
@@ -84,4 +49,21 @@ void	close_stds(void)
 		close(STDOUT_FILENO);
 	if (STDERR_FILENO != -1)
 		close(STDERR_FILENO);
+}
+
+void	close_fds(int *pipefds, int *prev_fd, t_bool stds)
+{
+	if (pipefds[0] != -1)
+	{
+		close(pipefds[0]);
+		pipefds[0] = -1;
+	}
+	if (pipefds[1] != -1)
+	{
+		close(pipefds[1]);
+		pipefds[1] = -1;
+	}
+	close_prev_fd(prev_fd);
+	if (stds)
+		close_stds();
 }

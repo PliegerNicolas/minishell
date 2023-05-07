@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/06 14:39:30 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/07 14:18:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -88,7 +88,7 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 	{
 		if (is_builtin(lexer->exec))
 		{
-			if (builtin_execution(lexer, &prev_fd, envp))
+			//if (builtin_execution(lexer, &prev_fd, envp))
 				return (TRUE);
 		}
 		else
