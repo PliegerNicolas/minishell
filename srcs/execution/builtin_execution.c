@@ -6,12 +6,13 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 17:51:24 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/08 14:20:19 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static t_bool	execute_builtin(t_lexer *lexer, char ***envp)
+static t_bool	execute_builtin(t_commands *commands, t_lexer *lexer,
+	char ***envp)
 {
 	t_bool	status;
 
@@ -31,7 +32,7 @@ static t_bool	execute_builtin(t_lexer *lexer, char ***envp)
 	else if (ft_strncmp(lexer->exec, "env", 4) == 0)
 		status = env_builtin(lexer, envp);
 	else if (ft_strncmp(lexer->exec, "exit", 5) == 0)
-		status = exit_builtin(lexer);
+		status = exit_builtin(commands, lexer, envp);
 	return (status);
 }
 
@@ -75,21 +76,45 @@ static t_bool	set_prev_fd(t_lexer *lexer, int *pipefds, int *prev_fd)
 	return (FALSE);
 }
 
-t_bool	builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp)
+static int	exit_exception(t_commands *commands, t_lexer *lexer, char ***envp)
+{
+	int		fd;
+
+	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
+			|| lexer->redir_type[1] == append_to_file))
+	{
+		fd = open_file(lexer->redir_path[1], lexer->redir_type[1]);
+		if (fd == -1)
+			return (TRUE);
+		close(fd);
+	}
+	if (lexer->previous || lexer->next)
+		return (FALSE);
+	else
+		(void)execute_builtin(commands, lexer, envp);
+	return (FALSE);
+}
+
+t_bool	builtin_execution(t_commands *commands, t_lexer *lexer,
+	int *prev_fd, char ***envp)
 {
 	int	pipefds[2];
 	int	stdout_cpy;
 
-	if (!lexer)
-		return (FALSE);
 	close_prev_fd(prev_fd);
+	if (lexer->exec && ft_strncmp(lexer->exec, "exit", 5) == 0)
+	{
+		if (exit_exception(commands, lexer, envp))
+			return (TRUE);
+		return (FALSE);
+	}
 	stdout_cpy = dup(STDOUT_FILENO);
 	if (pipe(pipefds) == -1)
 		return (perror("pipe"), close_fds(NULL, prev_fd, TRUE),
 			close(stdout_cpy), g_status = general_failure, TRUE);
 	if (outfile_redirection(lexer, pipefds, prev_fd))
 		return (close(stdout_cpy), TRUE);
-	if (execute_builtin(lexer, envp))
+	if (execute_builtin(commands, lexer, envp))
 		return (close_fds(pipefds, prev_fd, TRUE), close(stdout_cpy), TRUE);
 	if (set_prev_fd(lexer, pipefds, prev_fd))
 		return (close(stdout_cpy), TRUE);

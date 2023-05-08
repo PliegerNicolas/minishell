@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 15:38:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/08 13:01:39 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -96,7 +96,8 @@ static t_bool	wait_for_processes(void)
 	return (FALSE);
 }
 
-static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
+static t_bool	lexer_execution(t_commands *commands, t_lexer *lexer,
+	char ***envp)
 {
 	int		prev_fd;
 
@@ -107,7 +108,7 @@ static t_bool	lexer_execution(t_lexer *lexer, char ***envp)
 	{
 		if (is_builtin(lexer->exec))
 		{
-			if (builtin_execution(lexer, &prev_fd, envp))
+			if (builtin_execution(commands, lexer, &prev_fd, envp))
 				return (TRUE);
 		}
 		else
@@ -129,7 +130,7 @@ static t_bool	commands_execution(t_commands *commands, char ***envp)
 	current_command = commands;
 	while (current_command && current_command->lexer)
 	{
-		if (lexer_execution(current_command->lexer, envp))
+		if (lexer_execution(commands, current_command->lexer, envp))
 			return (TRUE);
 		current_command = current_command->next;
 	}

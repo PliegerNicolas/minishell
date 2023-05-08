@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/05/07 17:35:48 by nicolas          ###   ########.fr        #
+#    Updated: 2023/05/08 14:36:34 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -98,6 +98,7 @@ SRCS				:=		minishell \
 							utils/ft_join_str_arr \
 							utils/ft_strarrlen \
 							utils/ft_only_whitespace \
+							utils/ft_atolli \
 
 DEPS				:=		minishell \
 

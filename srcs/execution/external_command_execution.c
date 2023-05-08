@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 15:39:57 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/08 13:46:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -88,6 +88,7 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 		{
 			close(pipefds[0]);
 			pipefds[0] = -1;
+			waitpid(pid, NULL, 0);
 			pipefds[0] = open(lexer->redir_path[1], O_RDONLY);
 			if (pipefds[0] == -1)
 				return (perror("open"), close_fds(pipefds, prev_fd, TRUE),
@@ -100,8 +101,7 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 		waitpid(pid, &status, 0);
 		g_status = WEXITSTATUS(status);
 	}
-	close(pipefds[0]);
-	return (FALSE);
+	return (close(pipefds[0]), FALSE);
 }
 
 t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)

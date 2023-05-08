@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/07 17:36:34 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/08 14:36:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -187,7 +187,8 @@ void			reset_echoctl(void);
 
 enum e_status	executer(char ***envp, char *line);
 t_bool			is_builtin(const char *str);
-t_bool			builtin_execution(t_lexer *lexer, int *prev_fd, char ***envp);
+t_bool			builtin_execution(t_commands *commands, t_lexer *lexer,
+					int *prev_fd, char ***envp);
 t_bool			external_execution(t_lexer *lexer, int *prev_fd, char ***envp);
 
 int				open_file(const char *path, const enum e_redir_type redir_type);
@@ -201,7 +202,8 @@ t_bool			pwd_builtin(t_lexer *lexer);
 t_bool			export_builtin(t_lexer *lexer, char ***envp);
 t_bool			unset_builtin(t_lexer *lexer, char ***envp);
 t_bool			env_builtin(t_lexer *lexer, char ***envp);
-t_bool			exit_builtin(t_lexer *lexer);
+t_bool			exit_builtin(t_commands *commands, t_lexer *lexer,
+					char ***envp);
 
 /* parsing */
 
@@ -262,6 +264,7 @@ char			*ft_itoa(int n);
 int				ft_isalpha(int c);
 void			ft_bzero(void *s, size_t n);
 void			*ft_calloc(size_t count, size_t size);
+long long int	ft_atolli(const char *nptr);
 
 t_bool			ft_only_whitespace(const char *str);
 char			**ft_join_str_arr(char **arr1, char **arr2);
