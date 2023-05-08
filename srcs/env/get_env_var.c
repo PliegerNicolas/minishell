@@ -6,10 +6,27 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:31:57 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/23 18:34:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/08 15:32:54 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
+
+static int	ft_envp_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t		i;
+
+	i = 0;
+
+	while ((s1[i] || s2[i]) && s2[i] != '=')
+	{
+		if (s1[i] != s2[i])
+			return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
+		i++;
+	}
+	if (i != n)
+		return (-1);
+	return (0);
+}
 
 char	*get_env_var(const char *var, const char **envp)
 {
@@ -20,7 +37,7 @@ char	*get_env_var(const char *var, const char **envp)
 	if (!var || !envp)
 		return (NULL);
 	i = 0;
-	while (envp[i] && ft_strncmp(var, envp[i], ft_strlen(var)) != 0)
+	while (envp[i] && ft_envp_strncmp(var, envp[i], ft_strlen(var)) != 0)
 		i++;
 	if (!envp[i])
 		return (NULL);
