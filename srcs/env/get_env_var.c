@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:31:57 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/08 15:32:54 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/09 14:59:11 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,7 +16,6 @@ static int	ft_envp_strncmp(const char *s1, const char *s2, size_t n)
 	size_t		i;
 
 	i = 0;
-
 	while ((s1[i] || s2[i]) && s2[i] != '=')
 	{
 		if (s1[i] != s2[i])
