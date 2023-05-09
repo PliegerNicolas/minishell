@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:14:22 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/09 23:27:08 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/09 23:30:12 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -110,5 +110,5 @@ t_bool	export_builtin(t_lexer *lexer, char ***envp)
 	}
 	else if (len == 1)
 		put_exported(*envp);
-	return (g_status = success, FALSE);	
+	return (g_status = success, FALSE);
 }
