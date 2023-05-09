@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/08 14:36:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/09 18:56:18 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -275,5 +275,8 @@ char			**ft_trimsplit(const char **split, const char *set);
 int				ft_followed_chars(const char *s, const int c1, const int c2);
 int				ft_isnextcharset(const char *s, const char *set);
 size_t			ft_strarrlen(const char **strarr);
+
+char			*replace_first(char *str, const char *substr,
+					const char *replacement);
 
 #endif

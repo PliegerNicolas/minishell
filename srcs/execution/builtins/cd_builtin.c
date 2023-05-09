@@ -6,11 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:07:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/09 14:59:29 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/09 18:56:44 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
 static char	*substitute_variable(char *line, const char *substr,
 	const char *replacement)
 {
@@ -38,6 +39,7 @@ stitute_variables)");
 	new_line[lens[0] + (lens[2] - lens[1])] = '\0';
 	return (free(line), new_line);
 }
+*/
 
 static t_bool	parse_cd_path(char **path, char ***envp)
 {
@@ -82,7 +84,7 @@ static t_bool	parse_cd_path(char **path, char ***envp)
 			*path = home_path;
 		else
 		{
-			*path = substitute_variable(*path, "~", home_path);
+			*path = replace_first(*path, "~", home_path);
 			free(home_path);
 			if (!*path)
 				return (FALSE);
