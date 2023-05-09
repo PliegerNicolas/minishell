@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:07:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/09 22:14:36 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/09 23:20:26 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -111,6 +111,8 @@ t_bool	cd_builtin(t_lexer *lexer, char ***envp)
 
 	if (!lexer)
 		return (FALSE);
+	if (!envp || !*envp)
+		return (g_status = general_failure, TRUE);
 	len = ft_strarrlen((const char **)lexer->args);
 	if (len > 2)
 	{
@@ -124,7 +126,8 @@ t_bool	cd_builtin(t_lexer *lexer, char ***envp)
 	if (parse_cd_path(&path, envp))
 		return (g_status = general_failure, FALSE);
 	else if (!path)
-		return (perror_malloc("test"), g_status = general_failure, TRUE);
+		return (perror_malloc("@path (srcs/execuion/builtins/cd_builtin.c #cd_b\
+uiltin"), g_status = general_failure, TRUE);
 	if (change_directory(path, envp))
 		return (free(path), g_status = general_failure, TRUE);
 	return (free(path), g_status = success, FALSE);
