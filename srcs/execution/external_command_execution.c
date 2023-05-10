@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/08 13:46:28 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/10 17:46:42 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -42,7 +42,6 @@ static t_bool	outfile_redirection(t_lexer *lexer, int *pipefds, int *prev_fd)
 			|| lexer->redir_type[1] == append_to_file))
 	{
 		close(pipefds[1]);
-		pipefds[1] = -1;
 		pipefds[1] = open_file(lexer->redir_path[1], lexer->redir_type[1]);
 		if (pipefds[1] == -1)
 			return (close_fds(pipefds, prev_fd, TRUE),
@@ -86,8 +85,9 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 		if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
 				|| lexer->redir_type[1] == append_to_file))
 		{
+			if (access(lexer->redir_path[0], R_OK) == -1)
+				return (close(pipefds[0]), g_status = general_failure, FALSE);
 			close(pipefds[0]);
-			pipefds[0] = -1;
 			waitpid(pid, NULL, 0);
 			pipefds[0] = open(lexer->redir_path[1], O_RDONLY);
 			if (pipefds[0] == -1)
@@ -95,12 +95,10 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 					g_status = general_failure, TRUE);
 		}
 		*prev_fd = dup(pipefds[0]);
+		return (close(pipefds[0]), FALSE);
 	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		g_status = WEXITSTATUS(status);
-	}
+	waitpid(pid, &status, 0);
+	g_status = WEXITSTATUS(status);
 	return (close(pipefds[0]), FALSE);
 }
 
