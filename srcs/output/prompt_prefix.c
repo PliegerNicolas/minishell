@@ -6,129 +6,134 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/29 15:20:17 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/10 17:22:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static char	*get_user(char ***envp)
-{
-	char	*user;
-
-	user = get_env_var("USER", (const char **)*envp);
-	if (!user)
-		user = ft_strdup("");
-	if (!user)
-		return (NULL);
-	return (user);
-}
-
-/*
-	delimiters[0] = start;
-	delimiters[1] = end;
-*/
-static char	*set_path(char *path, char *parsed_path)
-{
-	size_t	delimiters[2];
-
-	if (ft_strncmp(path, parsed_path, ft_strlen(parsed_path) + 1) == 0)
-	{
-		free(parsed_path);
-		parsed_path = ft_strdup("~");
-		if (!parsed_path)
-			return (NULL);
-		return (parsed_path);
-	}
-	free(parsed_path);
-	if (ft_strncmp(path, "/", 2) == 0)
-		parsed_path = ft_strdup("/");
-	else
-	{
-		delimiters[0] = 0;
-		delimiters[1] = 0;
-		while (path[delimiters[1]])
-			if (path[delimiters[1]++] == '/')
-				delimiters[0] = delimiters[1];
-		parsed_path = ft_substr(path, delimiters[0], delimiters[1]);
-	}
-	if (!parsed_path)
-		return (NULL);
-	return (parsed_path);
-}
-
-/*
-	This function gets the last element of a string splitted by '/'.
-	It's purpose is to get the name of the last directory of the given path.
-	If the given path is /home/USER. It returns ~.
-
-	@delimiters[0] = start of substr.
-	@delimiters[1] = end of substr.
-*/
-static char	*parse_prompt_prefix(char *path, char ***envp)
-{
-	char	*parsed_path;
-	char	*user;
-
-	user = get_user(envp);
-	if (!user)
-		return (free(path), NULL);
-	parsed_path = ft_strjoin("/home/", user);
-	free(user);
-	if (!parsed_path)
-		return (free(path), NULL);
-	parsed_path = set_path(path, parsed_path);
-	if (!parsed_path)
-		return (free(path), NULL);
-	return (free(path), parsed_path);
-}
-
-/*
-	This composes the "prompt_prefix".
-	It should look like : "➜  [dir_name] ¤ "
-*/
-static char	*compose_prompt_prefix(char *dir_name)
-
-{
-	char	*prompt_prefix;
-	size_t	len;
-
-	if (!dir_name)
-		return (NULL);
-	len = (ft_strlen(RED) * 3) + ft_strlen(WHITE) + ft_strlen("➜  ")
-		+ ft_strlen(" ¤ ") + ft_strlen(dir_name) + 1;
-	prompt_prefix = malloc(len * sizeof(*prompt_prefix));
-	if (!prompt_prefix)
-		return (NULL);
-	*prompt_prefix = '\0';
-	ft_strlcat(prompt_prefix, "\001➜\002  ", len);
-	ft_strlcat(prompt_prefix, CYAN, len);
-	ft_strlcat(prompt_prefix, dir_name, len);
-	ft_strlcat(prompt_prefix, YELLOW, len);
-	ft_strlcat(prompt_prefix, " ¤ ", len);
-	ft_strlcat(prompt_prefix, WHITE, len);
-	return (free(dir_name), prompt_prefix);
-}
-
-/*
-	This function creates the "prompt_prefix". A small and colored message to
-	indicate when prompt is open.
-*/
-char	*prompt_prefix(char ***envp)
+static char	*get_current_working_directory(char ***envp)
 {
 	char	*cwd;
+	char	t_cwd[1024];
 
-	cwd = malloc((BUFFER_SIZE + 1) * sizeof(*cwd));
+	cwd = get_env_var("PWD", (const char **)*envp);
 	if (!cwd)
-		return (NULL);
-	if (!getcwd(cwd, BUFFER_SIZE))
-		return (free(cwd), NULL);
-	cwd = parse_prompt_prefix(cwd, envp);
-	if (!cwd)
-		return (NULL);
-	if (g_status == success)
-		ft_putstr_fd(GREEN, STDOUT);
-	else
-		ft_putstr_fd(RED, STDOUT);
-	cwd = compose_prompt_prefix(cwd);
+	{
+		if (getcwd(t_cwd, sizeof(t_cwd)))
+			cwd = ft_strdup(t_cwd);
+		else
+			cwd = ft_strdup(".");
+		if (!cwd)
+			return (perror_malloc("test1"), NULL);
+	}
 	return (cwd);
+}
+
+static t_bool	get_home_path(char **home_path, char ***envp)
+{
+	char	*user;
+
+	*home_path = get_env_var("HOME", (const char **)*envp);
+	if (!*home_path)
+	{
+		user = get_env_var("USER", (const char **)*envp);
+		if (!user)
+		{
+			user = get_env_var("USERNAME", (const char **)*envp);
+			if (!user)
+			{
+				user = get_env_var("LOGNAME", (const char **)*envp);
+				if (!user)
+					return (FALSE);
+			}
+		}
+		*home_path = ft_strjoin("/home/", user);
+		free(user);
+		if (!*home_path)
+			return (perror_malloc("test2"), TRUE);
+	}
+	return (FALSE);
+}
+
+static char	*trim_path(char *path)
+{
+	char	*new_path;
+	size_t	index[2];
+
+	if (!path)
+		return (NULL);
+	index[0] = 0;
+	index[1] = 0;
+	while (path[index[0] + index[1]])
+	{
+		if (path[index[0] + index[1]] && path[index[0] + index[1]] == '/')
+			index[1]++;
+		while (path[index[0] + index[1]] && path[index[0] + index[1]] != '/')
+			index[1]++;
+		if (path[index[0] + index[1]] == '/')
+		{
+			index[0] += index[1];
+			index[1] = 0;
+		}
+	}
+	if (path[index[0]] == '/' && path[index[0] + 1])
+		index[0]++;
+	new_path = ft_substr(path, index[0], ft_strlen(path + index[0]));
+	if (!new_path)
+		return (perror_malloc("test"), free(path), NULL);
+	return (free(path), new_path);
+}
+
+static char	*beautify_prompt(char *prompt)
+{
+	char	*new_prompt;
+	size_t	len;
+
+	prompt = trim_path(prompt);
+	if (!prompt)
+		return (NULL);
+	len = ft_strlen(prompt) + 1 + ft_strlen(WHITE) + (ft_strlen(RED) * 3)
+		+ ft_strlen("➜  ") + ft_strlen(" ¤ ");
+	new_prompt = ft_calloc(len, sizeof(*new_prompt));
+	if (!new_prompt)
+		return (perror_malloc("test5"), free(prompt), NULL);
+	ft_strlcat(new_prompt, "\001➜\002  ", len);
+	ft_strlcat(new_prompt, CYAN, len);
+	ft_strlcat(new_prompt, prompt, len);
+	ft_strlcat(new_prompt, YELLOW, len);
+	ft_strlcat(new_prompt, " ¤ ", len);
+	ft_strlcat(new_prompt, WHITE, len);
+	if (prompt && g_status == success)
+		ft_putstr_fd(GREEN, STDOUT);
+	else if (prompt && g_status != success)
+		ft_putstr_fd(RED, STDOUT);
+	return (free(prompt), new_prompt);
+}
+
+char	*prompt_prefix(char ***envp)
+{
+	char	*prompt;
+	char	*home_path;
+
+	prompt = get_current_working_directory(envp);
+	if (!prompt)
+		return (NULL);
+	home_path = NULL;
+	if (get_home_path(&home_path, envp))
+		return (free(prompt), NULL);
+	if (home_path)
+	{
+		if (ft_strncmp(prompt, home_path, ft_strlen(home_path) + 1) == 0)
+		{
+			free(prompt);
+			prompt = ft_strdup("~");
+			if (!prompt)
+				return (perror_malloc("test3"), free(home_path), NULL);
+		}
+		free(home_path);
+	}
+	prompt = beautify_prompt(prompt);
+	if (!prompt)
+		return (NULL);
+	return (prompt);
 }

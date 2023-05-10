@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:07:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/09 23:41:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/10 16:58:47 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -82,26 +82,31 @@ static t_bool	parse_cd_path(char **path, char ***envp)
 
 static t_bool	change_directory(char *path, char ***envp)
 {
-	char	oldpwd[1024];
-	char	cwd[1024];
+	char	*oldpwd;
+	char	t_oldpwd[1024];
+	char	t_pwd[1024];
 
-	if (!path)
-		return (FALSE);
-	if (!getcwd(oldpwd, sizeof(oldpwd)))
-		return (perror("getcwd"), TRUE);
+	oldpwd = get_env_var("PWD", (const char **)*envp);
+	if (!oldpwd)
+	{
+		if (getcwd(t_oldpwd, sizeof(t_oldpwd)))
+			oldpwd = ft_strdup(t_oldpwd);
+		else
+			oldpwd = ft_strdup("");
+		if (!oldpwd)
+			return (perror_malloc("test"), TRUE);
+	}
 	if (chdir(path) == -1)
-		return (perror("chdir"), FALSE);
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (perror("getcwd"), TRUE);
+		return (perror("chdir"), free(oldpwd), FALSE);
+	if (!getcwd(t_pwd, sizeof(t_pwd)))
+		return (perror("getcwd"), free(oldpwd), TRUE);
 	*envp = set_env_var("OLDPWD", oldpwd, *envp);
 	if (!envp || !*envp)
-		return (perror_malloc("@envp (srcs/execuion/builtins/cd_builtin.c #chan\
-ge_directory"), TRUE);
-	*envp = set_env_var("PWD", cwd, *envp);
+		return (free(oldpwd), TRUE);
+	*envp = set_env_var("PWD", t_pwd, *envp);
 	if (!envp || !*envp)
-		return (perror_malloc("@envp (srcs/execuion/builtins/cd_builtin.c #chan\
-ge_directory"), TRUE);
-	return (FALSE);
+		return (free(oldpwd), TRUE);
+	return (free(oldpwd), FALSE);
 }
 
 t_bool	cd_builtin(t_lexer *lexer, char ***envp)

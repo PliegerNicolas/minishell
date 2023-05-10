@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/04/25 15:12:30 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/05/10 15:19:44 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -57,10 +57,7 @@ static void	prompt(char ***envp)
 	{
 		prompt_msg = prompt_prefix(envp);
 		if (!prompt_msg)
-		{
-			perror_malloc("@prompt_msg (srcs/minishell.c #prompt)");
 			break ;
-		}
 		line = readline(prompt_msg);
 		free(prompt_msg);
 		if (!line)
