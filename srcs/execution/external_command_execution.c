@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/10 17:46:42 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 11:14:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -83,10 +83,9 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 	if (lexer->next)
 	{
 		if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
-				|| lexer->redir_type[1] == append_to_file))
+				|| lexer->redir_type[1] == append_to_file)
+			&& (access(lexer->redir_path[1], R_OK) == 0 || errno == ENOENT))
 		{
-			if (access(lexer->redir_path[0], R_OK) == -1)
-				return (close(pipefds[0]), g_status = general_failure, FALSE);
 			close(pipefds[0]);
 			waitpid(pid, NULL, 0);
 			pipefds[0] = open(lexer->redir_path[1], O_RDONLY);
