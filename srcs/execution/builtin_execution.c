@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/08 14:20:19 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 22:00:25 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -41,7 +41,7 @@ static t_bool	outfile_redirection(t_lexer *lexer, int *pipefds, int *prev_fd)
 	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
 			|| lexer->redir_type[1] == append_to_file))
 	{
-		*prev_fd = open_file(lexer->redir_path[1], lexer->redir_type[1]);
+		*prev_fd = open_file(lexer, lexer->redir_path[1], lexer->redir_type[1]);
 		if (*prev_fd == -1)
 			return (close_fds(pipefds, prev_fd, TRUE),
 				g_status = general_failure, TRUE);
@@ -64,7 +64,6 @@ static t_bool	set_prev_fd(t_lexer *lexer, int *pipefds, int *prev_fd)
 			|| lexer->redir_type[1] == append_to_file))
 	{
 		close(pipefds[0]);
-		pipefds[0] = -1;
 		pipefds[0] = open(lexer->redir_path[1], O_RDONLY);
 		if (pipefds[0] == -1)
 			return (perror("open"), close_fds(pipefds, prev_fd, TRUE),
@@ -83,7 +82,7 @@ static int	exit_exception(t_commands *commands, t_lexer *lexer, char ***envp)
 	if (lexer->redir_path[1] && (lexer->redir_type[1] == to_file
 			|| lexer->redir_type[1] == append_to_file))
 	{
-		fd = open_file(lexer->redir_path[1], lexer->redir_type[1]);
+		fd = open_file(lexer, lexer->redir_path[1], lexer->redir_type[1]);
 		if (fd == -1)
 			return (TRUE);
 		close(fd);

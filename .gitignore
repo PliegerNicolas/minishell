@@ -1,5 +1,4 @@
-srcs/lexical_analysis
-srcs/lexical_analysis/*
-srcs/parsing/test1
-srcs/parsing/test2
-srcs/parsing/test3
+test1
+test2
+test3
+test4

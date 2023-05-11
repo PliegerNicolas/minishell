@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/11 13:55:12 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 21:58:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-int	open_file(const char *path, const enum e_redir_type redir_type)
+int	open_file(t_lexer *lexer, const char *path, const enum e_redir_type redir_type)
 {
 	int	fd;
 
@@ -30,7 +30,12 @@ int	open_file(const char *path, const enum e_redir_type redir_type)
 	else
 		return (-1);
 	if (fd == -1)
-		return (perror("open"), -1);
+	{
+		if (!lexer->err)
+			perror("open");
+		lexer->err = TRUE;
+		return (-1);
+	}
 	return (fd);
 }
 
