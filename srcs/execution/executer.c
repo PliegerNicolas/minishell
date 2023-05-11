@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/08 13:01:39 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 13:50:39 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -103,6 +103,7 @@ static t_bool	lexer_execution(t_commands *commands, t_lexer *lexer,
 
 	if (!lexer)
 		return (FALSE);
+	signal(SIGINT, SIG_IGN);
 	prev_fd = -1;
 	while (lexer)
 	{
@@ -118,6 +119,7 @@ static t_bool	lexer_execution(t_commands *commands, t_lexer *lexer,
 	}
 	if (wait_for_processes())
 		return (TRUE);
+	setup_signals(sigint_handler);
 	return (FALSE);
 }
 

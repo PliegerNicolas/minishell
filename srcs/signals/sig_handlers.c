@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 23:12:52 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/19 18:55:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 13:54:22 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -18,7 +18,7 @@
 	- ft_putstr_fd is here to change the color of the ➜ in front of the
 		readline prompt message to RED.
 */
-static void	sigint_handler(int signo)
+void	sigint_handler(int signo)
 {
 	if (signo != SIGINT)
 		return ;
@@ -31,13 +31,21 @@ static void	sigint_handler(int signo)
 	signal(SIGINT, sigint_handler);
 }
 
+void	proc_sigint_handler(int signo)
+{
+	if (signo != SIGINT)
+		return ;
+	ft_putendl_fd("^C", STDOUT);
+	signal(SIGINT, proc_sigint_handler);
+}
+
 /*
 	Tells the program to run sigint_handler on SIGINT (ctrl + c).
 	Tells the program to ignorer the SIGQUIT signal (ctrl + \).
 */
-void	setup_signals(void)
+void	setup_signals(void (*sig_handler)(int))
 {
-	signal(SIGINT, sigint_handler);
+	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
 }

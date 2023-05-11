@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/10 15:19:44 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 13:49:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -21,7 +21,7 @@ enum e_status	g_status = success;
 */
 static void	prompt_init(void)
 {
-	setup_signals();
+	setup_signals(sigint_handler);
 	rm_echoctl();
 }
 

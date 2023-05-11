@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/09 18:56:18 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 13:49:20 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -177,8 +177,11 @@ int				reset_write_color(int fd);
 
 /* signals */
 
-void			setup_signals(void);
+void			setup_signals(void (*sig_handler)(int));
 void			reset_signals(void);
+
+void			sigint_handler(int signo);
+void			proc_sigint_handler(int signo);
 
 void			rm_echoctl(void);
 void			reset_echoctl(void);

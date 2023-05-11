@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/11 11:14:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 13:55:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -117,6 +117,7 @@ t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 			g_status = general_failure, TRUE);
 	else if (pid == 0)
 	{
+		signal(SIGINT, proc_sigint_handler);
 		(void)child(lexer, pipefds, prev_fd, envp);
 		exit(g_status);
 	}
