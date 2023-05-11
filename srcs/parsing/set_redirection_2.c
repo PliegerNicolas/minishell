@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 01:49:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/11 22:01:06 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 22:03:08 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -29,7 +29,7 @@ t_bool	set_redir_path(char *pathname, t_lexer *lexer, int slot)
 		else
 		{
 			fd = open_file(lexer, lexer->redir_path[slot],
-				lexer->redir_type[slot]);
+					lexer->redir_type[slot]);
 			if (fd == -1)
 				return (perror("open"), TRUE);
 			close(fd);

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/11 21:59:18 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 22:03:50 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -39,7 +39,8 @@ static t_bool	outfile_redirection(t_lexer *lexer, int *pipefds, int *prev_fd)
 			|| lexer->redir_type[1] == append_to_file))
 	{
 		close(pipefds[1]);
-		pipefds[1] = open_file(lexer, lexer->redir_path[1], lexer->redir_type[1]);
+		pipefds[1] = open_file(lexer, lexer->redir_path[1],
+				lexer->redir_type[1]);
 		if (pipefds[1] == -1)
 			return (close_fds(pipefds, prev_fd, TRUE), TRUE);
 		if (dup2(pipefds[1], STDOUT_FILENO) == -1)

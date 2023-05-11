@@ -6,12 +6,13 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/11 21:58:49 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/11 22:04:03 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-int	open_file(t_lexer *lexer, const char *path, const enum e_redir_type redir_type)
+int	open_file(t_lexer *lexer, const char *path,
+	const enum e_redir_type redir_type)
 {
 	int	fd;
 
