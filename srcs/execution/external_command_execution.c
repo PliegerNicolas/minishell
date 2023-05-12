@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/11 22:03:50 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/12 13:50:44 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -64,7 +64,10 @@ static t_bool	child(t_lexer *lexer, int *pipefds, int *prev_fd, char ***envp)
 	if (outfile_redirection(lexer, pipefds, prev_fd))
 		return (close_fds(pipefds, prev_fd, TRUE), g_status = general_failure,
 			TRUE);
-	close_fds(pipefds, prev_fd, FALSE);
+	if (lexer->err)
+		close_fds(pipefds, prev_fd, TRUE);
+	else
+		close_fds(pipefds, prev_fd, FALSE);
 	if (execve(lexer->exec, lexer->args, *envp) == -1)
 		return (perror(lexer->exec), g_status = command_not_found,
 			close_fds(pipefds, prev_fd, TRUE), FALSE);
