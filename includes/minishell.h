@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/11 21:59:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/14 22:45:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -246,8 +246,7 @@ void			free_commands(t_commands *commands);
 void			free_lexer(t_lexer *lexer);
 void			free_str_arr(char **arr);
 
-void			from_commands_destroy_heredocs(t_commands *commands);
-void			from_lexer_destroy_heredocs(t_lexer *lexer);
+void			destroy_heredocs(void);
 
 /* utils */
 

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 17:43:26 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/14 22:20:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -64,7 +64,7 @@ static t_bool	set_redir(char *pathname, t_lexer *lexer,
 	if (redir_type == heredoc)
 	{
 		if (set_redir_path_heredoc(pathname, lexer, envp))
-			return (free(pathname), TRUE);
+			return (TRUE);
 		free(pathname);
 		pathname = NULL;
 	}
