@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:36:38 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/14 15:35:35 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/14 15:46:24 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -66,7 +66,7 @@ static t_bool	set_prev_fd(t_lexer *lexer, int *pipefds, int *prev_fd)
 			close_fds(pipefds, prev_fd, FALSE);
 			fd = open(lexer->redir_path[1], O_RDONLY);
 			if (fd == -1)
-				return (TRUE); // test
+				return (TRUE);
 			*prev_fd = fd;
 		}
 		else
@@ -122,14 +122,15 @@ t_bool	builtin_execution(t_commands *commands, t_lexer *lexer,
 	if (lexer->err)
 		return (close_fds(pipefds, prev_fd, FALSE), close(stdout_cpy),
 			g_status = general_failure, FALSE);
+	if (lexer->exec && ft_strncmp(lexer->exec, "exit", 5) == 0)
+		close_fds(pipefds, &stdout_cpy, FALSE);
 	if (execute_builtin(commands, lexer, envp))
 		return (close_fds(pipefds, prev_fd, TRUE), close(stdout_cpy), TRUE);
 	if (lexer->next || lexer->redir_path[1])
 		if (dup2(stdout_cpy, STDOUT_FILENO) == -1)
 			return (close_fds(pipefds, prev_fd, TRUE), close(stdout_cpy),
 				g_status = general_failure, TRUE);
-	close(stdout_cpy);
 	if (set_prev_fd(lexer, pipefds, prev_fd))
-		return (g_status = general_failure, TRUE);
-	return (FALSE);
+		return (close(stdout_cpy), g_status = general_failure, TRUE);
+	return (close(stdout_cpy), FALSE);
 }
