@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/14 22:37:03 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/15 13:35:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -103,7 +103,7 @@ static t_bool	lexer_execution(t_commands *commands, t_lexer *lexer,
 
 	if (!lexer)
 		return (FALSE);
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, proc_sigint_handler);
 	prev_fd = -1;
 	while (lexer)
 	{
@@ -152,9 +152,7 @@ enum e_status	executer(char ***envp, char *line)
 		return (g_status = general_failure, general_failure);
 	//put_commands(commands);
 	if (commands_execution(commands, envp))
-		return (destroy_heredocs(),
-			free_commands(commands), g_status);
-	//from_commands_destroy_heredocs(commands);
+		return (destroy_heredocs(), free_commands(commands), g_status);
 	destroy_heredocs();
 	return (free_commands(commands), g_status);
 }
