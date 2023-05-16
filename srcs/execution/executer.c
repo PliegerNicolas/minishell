@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/15 13:35:28 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/16 19:56:38 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -149,7 +149,11 @@ enum e_status	executer(char ***envp, char *line)
 		return (free(line), success);
 	commands = parse_user_input(line, envp);
 	if (!commands)
-		return (g_status = general_failure, general_failure);
+	{
+		if (g_status != termination_by_ctrl_c)
+			g_status = general_failure;
+		return (g_status);
+	}
 	//put_commands(commands);
 	if (commands_execution(commands, envp))
 		return (destroy_heredocs(), free_commands(commands), g_status);
