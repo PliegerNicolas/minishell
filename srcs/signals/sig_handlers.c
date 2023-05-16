@@ -6,10 +6,20 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 23:12:52 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/11 13:54:22 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/16 19:31:07 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
+
+void	sigint_heredoc_handler(int signo)
+{
+	if (signo != SIGINT)
+		return ;
+	ft_putchar_fd('\n', STDIN_FILENO);
+	close(STDIN_FILENO);
+	ft_putendl_fd("^C", STDERR_FILENO);
+	g_status = termination_by_ctrl_c;
+}
 
 /*
 	- Prints '\n' to indicate end of line to readline().

@@ -1,34 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_heredoc.c                                      :+:      :+:    :+:   */
+/*   set_heredoc_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/24 13:06:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/29 15:04:17 by nicolas          ###   ########.fr       */
+/*   Created: 2023/05/16 19:20:25 by nicolas           #+#    #+#             */
+/*   Updated: 2023/05/16 19:43:44 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-static char	*set_heredoc_filename(t_lexer *lexer)
-{
-	char	*heredoc;
-	char	*id;
-
-	if (!lexer)
-		return (NULL);
-	id = ft_itoa(lexer->id);
-	if (!id)
-		return (perror_malloc("@id (srcs/parsing/set_heredoc.c \
-#heredoc_filename)"), NULL);
-	heredoc = ft_strjoin(".heredoc_", id);
-	free(id);
-	if (!heredoc)
-		return (perror_malloc("@heredoc (srcs/parsing/set_heredoc.c \
-#heredoc_filename)"), NULL);
-	return (heredoc);
-}
 
 static char	*heredoc_prompt(t_lexer *lexer)
 {
@@ -70,7 +51,7 @@ static t_bool	fill_heredoc(char *line, const int fd, const size_t len)
 	return (FALSE);
 }
 
-static t_bool	write_to_heredoc(t_lexer *lexer, const int fd,
+t_bool	write_to_heredoc(t_lexer *lexer, const int fd,
 	const char *end, char ***envp)
 {
 	char	*prompt;
@@ -81,44 +62,20 @@ static t_bool	write_to_heredoc(t_lexer *lexer, const int fd,
 	{
 		prompt = heredoc_prompt(lexer);
 		if (!prompt)
-			return (TRUE);
+			return (g_status = general_failure, TRUE);
 		line = readline(prompt);
 		free(prompt);
 		if (!line)
 			return (TRUE);
 		line = substitute_line_content(line, 0, none, envp);
 		if (!line)
-			return (TRUE);
+			return (g_status = general_failure, TRUE);
 		len = ft_strlen(line);
 		if (ft_strncmp(line, end, len) == 0)
-			return (free(line), FALSE);
+			return (g_status = general_failure, free(line), FALSE);
 		if (fill_heredoc(line, fd, len))
-			return (free(line), TRUE);
+			return (g_status = general_failure, free(line), TRUE);
 		free(line);
 	}
-	return (FALSE);
-}
-
-t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer, char ***envp)
-{
-	int		fd;
-
-	if (!end)
-		return (FALSE);
-	if (lexer->redir_path[0])
-		free(lexer->redir_path[0]);
-	lexer->redir_path[0] = set_heredoc_filename(lexer);
-	if (!lexer->redir_path[0])
-		return (TRUE);
-	fd = open(lexer->redir_path[0], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd == -1)
-		return (perror_file(), TRUE);
-	if (write_to_heredoc(lexer, fd, end, envp))
-		return (close(fd), TRUE);
-	if (close(fd) == -1)
-		return (perror_file(), TRUE);
-	if (!lexer->redir_path[0])
-		return (perror_malloc("lexer->lexer_redir (srcs/parsing/set_redirection\
-_2.c #set_redir_path_heredoc)"), TRUE);
 	return (FALSE);
 }

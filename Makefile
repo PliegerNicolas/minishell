@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/05/09 18:55:53 by nicolas          ###   ########.fr        #
+#    Updated: 2023/05/16 19:28:07 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,8 @@ SRCS				:=		minishell \
 							parsing/set_arguments \
 							parsing/set_redirection_1 \
 							parsing/set_redirection_2 \
-							parsing/set_heredoc \
+							parsing/set_heredoc_1 \
+							parsing/set_heredoc_2 \
 							parsing/destroy_heredocs \
 							parsing/quote \
 							parsing/ft_setsplit_quotesafe \

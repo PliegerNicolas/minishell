@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/14 22:45:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/16 19:23:16 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -182,6 +182,7 @@ void			reset_signals(void);
 
 void			sigint_handler(int signo);
 void			proc_sigint_handler(int signo);
+void			sigint_heredoc_handler(int signo);
 
 void			rm_echoctl(void);
 void			reset_echoctl(void);
@@ -228,6 +229,8 @@ t_bool			set_redirection(const char *str, t_lexer *lexer,
 t_bool			set_redir_path(char *pathname, t_lexer *lexer, int slot);
 t_bool			set_redir_path_heredoc(const char *end, t_lexer *lexer,
 					char ***envp);
+t_bool			write_to_heredoc(t_lexer *lexer, const int fd,
+					const char *end, char ***envp);
 
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status, char ***envp);
