@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 18:15:14 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 21:27:49 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -78,7 +78,7 @@ static size_t	variable_placeholder_len(char *s)
 		{
 			if (s[i] == '}')
 				return (0);
-			else if (is_inset(s[i], "$\'\"="))
+			else if (is_inset(s[i], "$\'\"=") || (s[i - 1] && s[i - 1] == '?'))
 				break ;
 			i++;
 		}

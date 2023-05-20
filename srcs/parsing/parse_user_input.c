@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 23:54:01 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 20:32:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 21:16:43 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -29,7 +29,8 @@ static t_bool	quote_error(char *line)
 			i++;
 			continue ;
 		}
-		else if (line[i] == '\\' && line[i + 1] && (line[i + 1] == '\'' || line[i + 1] == '\"'))
+		else if (line[i] == '\\' && line[i + 1]
+			&& (line[i + 1] == '\'' || line[i + 1] == '\"'))
 			i++;
 		i++;
 	}

@@ -6,12 +6,11 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 20:38:18 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 21:17:28 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-/*
 static size_t	ft_sections(const char *s, const char *set,
 	enum e_quote_status quote_status)
 {
@@ -21,52 +20,48 @@ static size_t	ft_sections(const char *s, const char *set,
 
 	if (!s || !*s || !set || !*set)
 		return (0);
-	count = 1;
-	i = 0;
 	tr_s = ft_strtrim(s, WHITE_SPACES);
 	if (!tr_s)
 		return (0);
+	i = 0;
+	count = 1;
 	while (tr_s[i])
 	{
-		set_quotestatus((char *)(tr_s + i), &quote_status);
-		if (tr_s[i] && (is_inset(tr_s[i], set)
-				&& !quote_status) && tr_s[i + 1]
-			&& !ft_only_whitespace(tr_s + i + 1))
-			count++;
+		if (!is_between_quotes(tr_s[i], &quote_status))
+			if (tr_s[i] && is_inset(tr_s[i], set)
+				&& !ft_only_whitespace(tr_s + i + 1))
+				count++;
 		i++;
 	}
-	free(tr_s);
-	return (count);
+	return (free(tr_s), count);
 }
-*/
 
-/*
 static char	*get_section(const char *line, const char *set, size_t *i,
-	enum e_quote_status *quote_status)
+	enum e_quote_status *q_status)
 {
 	char				*section;
+	enum e_quote_status	mem_q;
 	size_t				j;
 
 	if (!line || !*line || !set || !*set)
 		return (NULL);
+	mem_q = *q_status;
 	while (line[*i] && is_inset(line[*i], set))
 		(*i)++;
 	j = 0;
-	while (line[*i + j] && (!is_inset(line[*i + j], set) || *quote_status))
-		set_quotestatus((char *)(line + *i + j++), quote_status);
+	while (line[*i + j] && (is_between_quotes(line[*i + j], &mem_q)
+			|| !is_inset(line[*i + j], set)))
+		j++;
 	section = malloc((j + 1) * sizeof(*section));
 	if (!section)
 		return (NULL);
 	j = 0;
-	while (line[*i] && (!is_inset(line[*i], set) || *quote_status))
-	{
-		set_quotestatus((char *)(line + *i), quote_status);
+	while (line[*i] && (is_between_quotes(line[*i], q_status)
+			|| !is_inset(line[*i], set)))
 		section[j++] = line[(*i)++];
-	}
 	section[j] = '\0';
 	return (section);
 }
-*/
 
 static void	free_split(char **splitted_commands)
 {
