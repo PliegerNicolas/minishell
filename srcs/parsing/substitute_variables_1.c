@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/21 01:42:49 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/21 01:45:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -42,13 +42,8 @@ static t_bool	scan_through_line(char *line, size_t *i,
 		{
 			if (line[*i] == '\\')
 				(*i) += 2;
-			else if (line[*i] == '$' && line[*i + 1] == '$')
+			else if (line[*i] == '$' && is_inset(line[*i + 1], "$\\"))
 				(*i)++;
-			else if (line[*i] == '$' && line[*i + 1] == '\\')
-				(*i)++;
-			//else if (line[*i] == '$'
-			//	&& (line[*i + 1] == '\'' || line[*i + 1] == '\"'))
-			//	(*i)++;
 			else if (line[*i] == '$' && !ft_isspace(line[*i + 1]))
 				return (FALSE);
 			else
