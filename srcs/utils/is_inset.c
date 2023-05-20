@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_user_input.c                                 :+:      :+:    :+:   */
+/*   is_inset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/14 23:54:01 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 17:32:39 by nicolas          ###   ########.fr       */
+/*   Created: 2023/05/20 17:44:03 by nicolas           #+#    #+#             */
+/*   Updated: 2023/05/20 17:44:15 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-t_commands	*parse_user_input(char *line, char ***envp)
+t_bool	is_inset(char c, const char *set)
 {
-	t_commands	*commands;
+	int		i;
 
-	if (!line)
-		return (NULL);
-	if (quote_error(line, none))
-		return (perror_quote(), free(line), NULL);
-	line = substitute_line_content(line, 0, none, envp);
-	if (!line)
-		return (NULL);
-	commands = generate_commands(line, envp);
-	if (!commands)
-		return (free(line), NULL);
-	return (free(line), commands);
+	if (!set || !*set)
+		return (FALSE);
+	i = 0;
+	while (set[i])
+		if (c == set[i++])
+			return (TRUE);
+	return (FALSE);
 }

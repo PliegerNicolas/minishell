@@ -6,12 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 17:01:01 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 18:02:41 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static t_bool	is_between_quotes(char c, enum e_quote_status *quote_status)
+t_bool	is_between_quotes(char c, enum e_quote_status *quote_status)
 {
 	if (!c)
 		return (FALSE);
@@ -35,7 +35,8 @@ static t_bool	scan_through_line(char *line, size_t *i,
 		return (TRUE);
 	while (line[*i])
 	{
-		if (is_between_quotes(line[*i], quote_status) && *quote_status == single_quote)
+		if (is_between_quotes(line[*i], quote_status)
+			&& *quote_status == single_quote)
 			(*i)++;
 		else if (line[*i + 1])
 		{
@@ -43,7 +44,8 @@ static t_bool	scan_through_line(char *line, size_t *i,
 				(*i) += 2;
 			else if (line[*i] == '$' && line[*i + 1] == '$')
 				(*i)++;
-			else if (line[*i] == '$' && (line[*i + 1] == '\'' || line[*i + 1] == '\"'))
+			else if (line[*i] == '$'
+				&& (line[*i + 1] == '\'' || line[*i + 1] == '\"'))
 				(*i)++;
 			else if (line[*i] == '$' && !ft_isspace(line[*i + 1]))
 				return (FALSE);
@@ -56,57 +58,32 @@ static t_bool	scan_through_line(char *line, size_t *i,
 	return (TRUE);
 }
 
-static size_t	variable_placeholder_len(char *line, size_t i)
+static size_t	variable_placeholder_len(char *s)
 {
-	size_t	j;
+	size_t	i;
 
-	j =  1;
-	if (line[i + j] == '{')
+	i = 1;
+	if (s[i] == '{')
 	{
-		if (!ft_strchr(line + i + j, '}'))
+		if (!ft_strchr(s + i, '}'))
 			return (0);
-		while (line[i + j] != '}' && line[i + j] != '\\')
-		{
-			if (line[i + j] == '\'' || line[i + j] == '\"')
+		while (!is_inset(s[i], "}\\"))
+			if (is_inset(s[i++], "\'\""))
 				return (0);
-			j++;
-		}
-		j++;
+		i++;
 	}
 	else
 	{
-		while (line[i + j] && !ft_isspace(line[i + j]) && line[i + j] != '\\')
+		while (s[i] && !ft_isspace(s[i]) && s[i] != '\\')
 		{
-			if (line[i + j] == '}')
+			if (s[i] == '}')
 				return (0);
-			else if (line[i + j] == '$' || line[i + j] == '\'' || line[i + j] == '\"')
+			else if (is_inset(s[i], "$\'\"="))
 				break ;
-			j++;
+			i++;
 		}
 	}
-	return (j);
-}
-
-static char	*find_variable_value(char *line, size_t j, char ***envp)
-{
-	char	*variable_name;
-	char	*variable_value;
-
-	if (!line)
-		return (NULL);
-	if (line[1] == '{')
-		variable_name = ft_substr(line, 2, j - 3);
-	else
-		variable_name = ft_substr(line, 1, j - 1);
-	if (!variable_name)
-		return (perror_malloc("test2"), NULL);
-	variable_value = get_env_var(variable_name, (const char **)*envp);
-	free(variable_name);
-	if (!variable_value)
-		variable_value = ft_strdup("");
-	if (!variable_value)
-		return (perror_malloc("test3"), NULL);
-	return (variable_value);
+	return (i);
 }
 
 static t_bool	substitute_variable(char **line, size_t i, char ***envp)
@@ -117,12 +94,13 @@ static t_bool	substitute_variable(char **line, size_t i, char ***envp)
 
 	if (!*line)
 		return (TRUE);
-	j = variable_placeholder_len(*line, i);
+	j = variable_placeholder_len((*line) + i);
 	if (j == 0)
 		return (perror_bad_substitution(), free(*line), TRUE);
 	variable_placeholder = ft_substr(*line + i, 0, j);
 	if (!variable_placeholder)
-		return (perror_malloc("test1"), free(*line), TRUE);
+		return (perror_malloc("@variable_placeholder (srcs/parsing/substitute_v\
+ariables_1.c #substitute_variable)"), free(*line), TRUE);
 	variable_value = find_variable_value(*line + i, j, envp);
 	if (!variable_value)
 		return (free(variable_placeholder), free(*line), TRUE);
@@ -140,67 +118,13 @@ char	*substitute_line_content(char *line, size_t i,
 	if (!line)
 		return (NULL);
 	if (scan_through_line(line, &i, &quote_status))
+	{
+		line = replace_escaped_characters(line);
+		if (!line)
+			return (NULL);
 		return (line);
+	}
 	if (substitute_variable(&line, i, envp))
 		return (NULL);
 	return (substitute_line_content(line, i, quote_status, envp));
 }
-/*
-static t_bool	scan_line(char *line, size_t *i,
-	enum e_quote_status *quote_status)
-{
-	while (line[*i] && line[*i + 1])
-	{
-		if (set_quotestatus(line + *i, quote_status))
-			(*i)++;
-		else if (*quote_status == single_quote)
-			(*i)++;
-		else
-		{
-			if (line[*i] == '$' && line[*i + 1] == '$')
-				(*i)++;
-			else if (line[*i] == '$' && (line[*i + 1] == '\''
-					|| line[*i + 1] == '\"'))
-				(*i)++;
-			else if (line[*i] == '$' && !ft_isspace(line[*i + 1]))
-				return (FALSE);
-			else
-				(*i)++;
-		}
-	}
-	return (TRUE);
-}
-
-static char	**get_var_landmarks(char *line, size_t i, char ***envp)
-{
-	char	**var_landmarks;
-	t_bool	brackets;
-
-	if (!line && !*line)
-		return (NULL);
-	if (line[i] && !ft_followed_chars(line + i, '{', '}'))
-		return (perror_bad_substitution(), NULL);
-	brackets = FALSE;
-	if (line[i + 1] && line[i + 1] == '{')
-		brackets = TRUE;
-	var_landmarks = set_var_landmarks(line, i, brackets, envp);
-	if (!var_landmarks)
-		return (NULL);
-	return (var_landmarks);
-}
-
-char	*substitute_line_content(char *line, size_t i,
-	enum e_quote_status quote_status, char ***envp)
-{
-	char	**var_landmarks;
-
-	if (!line || !line[i] || scan_line(line, &i, &quote_status))
-		return (line);
-	var_landmarks = get_var_landmarks(line, i, envp);
-	if (!var_landmarks)
-		return (free(line), NULL);
-	line = replace_first(line, var_landmarks[0], var_landmarks[2]);
-	free_str_arr(var_landmarks);
-	return (substitute_line_content(line, i, quote_status, envp));
-}
-*/

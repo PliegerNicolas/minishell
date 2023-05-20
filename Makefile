@@ -6,7 +6,7 @@
 #    By: nplieger <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 11:23:54 by nplieger          #+#    #+#              #
-#    Updated: 2023/05/16 19:28:07 by nicolas          ###   ########.fr        #
+#    Updated: 2023/05/20 17:45:12 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -101,6 +101,7 @@ SRCS				:=		minishell \
 							utils/ft_only_whitespace \
 							utils/ft_atolli \
 							utils/replace_first \
+							utils/is_inset \
 
 DEPS				:=		minishell \
 
