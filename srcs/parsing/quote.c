@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:17:40 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 19:08:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 20:33:14 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,6 +16,7 @@
 	If *quote_status has been modified (a.k.a a hidden quote has been found),
 	it returns TRUE. Else FALSE.
 */
+/*
 t_bool	set_quotestatus(char *s, enum e_quote_status *quote_status)
 {
 	enum e_quote_status	mem_quote;
@@ -41,51 +42,51 @@ t_bool	set_quotestatus(char *s, enum e_quote_status *quote_status)
 		return (FALSE);
 	return (TRUE);
 }
-
-/*
-	This function reads through a string and verifies if every
-	quote is closed correctly.
-	It returns TRUE if there is an error. Else FALSE.
 */
-t_bool	quote_error(char *s, enum e_quote_status quote_status)
-{
-	int		i;
-
-	if (!s)
-		return (FALSE);
-	i = 0;
-	while (s[i])
-		set_quotestatus(s + i++, &quote_status);
-	if (quote_status != none)
-		return (TRUE);
-	return (FALSE);
-}
 
 /*
 	A simple function that removes quotes from a given string.
 */
-char	*remove_quotes(char *line, enum e_quote_status quote_status)
+char	*remove_quotes(char *line, enum e_quote_status q_status)
 {
 	char				*new_line;
 	size_t				i;
 	size_t				len;
+	enum e_quote_status	mem_q;
 
-	i = 0;
-	len = 0;
-	while (line[i])
-		if (!set_quotestatus(line + i++, &quote_status))
-			len++;
-	new_line = malloc((len + 1) * sizeof(*new_line));
-	if (!new_line)
-		return (free(line), perror_malloc("@new_line (srcs/parsing/substitute_v\
-ariables.c #remove_quotes)"), NULL);
+	if (!line)
+		return (NULL);
 	i = 0;
 	len = 0;
 	while (line[i])
 	{
-		if (!set_quotestatus(line + i, &quote_status))
-			new_line[len++] = line[i];
+		mem_q = q_status;
+		if (is_between_quotes(line[i], &q_status) && mem_q != q_status)
+		{
+			i++;
+			continue ;
+		}
+		else if (line[i] == '\\' && line[i + 1] && (line[i + 1] == '\'' || line[i + 1] == '\"'))
+			i++;
 		i++;
+		len++;
+	}
+	new_line = malloc((len + 1) * sizeof(*new_line));
+	if (!new_line)
+		return (perror_malloc("test"), free(line), NULL);
+	i = 0;
+	len = 0;
+	while (line[i])
+	{
+		mem_q = q_status;
+		if (is_between_quotes(line[i], &q_status) && mem_q != q_status)
+		{
+			i++;
+			continue ;
+		}
+		else if (line[i] == '\\' && line[i + 1] && (line[i + 1] == '\'' || line[i + 1] == '\"'))
+			i++;
+		new_line[len++] = line[i++];
 	}
 	new_line[len] = '\0';
 	return (free(line), new_line);

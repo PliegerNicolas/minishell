@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/20 18:26:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 20:34:12 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -237,10 +237,10 @@ char			*substitute_line_content(char *line, size_t i,
 char			*find_variable_value(char *line, size_t j, char ***envp);
 char			*replace_escaped_characters(char *line, size_t i,
 					enum e_quote_status q_status);
-t_bool			is_between_quotes(char c, enum e_quote_status *quote_status);
 
-t_bool			set_quotestatus(char *s, enum e_quote_status *quote_status);
-t_bool			quote_error(char *s, enum e_quote_status quote_status);
+t_bool			is_between_quotes(char c, enum e_quote_status *quote_status);
+//t_bool			set_quotestatus(char *s, enum e_quote_status *quote_status);
+//t_bool			quote_error(char *s, enum e_quote_status quote_status);
 char			*remove_quotes(char *line, enum e_quote_status quote_status);
 char			**ft_setsplit_quotesafe(const char *line, const char *set,
 					enum e_quote_status quote_status);

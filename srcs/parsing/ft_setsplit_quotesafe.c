@@ -6,11 +6,12 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 17:44:56 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 20:38:18 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+/*
 static size_t	ft_sections(const char *s, const char *set,
 	enum e_quote_status quote_status)
 {
@@ -37,7 +38,9 @@ static size_t	ft_sections(const char *s, const char *set,
 	free(tr_s);
 	return (count);
 }
+*/
 
+/*
 static char	*get_section(const char *line, const char *set, size_t *i,
 	enum e_quote_status *quote_status)
 {
@@ -63,6 +66,7 @@ static char	*get_section(const char *line, const char *set, size_t *i,
 	section[j] = '\0';
 	return (section);
 }
+*/
 
 static void	free_split(char **splitted_commands)
 {

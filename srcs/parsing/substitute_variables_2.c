@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 13:24:12 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 19:03:55 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 20:11:06 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -66,7 +66,7 @@ char	*replace_escaped_characters(char *line, size_t i,
 		{
 			if (is_inset(line[i + 1], "\'\""))
 				i++;
-			else if (line[i + 1] != '\\' && q_status == double_quote)
+			else if (/*line[i + 1] != '\\' && */q_status == double_quote)
 				line = replace_escaped_characters_double_quotes(line, i);
 			i++;
 		}
