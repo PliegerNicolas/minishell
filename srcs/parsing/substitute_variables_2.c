@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 13:24:12 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 20:52:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/21 00:02:58 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -43,7 +43,8 @@ static char	*replace_escaped_characters_other(char *line, size_t i)
 
 	substr = ft_substr(line + i++, 0, 2);
 	if (!substr)
-		return (perror_malloc("test6"), free(line), NULL);
+		return (perror_malloc("@substr (srcs/parsing/substitute_variables_2.c #\
+replace_escaped_characters_other)"), free(line), NULL);
 	line = replace_first(line, substr, substr + 1);
 	free(substr);
 	if (!line)
@@ -68,6 +69,8 @@ char	*replace_escaped_characters(char *line, size_t i,
 				i++;
 			else if (q_status == double_quote)
 				line = replace_escaped_characters_double_quotes(line, i);
+			else if (q_status == none)
+				line = replace_escaped_characters_other(line, i);
 			i++;
 		}
 		else
