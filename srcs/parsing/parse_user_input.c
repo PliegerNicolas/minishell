@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 23:54:01 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 16:05:09 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 17:01:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -44,17 +44,43 @@ static char	*replace_backslashes(char *line)
 		mem_quote = quote_status;
 		if (is_between_quotes(line[i], &quote_status) && quote_status != mem_quote)
 			i++;
-		else if (line[i] != '\\')
+		else if (quote_status == single_quote || line[i] != '\\')
 			i++;
-		else
+		else if (line[i] == '\\' && line[i + 1] && (line[i + 1] == '\'' || line[i + 1] == '\"'))
+			i++;
+		else if (line[i] == '\\' && line[i + 1] && line[i + 1] != '\\'
+			&& quote_status == double_quote)
 		{
 			substr = ft_substr(line + i, 0, 2);
 			if (!substr)
 				return (perror_malloc("test5"), free(line), NULL);
+			if (ft_strncmp(line + i, "\\n", 2) == 0)
+				line = replace_first(line, substr, "\n");
+			else if (ft_strncmp(line + i, "\\t", 2) == 0)
+				line = replace_first(line, substr, "\t");
+			else if (ft_strncmp(line + i, "\\v", 2) == 0)
+				line = replace_first(line, substr, "\v");
+			else if (ft_strncmp(line + i, "\\f", 2) == 0)
+				line = replace_first(line, substr, "\f");
+			else if (ft_strncmp(line + i, "\\r", 2) == 0)
+				line = replace_first(line, substr, "\r");
+			else
+			{
+				line = replace_first(line, substr, substr + 1);
+				if (!line)
+					return (NULL);
+			}
+			i++;
+		}
+		else
+		{
+			substr = ft_substr(line + i, 0, 2);
+			if (!substr)
+				return (perror_malloc("test6"), free(line), NULL);
 			line = replace_first(line, substr, substr + 1);
-			free(substr);
 			if (!line)
 				return (NULL);
+			i++;
 		}
 	}
 	return (line);
@@ -72,14 +98,16 @@ t_commands	*parse_user_input(char *line, char ***envp)
 	if (!line)
 		return (NULL);
 	line = replace_backslashes(line);
-	//
+	if (!line)
+		return (NULL);
+	/*
 	if (line)
 	{
 		printf("%s\n", line);
 		free(line);
 		return (NULL);
 	}
-	//
+	*/
 	if (!line)
 		return (NULL);
 	commands = generate_commands(line, envp);

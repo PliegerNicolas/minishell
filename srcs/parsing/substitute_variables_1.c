@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 16:10:10 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 17:01:01 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -39,7 +39,9 @@ static t_bool	scan_through_line(char *line, size_t *i,
 			(*i)++;
 		else if (line[*i + 1])
 		{
-			if (line[*i] == '$' && line[*i + 1] == '$')
+			if (line[*i] == '\\')
+				(*i) += 2;
+			else if (line[*i] == '$' && line[*i + 1] == '$')
 				(*i)++;
 			else if (line[*i] == '$' && (line[*i + 1] == '\'' || line[*i + 1] == '\"'))
 				(*i)++;
@@ -63,7 +65,7 @@ static size_t	variable_placeholder_len(char *line, size_t i)
 	{
 		if (!ft_strchr(line + i + j, '}'))
 			return (0);
-		while (line[i + j] != '}')
+		while (line[i + j] != '}' && line[i + j] != '\\')
 		{
 			if (line[i + j] == '\'' || line[i + j] == '\"')
 				return (0);
@@ -73,7 +75,7 @@ static size_t	variable_placeholder_len(char *line, size_t i)
 	}
 	else
 	{
-		while (line[i + j] && !ft_isspace(line[i + j]))
+		while (line[i + j] && !ft_isspace(line[i + j]) && line[i + j] != '\\')
 		{
 			if (line[i + j] == '}')
 				return (0);
