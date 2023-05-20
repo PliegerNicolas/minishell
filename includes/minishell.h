@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/20 18:00:55 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 18:26:32 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -235,7 +235,8 @@ t_bool			write_to_heredoc(t_lexer *lexer, const int fd,
 char			*substitute_line_content(char *line, size_t i,
 					enum e_quote_status quote_status, char ***envp);
 char			*find_variable_value(char *line, size_t j, char ***envp);
-char			*replace_escaped_characters(char *line);
+char			*replace_escaped_characters(char *line, size_t i,
+					enum e_quote_status q_status);
 t_bool			is_between_quotes(char c, enum e_quote_status *quote_status);
 
 t_bool			set_quotestatus(char *s, enum e_quote_status *quote_status);

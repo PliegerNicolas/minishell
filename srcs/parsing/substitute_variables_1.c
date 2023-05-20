@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/20 18:02:41 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 18:15:14 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -119,7 +119,7 @@ char	*substitute_line_content(char *line, size_t i,
 		return (NULL);
 	if (scan_through_line(line, &i, &quote_status))
 	{
-		line = replace_escaped_characters(line);
+		line = replace_escaped_characters(line, 0, none);
 		if (!line)
 			return (NULL);
 		return (line);
