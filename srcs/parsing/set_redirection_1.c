@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/14 22:20:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/21 00:08:15 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -21,7 +21,7 @@ static char	*set_quoteless_str(const char *str, t_bool *prev_is_redir)
 	if (!quoteless_str)
 		return (perror_malloc("@quoteless_str (srcs/parsing/set_options.c #get_\
 quoteless_str)"), NULL);
-	quoteless_str = remove_quotes(quoteless_str, none);
+	quoteless_str = remove_quotes(quoteless_str, 0, none);
 	if (!quoteless_str)
 		return (NULL);
 	*prev_is_redir = FALSE;

@@ -6,23 +6,10 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 23:24:21 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/15 00:53:19 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 17:45:40 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-static t_bool	is_inset(char c, const char *set)
-{
-	int		i;
-
-	if (!set || !*set)
-		return (FALSE);
-	i = 0;
-	while (set[i])
-		if (c == set[i++])
-			return (TRUE);
-	return (FALSE);
-}
 
 static size_t	ft_sections(const char *s, const char *set)
 {

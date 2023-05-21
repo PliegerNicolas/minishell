@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/08 13:09:08 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/20 23:52:39 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -51,7 +51,7 @@ static t_bool	next_is_valid_word(const char *s)
 	size_t	i;
 
 	i = 0;
-	while (s[i] && ft_isspace(s[i]))
+	while (s[i] && (ft_isspace(s[i]) && s[i] != '\n'))
 		i++;
 	if (s[i] && s[i] != '<' && s[i] != '>')
 		return (TRUE);

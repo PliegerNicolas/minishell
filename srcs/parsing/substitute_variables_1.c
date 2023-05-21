@@ -6,96 +6,122 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:02:15 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/09 18:58:38 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/21 01:45:27 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-/*
-	This function goes through the line to find the next valid index.
-	It looks for a '$' and ensures it's followed by other chars but quotes.
-	A variable ends if quote is met, another '$' or a whitespace.
+t_bool	is_between_quotes(char c, enum e_quote_status *quote_status)
+{
+	if (!c)
+		return (FALSE);
+	if (*quote_status == none && c == '\'')
+		*quote_status = single_quote;
+	else if (*quote_status == none && c == '\"')
+		*quote_status = double_quote;
+	else if (*quote_status == single_quote && c == '\'')
+		*quote_status = none;
+	else if (*quote_status == double_quote && c == '\"')
+		*quote_status = none;
+	else if (*quote_status == none)
+		return (FALSE);
+	return (TRUE);
+}
 
-	It returns FALSE if a variable is found, else TRUE.
-*/
-static t_bool	scan_line(char *line, size_t *i,
+static t_bool	scan_through_line(char *line, size_t *i,
 	enum e_quote_status *quote_status)
 {
-	while (line[*i] && line[*i + 1])
+	if (!line)
+		return (TRUE);
+	while (line[*i])
 	{
-		if (set_quotestatus(line + *i, quote_status))
+		if (is_between_quotes(line[*i], quote_status)
+			&& *quote_status == single_quote)
 			(*i)++;
-		else if (*quote_status == single_quote)
-			(*i)++;
-		else
+		else if (line[*i + 1])
 		{
-			if (line[*i] == '$' && line[*i + 1] == '$')
-				(*i)++;
-			else if (line[*i] == '$' && (line[*i + 1] == '\''
-					|| line[*i + 1] == '\"'))
+			if (line[*i] == '\\')
+				(*i) += 2;
+			else if (line[*i] == '$' && is_inset(line[*i + 1], "$\\"))
 				(*i)++;
 			else if (line[*i] == '$' && !ft_isspace(line[*i + 1]))
 				return (FALSE);
 			else
 				(*i)++;
 		}
+		else
+			(*i)++;
 	}
 	return (TRUE);
 }
 
-/*
-	This function retrieves multiple values and stores it in a char **.
-
-	var_landmarks[0] = what should be replaced by the variable's value
-					   (ex : ${USER} or $USER).
-	var_landmarks[1] = the variable's name. (ex : USER).
-	var_landmarks[2] = the variable's value. (ex : nicolas).
-
-	Returns var_landmarks or NULL on error.
-*/
-static char	**get_var_landmarks(char *line, size_t i, char ***envp)
+static size_t	variable_placeholder_len(char *s)
 {
-	char	**var_landmarks;
-	t_bool	brackets;
+	size_t	i;
 
-	if (!line && !*line)
-		return (NULL);
-	if (line[i] && !ft_followed_chars(line + i, '{', '}'))
-		return (perror_bad_substitution(), NULL);
-	brackets = FALSE;
-	if (line[i + 1] && line[i + 1] == '{')
-		brackets = TRUE;
-	var_landmarks = set_var_landmarks(line, i, brackets, envp);
-	if (!var_landmarks)
-		return (NULL);
-	return (var_landmarks);
+	i = 1;
+	if (s[i] == '{')
+	{
+		if (!ft_strchr(s + i, '}'))
+			return (0);
+		while (!is_inset(s[i], "}\\"))
+			if (is_inset(s[i++], "\'\""))
+				return (0);
+		i++;
+	}
+	else
+	{
+		while (s[i] && !ft_isspace(s[i]) && s[i] != '\\')
+		{
+			if (s[i] == '}')
+				return (0);
+			else if (is_inset(s[i], "$\'\"=") || (s[i - 1] && s[i - 1] == '?'))
+				break ;
+			i++;
+		}
+	}
+	return (i);
 }
 
-/*
-	This function takes a line and substitutes it's contained variables
-	according to the following format : $VARIABLE, ${VARIABLE}.
-	It uses a recursive method. It also recognizes "$?" as a special case.
-	
-	- scan_line() : moves the cursor to find the next valid variable's index.
-	- var_landmarks() : props a lot of variables in a char ** for ease of use.
-						It should contain for example the part of the string
-						that should get replaced, the variable's name and it's
-						value.
-	- substitute_variable() : replaces the variable by it's value.
+static t_bool	substitute_variable(char **line, size_t i, char ***envp)
+{
+	char	*variable_placeholder;
+	char	*variable_value;
+	size_t	j;
 
-	Returns the given line with subsituted variables.
-*/
+	if (!*line)
+		return (TRUE);
+	j = variable_placeholder_len((*line) + i);
+	if (j == 0)
+		return (perror_bad_substitution(), free(*line), TRUE);
+	variable_placeholder = ft_substr(*line + i, 0, j);
+	if (!variable_placeholder)
+		return (perror_malloc("@variable_placeholder (srcs/parsing/substitute_v\
+ariables_1.c #substitute_variable)"), free(*line), TRUE);
+	variable_value = find_variable_value(*line + i, j, envp);
+	if (!variable_value)
+		return (free(variable_placeholder), free(*line), TRUE);
+	*line = replace_first(*line, variable_placeholder, variable_value);
+	free(variable_placeholder);
+	free(variable_value);
+	if (!*line)
+		return (TRUE);
+	return (FALSE);
+}
+
 char	*substitute_line_content(char *line, size_t i,
 	enum e_quote_status quote_status, char ***envp)
 {
-	char	**var_landmarks;
-
-	if (!line || !line[i] || scan_line(line, &i, &quote_status))
+	if (!line)
+		return (NULL);
+	if (scan_through_line(line, &i, &quote_status))
+	{
+		line = replace_escaped_characters(line, 0, none);
+		if (!line)
+			return (NULL);
 		return (line);
-	var_landmarks = get_var_landmarks(line, i, envp);
-	if (!var_landmarks)
-		return (free(line), NULL);
-	line = replace_first(line, var_landmarks[0], var_landmarks[2]);
-	free_str_arr(var_landmarks);
+	}
+	if (substitute_variable(&line, i, envp))
+		return (NULL);
 	return (substitute_line_content(line, i, quote_status, envp));
 }
