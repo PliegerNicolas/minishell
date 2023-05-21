@@ -6,7 +6,7 @@
 #    By: nicolas <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/21 15:02:08 by nicolas           #+#    #+#              #
-#    Updated: 2023/05/21 20:45:17 by nicolas          ###   ########.fr        #
+#    Updated: 2023/05/21 20:54:27 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -161,6 +161,11 @@ ifeq (santhread, $(filter santhread,$(MAKECMDGOALS)))
 	CFLAGS		+=			-fsanitize=thread
 endif
 
+ifeq (optimize, $(filter optimize,$(MAKECMDGOALS)))
+	CFLAGS		+=			-O3
+endif
+
+
 #* ************************************************************************** *#
 #* *                                 RULES                                  * *#
 #* ************************************************************************** *#
@@ -203,6 +208,8 @@ debug:				all
 sanaddress:			all
 
 santhread:			all
+
+optimize:			all
 
 # ----- #
 
