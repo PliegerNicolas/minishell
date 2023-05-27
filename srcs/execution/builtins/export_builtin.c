@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:14:22 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/09 23:30:12 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/05/27 15:02:40 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -30,21 +30,28 @@ static void	put_exported(char **envp)
 	}
 }
 
-static char	*find_name(const char *quoteless_str)
+static t_bool	find_name(const char *quoteless_str, char **name)
 {
-	char	*name;
 	size_t	i;
 
 	if (!quoteless_str)
-		return (NULL);
+		return (FALSE);
 	i = 0;
-	while (quoteless_str[i] && quoteless_str[i] != '=')
+	while (quoteless_str[i]
+		&& export_variable_name_validator(quoteless_str[i], i))
 		i++;
-	name = ft_substr(quoteless_str, 0, i);
-	if (!name)
+	if (!quoteless_str[i])
+		return (FALSE);
+	if (quoteless_str[i] != '=')
+	{
+		ft_putendl_fd("export: not a valid identifier", STDERR);
+		return (FALSE);
+	}
+	*name = ft_substr(quoteless_str, 0, i);
+	if (!*name)
 		return (perror_malloc("@name (srcs/execuion/builtins/export_builtin.c #\
-find_name"), NULL);
-	return (name);
+find_name"), TRUE);
+	return (FALSE);
 }
 
 static char	**update_envp(char *str, const char *name, char **envp)
@@ -75,14 +82,14 @@ static t_bool	export(const char *s, char ***envp)
 	char	*quoteless_str;
 	char	*name;
 
-	if (!s || !ft_strchr(s, '='))
-		return (FALSE);
 	quoteless_str = get_quoteless_str(s);
 	if (!quoteless_str)
 		return (g_status = general_failure, TRUE);
-	name = find_name(quoteless_str);
-	if (!name)
+	name = NULL;
+	if (find_name(quoteless_str, &name))
 		return (free(quoteless_str), g_status = general_failure, TRUE);
+	if (!name)
+		return (g_status = misuse_of_shell_builtins, FALSE);
 	*envp = update_envp(quoteless_str, name, *envp);
 	if (!envp || !*envp)
 		return (free(name), g_status = general_failure, TRUE);
@@ -106,7 +113,7 @@ t_bool	export_builtin(t_lexer *lexer, char ***envp)
 	else if (len == 2)
 	{
 		if (export(lexer->args[1], envp))
-			return (g_status = general_failure, TRUE);
+			return (TRUE);
 	}
 	else if (len == 1)
 		put_exported(*envp);
