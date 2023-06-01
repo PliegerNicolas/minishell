@@ -6,18 +6,23 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 15:48:09 by nicolas           #+#    #+#             */
-/*   Updated: 2023/04/24 15:48:54 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/01 13:40:52 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
 t_bool	ft_only_whitespace(const char *str)
 {
-	while (*str)
+	char	*quoteless_str;
+
+	quoteless_str = get_quoteless_str(str);
+	if (!quoteless_str)
+		return (perror_malloc("test"), TRUE);
+	while (*quoteless_str)
 	{
-		if (!ft_isspace(*str))
+		if (!ft_isspace(*quoteless_str))
 			return (FALSE);
-		str++;
+		quoteless_str++;
 	}
 	return (TRUE);
 }

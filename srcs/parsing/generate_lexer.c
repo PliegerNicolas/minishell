@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 11:00:13 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/14 22:38:32 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/01 13:07:41 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -27,7 +27,11 @@ static t_lexer	*new_lexer(char *cmd, size_t id, char ***envp)
 		return (perror_malloc("@lexer (srcs/parsing/generate_lexer.c #new_lexer\
 )"), NULL);
 	lexer->id = id;
-	lexer = populate_lexer(lexer, cmd, none, envp);
+	lexer->cmd = ft_strtrim(cmd, WHITE_SPACES);
+	if (!lexer->cmd)
+		return (perror_malloc("@lexer->cmd (srcs/parsing/generate_lexer #new_le\
+xer)"), free_lexer(lexer), NULL);
+	lexer = populate_lexer(lexer, none, envp);
 	if (!lexer)
 		return (NULL);
 	return (lexer);

@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/27 15:02:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/01 13:41:07 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -216,14 +216,13 @@ t_bool			exit_builtin(t_commands *commands, t_lexer *lexer,
 t_commands		*parse_user_input(char *line, char ***envp);
 t_commands		*generate_commands(const char *line, char ***envp);
 t_lexer			*generate_lexer(const char *cmd, char ***envp);
-t_lexer			*populate_lexer(t_lexer *lexer, const char *cmd,
+t_lexer			*populate_lexer(t_lexer *lexer,
 					enum e_quote_status quote_status, char ***envp);
 
-t_bool			set_exec(const char *str, t_lexer *lexer,
-					t_bool *prev_is_redir, char ***envp);
+t_bool			set_exec(char *cmd, t_lexer *lexer, char ***envp);
 char			*get_path(char *cmd, char ***envp);
 t_bool			set_options(const char *str, t_lexer *lexer);
-t_bool			set_arguments(const char *str, t_lexer *lexer);
+t_bool			set_arguments(const char *str, t_lexer *lexer, char ***envp);
 t_bool			set_redirection(const char *str, t_lexer *lexer,
 					t_bool *prev_is_redir, char ***envp);
 

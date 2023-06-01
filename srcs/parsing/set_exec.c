@@ -6,11 +6,27 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:39:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/07 17:41:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/01 13:37:13 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
+t_bool	set_exec(char *cmd, t_lexer *lexer, char ***envp)
+{
+	if (!lexer)
+		return (TRUE);
+	if (!cmd)
+		return (TRUE);
+	lexer->exec = cmd;
+	if (access(lexer->exec, X_OK) == 0)
+		return (FALSE);
+	lexer->exec = get_path(lexer->exec, envp);
+	if (!lexer->exec)
+		return (TRUE);
+	return (FALSE);
+}
+
+/*
 t_bool	set_exec(const char *str, t_lexer *lexer, t_bool *prev_is_redir,
 	char ***envp)
 {
@@ -38,3 +54,4 @@ t_bool	set_exec(const char *str, t_lexer *lexer, t_bool *prev_is_redir,
 		return (TRUE);
 	return (FALSE);
 }
+*/
