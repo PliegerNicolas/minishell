@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:20:25 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/16 19:43:44 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/02 11:21:48 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -71,7 +71,7 @@ t_bool	write_to_heredoc(t_lexer *lexer, const int fd,
 		if (!line)
 			return (g_status = general_failure, TRUE);
 		len = ft_strlen(line);
-		if (ft_strncmp(line, end, len) == 0)
+		if (ft_strncmp(line, end, len + 1) == 0)
 			return (g_status = general_failure, free(line), FALSE);
 		if (fill_heredoc(line, fd, len))
 			return (g_status = general_failure, free(line), TRUE);
