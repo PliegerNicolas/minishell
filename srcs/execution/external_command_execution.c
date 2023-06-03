@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/21 02:01:13 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/03 23:27:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -97,14 +97,17 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 					g_status = general_failure, TRUE);
 		}
 		*prev_fd = dup(pipefds[0]);
-		return (close(pipefds[0]), FALSE);
 	}
 	waitpid(pid, &status, 0);
-	g_status = WEXITSTATUS(status);
+	if (WIFEXITED(status))
+		g_status = WEXITSTATUS(status);
+	else
+		g_status = termination_by_ctrl_c;
 	return (close(pipefds[0]), FALSE);
 }
 
-t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
+t_bool	external_execution(t_commands *commands, t_lexer *lexer,
+	int *prev_fd, char ***envp)
 {
 	pid_t	pid;
 	int		pipefds[2];
@@ -122,6 +125,8 @@ t_bool	external_execution(t_lexer *lexer, int *prev_fd, char ***envp)
 	{
 		signal(SIGINT, proc_sigint_handler);
 		(void)child(lexer, pipefds, prev_fd, envp);
+		free_envp(*envp);
+		free_commands(commands);
 		exit(g_status);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/06/01 13:41:07 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/03 23:14:34 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -193,7 +193,8 @@ enum e_status	executer(char ***envp, char *line);
 t_bool			is_builtin(const char *str);
 t_bool			builtin_execution(t_commands *commands, t_lexer *lexer,
 					int *prev_fd, char ***envp);
-t_bool			external_execution(t_lexer *lexer, int *prev_fd, char ***envp);
+t_bool			external_execution(t_commands *commands, t_lexer *lexer,
+					int *prev_fd, char ***envp);
 
 int				open_file(t_lexer *lexer, const char *path,
 					const enum e_redir_type redir_type);
