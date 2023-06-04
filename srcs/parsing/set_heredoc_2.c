@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:20:25 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/02 11:21:48 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/04 20:14:06 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -65,17 +65,18 @@ t_bool	write_to_heredoc(t_lexer *lexer, const int fd,
 			return (g_status = general_failure, TRUE);
 		line = readline(prompt);
 		free(prompt);
-		if (!line)
+		if (!line && g_status == termination_by_ctrl_c)
 			return (TRUE);
+		else if (!line)
+			return (perror_heredoc_eof((char *)end), FALSE);
 		line = substitute_line_content(line, 0, none, envp);
 		if (!line)
 			return (g_status = general_failure, TRUE);
 		len = ft_strlen(line);
 		if (ft_strncmp(line, end, len + 1) == 0)
-			return (g_status = general_failure, free(line), FALSE);
+			return (free(line), FALSE);
 		if (fill_heredoc(line, fd, len))
 			return (g_status = general_failure, free(line), TRUE);
 		free(line);
 	}
-	return (FALSE);
 }

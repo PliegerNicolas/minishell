@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 13:06:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/16 19:58:11 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/04 20:20:48 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -42,11 +42,13 @@ t_bool	set_and_fill_heredoc(t_lexer *lexer, const char *end, char ***envp)
 	signal(SIGINT, sigint_heredoc_handler);
 	if (write_to_heredoc(lexer, fd, end, envp))
 	{
+		setup_signals(sigint_handler);
 		dup2(stdin_cpy, STDIN_FILENO);
 		return (close(stdin_cpy), close(fd), TRUE);
 	}
+	dup2(stdin_cpy, STDIN_FILENO);
 	setup_signals(sigint_handler);
-	return (close(stdin_cpy), close(fd), g_status = general_failure, FALSE);
+	return (close(stdin_cpy), close(fd), FALSE);
 }
 
 t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer, char ***envp)
