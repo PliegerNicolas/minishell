@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/04 20:22:12 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/13 15:50:19 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -83,15 +83,23 @@ static t_bool	wait_for_processes(void)
 	while (1)
 	{
 		pid = waitpid(-1, &status, 0);
-		if (pid == -1)
+		if (pid != -1)
+			continue ;
+		if (errno == ECHILD)
 		{
-			if (errno == ECHILD)
-				break ;
-			else if (errno == EINTR)
-				continue ;
-			else
-				return (g_status = general_failure, TRUE);
+			if (WIFEXITED(status))
+				g_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				g_status = termination_by_ctrl_c;
+			break ;
 		}
+		else if (errno == EINTR)
+		{
+			g_status = termination_by_ctrl_c;
+			continue ;
+		}
+		else
+			return (g_status = general_failure, TRUE);
 	}
 	return (FALSE);
 }

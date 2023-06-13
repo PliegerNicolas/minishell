@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:34:41 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/03 23:27:31 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/13 15:49:00 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -90,7 +90,7 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 			&& (access(lexer->redir_path[1], R_OK) == 0 || errno == ENOENT))
 		{
 			close(pipefds[0]);
-			waitpid(pid, NULL, 0);
+			waitpid(pid, &status, 0);
 			pipefds[0] = open(lexer->redir_path[1], O_RDONLY);
 			if (pipefds[0] == -1)
 				return (perror("open"), close_fds(pipefds, prev_fd, TRUE),
@@ -98,11 +98,6 @@ static t_bool	parent(t_lexer *lexer, int *pipefds, int *prev_fd, pid_t pid)
 		}
 		*prev_fd = dup(pipefds[0]);
 	}
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		g_status = WEXITSTATUS(status);
-	else
-		g_status = termination_by_ctrl_c;
 	return (close(pipefds[0]), FALSE);
 }
 

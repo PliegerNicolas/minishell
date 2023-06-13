@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:34:17 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/02 11:03:55 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/13 15:52:13 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -38,6 +38,7 @@ static t_bool	group_lexer_args(t_lexer *lexer)
 
 	if (!lexer)
 		return (FALSE);
+	new_lexer = NULL;
 	if (lexer->options || lexer->args)
 	{
 		new_lexer = ft_join_str_arr(lexer->options, lexer->args);
