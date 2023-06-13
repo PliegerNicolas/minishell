@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/11 13:49:51 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/13 15:58:51 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -61,7 +61,10 @@ static void	prompt(char ***envp)
 		line = readline(prompt_msg);
 		free(prompt_msg);
 		if (!line)
+		{
+			ft_putendl_fd("exit", STDOUT);
 			break ;
+		}
 		if (ft_only_whitespace(line))
 		{
 			free(line);
