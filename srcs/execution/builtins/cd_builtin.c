@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:07:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/10 16:58:47 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/14 21:28:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -97,7 +97,7 @@ static t_bool	change_directory(char *path, char ***envp)
 			return (perror_malloc("test"), TRUE);
 	}
 	if (chdir(path) == -1)
-		return (perror("chdir"), free(oldpwd), FALSE);
+		return (perror("chdir"), free(oldpwd), g_status = 1, FALSE);
 	if (!getcwd(t_pwd, sizeof(t_pwd)))
 		return (perror("getcwd"), free(oldpwd), TRUE);
 	*envp = set_env_var("OLDPWD", oldpwd, *envp);
@@ -106,7 +106,7 @@ static t_bool	change_directory(char *path, char ***envp)
 	*envp = set_env_var("PWD", t_pwd, *envp);
 	if (!envp || !*envp)
 		return (free(oldpwd), TRUE);
-	return (free(oldpwd), FALSE);
+	return (free(oldpwd), g_status = success, FALSE);
 }
 
 t_bool	cd_builtin(t_lexer *lexer, char ***envp)
@@ -135,5 +135,5 @@ t_bool	cd_builtin(t_lexer *lexer, char ***envp)
 uiltin"), g_status = general_failure, TRUE);
 	if (change_directory(path, envp))
 		return (free(path), g_status = general_failure, TRUE);
-	return (free(path), g_status = success, FALSE);
+	return (free(path), FALSE);
 }

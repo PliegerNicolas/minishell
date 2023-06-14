@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 00:02:51 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/13 15:50:19 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/06/14 21:34:30 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -75,10 +75,9 @@ static void	put_commands(t_commands *commands)
 }
 */
 
-static t_bool	wait_for_processes(void)
+static t_bool	wait_for_processes(t_bool last_cmd_builtin, int status)
 {
 	pid_t	pid;
-	int		status;
 
 	while (1)
 	{
@@ -87,9 +86,9 @@ static t_bool	wait_for_processes(void)
 			continue ;
 		if (errno == ECHILD)
 		{
-			if (WIFEXITED(status))
+			if (!last_cmd_builtin && WIFEXITED(status))
 				g_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
+			else if (!last_cmd_builtin && WIFSIGNALED(status))
 				g_status = termination_by_ctrl_c;
 			break ;
 		}
@@ -105,7 +104,7 @@ static t_bool	wait_for_processes(void)
 }
 
 static t_bool	lexer_execution(t_commands *commands, t_lexer *lexer,
-	char ***envp)
+	char ***envp, t_bool last_cmd_builtin)
 {
 	int		prev_fd;
 
@@ -119,16 +118,19 @@ static t_bool	lexer_execution(t_commands *commands, t_lexer *lexer,
 		{
 			if (builtin_execution(commands, lexer, &prev_fd, envp))
 				return (TRUE);
+			last_cmd_builtin = TRUE;
 		}
 		else
+		{
 			if (external_execution(commands, lexer, &prev_fd, envp))
 				return (TRUE);
+			last_cmd_builtin = FALSE;
+		}
 		lexer = lexer->next;
 	}
-	if (wait_for_processes())
+	if (wait_for_processes(last_cmd_builtin, 0))
 		return (TRUE);
-	setup_signals(sigint_handler);
-	return (FALSE);
+	return (setup_signals(sigint_handler), FALSE);
 }
 
 static t_bool	commands_execution(t_commands *commands, char ***envp)
@@ -140,7 +142,7 @@ static t_bool	commands_execution(t_commands *commands, char ***envp)
 	current_command = commands;
 	while (current_command && current_command->lexer)
 	{
-		if (lexer_execution(commands, current_command->lexer, envp))
+		if (lexer_execution(commands, current_command->lexer, envp, FALSE))
 			return (TRUE);
 		current_command = current_command->next;
 	}
