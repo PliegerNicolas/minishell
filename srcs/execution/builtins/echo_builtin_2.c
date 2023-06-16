@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:04:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/16 22:04:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/16 22:10:51 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -16,7 +16,7 @@ char	*filter_out_redirection(char *s)
 	char				*str1;
 	char				*str2;
 	size_t				i;
-	enum e_quote_status q_status;
+	enum e_quote_status	q_status;
 
 	i = 0;
 	q_status = none;
