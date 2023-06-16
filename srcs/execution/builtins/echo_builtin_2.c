@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 22:04:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/16 22:10:51 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/16 22:12:26 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -23,7 +23,7 @@ char	*filter_out_redirection(char *s)
 	while (s[i])
 	{
 		is_between_quotes(s[i], &q_status);
-		if (q_status != single_quote && (s[i] == '<' || s[i] == '>'))
+		if (q_status == none && (s[i] == '<' || s[i] == '>'))
 			break ;
 		i++;
 	}
