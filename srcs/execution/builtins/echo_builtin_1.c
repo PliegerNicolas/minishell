@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo_builtin.c                                     :+:      :+:    :+:   */
+/*   echo_builtin_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 17:35:59 by nplieger          #+#    #+#             */
-/*   Updated: 2023/05/20 23:52:39 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/16 22:09:05 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -53,7 +53,7 @@ static t_bool	next_is_valid_word(const char *s)
 	i = 0;
 	while (s[i] && (ft_isspace(s[i]) && s[i] != '\n'))
 		i++;
-	if (s[i] && s[i] != '<' && s[i] != '>')
+	if (s[i])
 		return (TRUE);
 	return (FALSE);
 }
@@ -98,7 +98,7 @@ t_bool	echo_builtin(t_lexer *lexer)
 		ft_putchar_fd('\n', STDOUT);
 		return (FALSE);
 	}
-	quoteless_str = get_quoteless_str(lexer->cmd);
+	quoteless_str = filter_out_redirection(lexer->cmd);
 	if (!quoteless_str)
 		return (TRUE);
 	i = 0;

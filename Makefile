@@ -6,7 +6,7 @@
 #    By: nicolas <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/21 15:02:08 by nicolas           #+#    #+#              #
-#    Updated: 2023/05/24 14:59:16 by nicolas          ###   ########.fr        #
+#    Updated: 2023/06/16 22:01:36 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,8 @@ SRCS_NAMES		=			minishell \
 							execution/builtin_execution \
 							execution/external_command_execution \
 							execution/builtins/is_builtin \
-							execution/builtins/echo_builtin \
+							execution/builtins/echo_builtin_1 \
+							execution/builtins/echo_builtin_2 \
 							execution/builtins/cd_builtin \
 							execution/builtins/pwd_builtin \
 							execution/builtins/export_builtin \
