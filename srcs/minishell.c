@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:24:12 by nplieger          #+#    #+#             */
-/*   Updated: 2023/06/13 15:58:51 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:32:08 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -65,12 +65,12 @@ static void	prompt(char ***envp)
 			ft_putendl_fd("exit", STDOUT);
 			break ;
 		}
+		add_history(line);
 		if (ft_only_whitespace(line))
 		{
 			free(line);
 			continue ;
 		}
-		add_history(line);
 		g_status = executer(envp, line);
 	}
 }
