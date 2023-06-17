@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:14:22 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/17 18:48:53 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/17 18:51:00 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -44,7 +44,8 @@ static char	*get_var_name(char *s, size_t *i)
 		(*i)++;
 	name = ft_substr(s, 0, *i);
 	if (!name)
-		return (perror_malloc("test"), NULL);
+		return (perror_malloc("@name (srcs/execuion/builtins/export_builtin.c #\
+get_var_name"), NULL);
 	(*i)++;
 	return (name);
 }
