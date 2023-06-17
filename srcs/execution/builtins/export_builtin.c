@@ -6,52 +6,47 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:14:22 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/27 15:02:40 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/17 18:48:53 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-static void	put_exported(char **envp)
+static t_bool	verify_argument(char *s)
 {
 	size_t	i;
-	size_t	j;
 
+	if (!s)
+		return (TRUE);
 	i = 0;
-	while (envp[i])
+	while (s[i] && s[i] != '=')
 	{
-		ft_putstr_fd("declare -x ", STDOUT);
-		j = 0;
-		while (envp[i][j] && envp[i][j] != '=')
-			ft_putchar_fd(envp[i][j++], STDOUT);
-		ft_putstr_fd("=\"", STDOUT);
-		ft_putstr_fd(envp[i] + ++j, STDOUT);
-		ft_putendl_fd("\"", STDOUT);
-		i++;
+		if ((s[i] >= 'a' && s[i] <= 'z')
+			|| (s[i] >= 'A' && s[i] <= 'Z') || s[i] == '_')
+			i++;
+		else if (i != 0 && (s[i] >= '0' && s[i] <= '9'))
+			i++;
+		else
+		{
+			ft_putendl_fd("export: not a valid identifier", STDERR);
+			return (g_status = general_failure, TRUE);
+		}
 	}
+	return (FALSE);
 }
 
-static t_bool	find_name(const char *quoteless_str, char **name)
+static char	*get_var_name(char *s, size_t *i)
 {
-	size_t	i;
+	char	*name;
 
-	if (!quoteless_str)
-		return (FALSE);
-	i = 0;
-	while (quoteless_str[i]
-		&& export_variable_name_validator(quoteless_str[i], i))
-		i++;
-	if (!quoteless_str[i])
-		return (FALSE);
-	if (quoteless_str[i] != '=')
-	{
-		ft_putendl_fd("export: not a valid identifier", STDERR);
-		return (FALSE);
-	}
-	*name = ft_substr(quoteless_str, 0, i);
-	if (!*name)
-		return (perror_malloc("@name (srcs/execuion/builtins/export_builtin.c #\
-find_name"), TRUE);
-	return (FALSE);
+	if (!s)
+		return (NULL);
+	while (s[*i] != '=')
+		(*i)++;
+	name = ft_substr(s, 0, *i);
+	if (!name)
+		return (perror_malloc("test"), NULL);
+	(*i)++;
+	return (name);
 }
 
 static char	**update_envp(char *str, const char *name, char **envp)
@@ -77,45 +72,44 @@ static char	**update_envp(char *str, const char *name, char **envp)
 	return (envp);
 }
 
-static t_bool	export(const char *s, char ***envp)
+static t_bool	export(char *s, char ***envp)
 {
-	char	*quoteless_str;
 	char	*name;
+	size_t	i;
 
-	quoteless_str = get_quoteless_str(s);
-	if (!quoteless_str)
+	if (!s)
 		return (g_status = general_failure, TRUE);
-	name = NULL;
-	if (find_name(quoteless_str, &name))
-		return (free(quoteless_str), g_status = general_failure, TRUE);
+	if (!ft_strchr(s, '='))
+		return (g_status = success, FALSE);
+	i = 0;
+	name = get_var_name(s, &i);
 	if (!name)
-		return (g_status = misuse_of_shell_builtins, FALSE);
-	*envp = update_envp(quoteless_str, name, *envp);
+		return (g_status = general_failure, TRUE);
+	*envp = update_envp(s, name, *envp);
 	if (!envp || !*envp)
 		return (free(name), g_status = general_failure, TRUE);
-	return (free(name), FALSE);
+	return (free(name), g_status = success, FALSE);
 }
 
 t_bool	export_builtin(t_lexer *lexer, char ***envp)
 {
+	char	*str;
 	size_t	len;
+	size_t	i;
 
-	if (!lexer)
-		return (FALSE);
-	if (!envp || !*envp)
-		return (g_status = general_failure, TRUE);
 	len = ft_strarrlen((const char **)lexer->args);
-	if (len > 2)
-	{
-		errno = E2BIG;
-		return (perror("exit"), g_status = misuse_of_shell_builtins, FALSE);
-	}
-	else if (len == 2)
-	{
-		if (export(lexer->args[1], envp))
-			return (TRUE);
-	}
+	if (len == 0)
+		return (g_status = general_failure, FALSE);
 	else if (len == 1)
-		put_exported(*envp);
-	return (g_status = success, FALSE);
+		return (put_exported(*envp), g_status = success, FALSE);
+	i = 1;
+	while (lexer->args[i])
+	{
+		str = get_quoteless_str(lexer->args[i++]);
+		if (verify_argument(str))
+			return (free(str), g_status = general_failure, FALSE);
+		if (export(str, envp))
+			return (free(str), g_status = general_failure, TRUE);
+	}
+	return (FALSE);
 }

@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/06/16 22:05:36 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/16 23:47:31 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -149,6 +149,7 @@ char			**set_env_var(char *name, char *value, char **envp);
 char			**remove_env_var(char *var_name, char **envp);
 
 void			put_env(char **envp);
+void			put_exported(char **envp);
 size_t			env_len(char **envp);
 void			free_envp(char **envp);
 
@@ -202,7 +203,7 @@ int				open_file(t_lexer *lexer, const char *path,
 void			close_prev_fd(int *prev_fd);
 void			close_stds(void);
 void			close_fds(int *pipefds, int *prev_fd, t_bool stds);
-t_bool			export_variable_name_validator(char c, size_t index);
+
 char			*filter_out_redirection(char *s);
 
 t_bool			echo_builtin(t_lexer *lexer);

@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 19:27:19 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/27 15:04:27 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/16 22:58:35 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -72,13 +72,4 @@ void	close_fds(int *pipefds, int *prev_fd, t_bool stds)
 	close_prev_fd(prev_fd);
 	if (stds)
 		close_stds();
-}
-
-t_bool	export_variable_name_validator(char c, size_t index)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')
-		return (TRUE);
-	else if (index != 0 && (c >= '0' && c <= '9'))
-		return (TRUE);
-	return (FALSE);
 }

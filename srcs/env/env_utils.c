@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 22:34:26 by nicolas           #+#    #+#             */
-/*   Updated: 2023/03/08 18:34:26 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/16 23:47:11 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -41,4 +41,23 @@ size_t	env_len(char **envp)
 	while (envp[i])
 		i++;
 	return (i);
+}
+
+void	put_exported(char **envp)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (envp[i])
+	{
+		ft_putstr_fd("declare -x ", STDOUT);
+		j = 0;
+		while (envp[i][j] && envp[i][j] != '=')
+			ft_putchar_fd(envp[i][j++], STDOUT);
+		ft_putstr_fd("=\"", STDOUT);
+		ft_putstr_fd(envp[i] + ++j, STDOUT);
+		ft_putendl_fd("\"", STDOUT);
+		i++;
+	}
 }
