@@ -6,7 +6,7 @@
 #    By: nicolas <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/21 15:02:08 by nicolas           #+#    #+#              #
-#    Updated: 2023/06/16 22:01:36 by nicolas          ###   ########.fr        #
+#    Updated: 2023/06/19 16:00:43 by nicolas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,8 +68,7 @@ SRCS_NAMES		=			minishell \
 							parsing/get_path \
 							parsing/set_options \
 							parsing/set_arguments \
-							parsing/set_redirection_1 \
-							parsing/set_redirection_2 \
+							parsing/set_redirection \
 							parsing/set_heredoc_1 \
 							parsing/set_heredoc_2 \
 							parsing/destroy_heredocs \

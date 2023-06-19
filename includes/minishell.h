@@ -6,7 +6,7 @@
 /*   By: nplieger <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 11:17:16 by nplieger          #+#    #+#             */
-/*   Updated: 2023/06/19 03:30:34 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:07:56 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -227,11 +227,10 @@ t_bool			set_exec(char *cmd, t_lexer *lexer, char ***envp);
 char			*get_path(char *cmd, char ***envp);
 t_bool			set_options(const char *str, t_lexer *lexer);
 t_bool			set_arguments(const char *str, t_lexer *lexer, char ***envp);
-t_bool			set_redirection(const char *str, t_lexer *lexer,
-					t_bool *prev_is_redir, char ***envp);
+t_bool			set_redirection(const char *s, t_lexer *lexer,
+					enum e_redir_type *redir_type, char ***envp);
 
 t_bool			set_redir_path(char *pathname, t_lexer *lexer, int slot);
-t_bool			overwrite_redirection(t_lexer *lexer);
 t_bool			set_redir_path_heredoc(const char *end, t_lexer *lexer,
 					char ***envp);
 t_bool			write_to_heredoc(t_lexer *lexer, const int fd,

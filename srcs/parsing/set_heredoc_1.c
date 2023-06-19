@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 13:06:31 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/04 20:20:48 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:40:20 by nicolas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -55,15 +55,13 @@ t_bool	set_redir_path_heredoc(const char *end, t_lexer *lexer, char ***envp)
 {
 	if (!end)
 		return (g_status = general_failure, FALSE);
-	if (lexer->redir_path[0])
-		free(lexer->redir_path[0]);
 	lexer->redir_path[0] = set_heredoc_filename(lexer);
 	if (!lexer->redir_path[0])
 		return (g_status = general_failure, TRUE);
 	if (set_and_fill_heredoc(lexer, end, envp))
 		return (TRUE);
 	if (!lexer->redir_path[0])
-		return (perror_malloc("lexer->lexer_redir (srcs/parsing/set_redirection\
-_2.c #set_redir_path_heredoc)"), g_status = general_failure, TRUE);
+		return (perror_malloc("lexer->lexer_path (srcs/parsing/set_heredoc_1.c \
+#set_redir_path_heredoc)"), g_status = general_failure, TRUE);
 	return (FALSE);
 }
