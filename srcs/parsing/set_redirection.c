@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:48:59 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/19 16:41:04 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/22 13:03:39 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -82,6 +82,8 @@ static t_bool	set_redir_lexer_variables(t_lexer *lexer, char *redir_path,
 		if (lexer->redir_type[slot] && overwrite_redirection(lexer))
 			return (TRUE);
 	}
+	if (lexer->err == TRUE)
+		return (TRUE);
 	if (lexer->redir_path[slot])
 		free(lexer->redir_path[slot]);
 	lexer->redir_type[slot] = *redir_type;
