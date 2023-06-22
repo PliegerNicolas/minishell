@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/05/10 17:22:03 by nicolas          ###   ########.fr       */
+/*   Updated: 2023/06/22 10:07:57 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -24,7 +24,8 @@ static char	*get_current_working_directory(char ***envp)
 		else
 			cwd = ft_strdup(".");
 		if (!cwd)
-			return (perror_malloc("test1"), NULL);
+			return (perror_malloc("@cwd (srcs/output/prompt_prefix.c #get_curre\
+nt_working_directory)"), NULL);
 	}
 	return (cwd);
 }
@@ -50,7 +51,8 @@ static t_bool	get_home_path(char **home_path, char ***envp)
 		*home_path = ft_strjoin("/home/", user);
 		free(user);
 		if (!*home_path)
-			return (perror_malloc("test2"), TRUE);
+			return (perror_malloc("@*home_path (srcs/output/prompt_prefix.c #ge\
+t_home_path)"), TRUE);
 	}
 	return (FALSE);
 }
@@ -80,7 +82,8 @@ static char	*trim_path(char *path)
 		index[0]++;
 	new_path = ft_substr(path, index[0], ft_strlen(path + index[0]));
 	if (!new_path)
-		return (perror_malloc("test"), free(path), NULL);
+		return (perror_malloc("@new_path (srcs/output/prompt_prefix.c #trim_pat\
+h)"), free(path), NULL);
 	return (free(path), new_path);
 }
 
@@ -128,7 +131,8 @@ char	*prompt_prefix(char ***envp)
 			free(prompt);
 			prompt = ft_strdup("~");
 			if (!prompt)
-				return (perror_malloc("test3"), free(home_path), NULL);
+				return (perror_malloc("@prompt (srcs/output/prompt_prefix.c #pr\
+ompt_prefix)"), free(home_path), NULL);
 		}
 		free(home_path);
 	}
