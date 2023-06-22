@@ -6,7 +6,7 @@
 /*   By: nicolas <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 22:34:36 by nicolas           #+#    #+#             */
-/*   Updated: 2023/06/22 10:12:59 by nplieger         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:16:12 by nplieger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -101,7 +101,7 @@ static char	*beautify_prompt(char *prompt)
 	if (!new_prompt)
 		return (perror_malloc("@new_prompt (srcs/output/prompt_prefix.c #beauti\
 fy_prompt)"), free(prompt), NULL);
-	ft_strlcat(new_prompt, "\001➜\002  ", len);
+	ft_strlcat(new_prompt, "➜  ", len);
 	ft_strlcat(new_prompt, CYAN, len);
 	ft_strlcat(new_prompt, prompt, len);
 	ft_strlcat(new_prompt, YELLOW, len);
